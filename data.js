@@ -1,0 +1,180 @@
+/* ============================================================
+   DATA FILE — Update your info here. No HTML/CSS touching needed.
+   ============================================================ */
+
+const PORTFOLIO_DATA = {
+
+  // ---- ABOUT ----
+  about: {
+    paragraphs: [
+<<<<<<< HEAD
+      "I'm currently a student doing an Integrated MSc in Software Development at Gauhati University, while concurrently reading Economics at IGNOU. My real interest lies in theoretical computer science: computability, type theory, complexity, and the mathematical structures beneath computation. I treat engineering as a way of shaping thought, not just shipping features.",
+      "I have a formal background in Fine Arts, which subtly influences how I approach HCI, typography, and the way systems feel. Outside the screen, I read deeply, watch carefully, and look for patterns in stories, sound, and silence."
+=======
+      "I'm currently a student doing an Integrated MSc in Software Development at Gauhati University, while concurrently reading Economics at IGNOU. My real interests lie in theoretical computer science: computability, type theory, complexity, and the mathematical structures beneath computation.",
+      "I also have a formal background in Fine Arts, which subtly influences how I approach HCI and design. Also I like to read and watch good movies and anime!"
+>>>>>>> 9b46dee ([RONIT]: UPDATE)
+    ],
+    quote: {
+      text: "A monad is just a monoid in the category of endofunctors, what's the problem?",
+      cite: "— someone who definitely doesn't get invited to parties"
+    }
+  },
+
+<<<<<<< HEAD
+  manifesto: [
+    "I treat problems as playful constraints, not checkboxes.",
+    "The clearest code is the one that carries meaning beyond the machine.",
+    "My work sits where mathematics, craft, and empathy intersect."
+  ],
+
+=======
+>>>>>>> 9b46dee ([RONIT]: UPDATE)
+  // ---- STACK ----
+  // Add, remove, or edit categories and items freely.
+  stack: [
+    {
+      label: "Languages",
+      items: "C/C++, C#, Java, Python, Haskell, Fortran, SQL, HTML/CSS, R"
+    },
+    {
+      label: "Frameworks & Tools",
+      items: "ASP.NET Core, Avalonia UI, WebSockets, PostgreSQL, Podman, NumPy, Scikit-Learn"
+    },
+    {
+      label: "Design",
+      items: "Figma, Inkscape, Adobe Illustrator, FreeCAD — WCAG-compliant accessible UI/UX"
+    },
+    {
+      label: "Theoretical",
+      items: "Discrete Maths, Automata Theory, Algorithm Design, Probability, Descriptive Statistics, Econ: Micro/Macroeconomics, Methods of Mathematical Economics"
+    }
+  ],
+
+  // ---- PROJECTS ----
+  // Add new projects by copying the object shape below.
+  projects: [
+    {
+      name: "OmniBus",
+      tags: ["Python", "FastAPI", "Redis", "PostgreSQL"],
+      desc: "Real-time bus tracking system. GPS from a driver app, live WebSocket updates to a student interface, and Redis pub/sub for location propagation. Co-architected the ML-based ETA prediction.",
+      link: {
+        text: "github.com/The3AMOrg",
+        url: "https://github.com/orgs/The3AMOrg/repositories"
+      }
+    },
+    {
+      name: "Dasam — FSM Simulator",
+      tags: ["C#", "Avalonia UI"],
+      desc: "Cross-platform finite state machine simulator with visual state tracing, real-time transition logic, and an accessibility-first GUI. Because state machines shouldn't just be for the sighted.",
+      link: {
+        text: "github.com/nonQualities/Dasaam",
+        url: "https://github.com/nonQualities/Dasaam"
+      }
+    },
+    {
+      name: "Fluid Simulation Engine",
+      tags: ["C++"],
+      desc: "2D Lattice Boltzmann Method based mesoscopic fluid dynamics. Optimised memory layout and computation loops for high frame-rate interactive rendering. Basically, making water do math really fast.",
+      link: {
+        text: "github.com/nonQualities/vayunicus",
+        url: "https://github.com/nonQualities/vayunicus"
+      }
+    },
+    {
+      name: "DSL Prototype & Evaluator",
+      tags: ["Haskell"],
+      desc: "Domain-specific language with a custom parser and evaluator built using monadic composition and type-safe functional paradigms.",
+      link: {
+        text: "github.com/nonQualities/ExpressionEval",
+        url: "https://github.com/nonQualities/ExpressionEval"
+      }
+    },
+    {
+      name: "FSynth — ADSR Synthesizer",
+      tags: ["Fortran"],
+      desc: "Low-level audio engine implementing ADSR envelope modelling and real-time waveform generation. Yes, Fortran. No, I am not from the 1970s.",
+      link: {
+        text: "github.com/nonQualities/synth",
+        url: "https://github.com/nonQualities/synth"
+      }
+    }
+  ],
+
+  // ---- GITHUB ----
+  github: {
+    username: "nonQualities",
+    note: "Code quality may vary from 'mathematically provable' to 'it compiled at 3 AM.'"
+  },
+
+  // ---- READING ----
+  // Update your current reads here.
+  reading: [
+    {
+      title: "War and Peace",
+      author: "Leo Tolstoy",
+      trivia: "Tolstoy's casual 1,200-page reminder that history is chaotic, nobody is actually in charge, and we're all just guessing."
+    },
+    {
+      title: "Discrete Mathematical Structures with Applications to CS",
+      author: "Tremblay & Manohar",
+      trivia: "Because trees aren't just for climbing. Honestly, this is the foundation of almost everything else on this page."
+    },
+    {
+      title: "Foundations of Cryptography",
+      author: "Oded Goldreich",
+      trivia: "A rigorous deep dive into keeping secrets safe by exploiting the fact that factoring very large prime numbers is really, really annoying."
+    },
+    {
+      title: "Ghost in the Wires",
+      author: "Kevin Mitnick",
+      trivia: "Mitnick's masterclass proving that no matter how good your encryption is, humans will always be the weakest link in any security system."
+    }
+  ],
+
+  // ---- WRITING ----
+  writing: {
+    items: [
+      {
+        title: "I Built a CSMA Simulator and Accidentally Read a 1975 Paper About It",
+        date: "Apr 2026",
+        url: "https://medium.com/@ronitchoudhury965/i-built-a-csma-simulator-and-accidentally-read-a-1975-paper-about-it-66dfe56c35ea"
+      },
+      {
+        title: "Hopefully, A Hopeful Piece of Literature",
+        date: "Dec 2023",
+        url: "https://medium.com/@ronitchoudhury965/hopefully-a-hopeful-piece-of-literature-e0299bbbc7d0"
+      }
+    ],
+    moreLink: {
+      text: "read all on Medium",
+      url: "https://medium.com/@ronitchoudhury965"
+    }
+  },
+
+  // ---- CONTACT ----
+  // Update links and handles here.
+  contact: [
+    {
+      type: "Proton",
+      value: "choudhury.ronit@proton.me",
+      href: "mailto:choudhury.ronit@proton.me"
+    },
+    {
+      type: "Gmail",
+      value: "ronitchoudhury965@gmail.com",
+      href: "mailto:ronitchoudhury965@gmail.com"
+    },
+    {
+      type: "GitHub",
+      value: "nonQualities",
+      href: "https://github.com/nonQualities"
+    },
+    {
+      type: "LinkedIn",
+      value: "Ronit Choudhury",
+      href: "https://www.linkedin.com/in/ronit-choudhury-2672ab404/"
+    }
+  ]
+
+};
