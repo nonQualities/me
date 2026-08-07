@@ -1,6 +1,36 @@
 /* ============================================================
-   MAIN — Renders everything from data.js. Do not edit content here.
+   MAIN — Renders everything from data.js + static line gutter.
    ============================================================ */
+
+const LINE_HEIGHT = 22;
+
+/* ---- STATIC LINE NUMBERS ---- */
+function initLineNumbers() {
+  const gutter = document.createElement('div');
+  gutter.className = 'line-gutter';
+  gutter.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(gutter);
+
+  // Wait for all content to render, then generate enough lines
+  requestAnimationFrame(() => {
+    const totalH = document.documentElement.scrollHeight;
+    const count = Math.ceil(totalH / LINE_HEIGHT);
+    let html = '';
+    for (let i = 1; i <= count; i++) {
+      html += `<div class="line-num">${i}</div>`;
+    }
+    gutter.innerHTML = html;
+  });
+}
+
+/* ---- HEADER MANIFESTO ---- */
+function renderManifesto() {
+  const container = document.getElementById('header-manifesto');
+  if (!container || !PORTFOLIO_DATA.manifesto) return;
+
+  const items = PORTFOLIO_DATA.manifesto.map(m => `<li>${escapeHtml(m)}</li>`).join('');
+  container.innerHTML = `<ul>${items}</ul>`;
+}
 
 /* ---- ABOUT ---- */
 function renderAbout() {
@@ -24,16 +54,6 @@ function renderAbout() {
   container.innerHTML = html;
 }
 
-<<<<<<< HEAD
-function renderManifesto() {
-  const container = document.getElementById('header-manifesto');
-  if (!container || !PORTFOLIO_DATA.manifesto?.length) return;
-  const manifesto = PORTFOLIO_DATA.manifesto[Math.floor(Math.random() * PORTFOLIO_DATA.manifesto.length)];
-  container.textContent = manifesto;
-}
-
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 /* ---- STACK ---- */
 function renderStack() {
   const container = document.getElementById('stack-body');
@@ -218,56 +238,6 @@ function escapeHtml(str) {
 }
 
 /* ---- NAV ACTIVE STATE ---- */
-<<<<<<< HEAD
-const TELEMETRY_MESSAGES = {
-  default: 'compiling curiosity...',
-  about: 'I build with questions, not answers.',
-  stack: 'Tools are means; depth is the metric.',
-  projects: 'Every project is an experiment in agency.',
-  github: 'Public code should feel honest, not polished.',
-  reading: 'I read to see the world with stranger axioms.',
-  writing: 'I write to translate thought into a practice.',
-  contact: 'Let us work on a problem worth solving.'
-};
-
-const TELEMETRY_CYCLE = [
-  'compiling curiosity...',
-  'linking art & algorithms',
-  'mining structure from complexity',
-  'holding design to the human scale',
-  'theory as a craft, code as gesture',
-  'finding beauty in proofs and products'
-];
-
-let telemetryInterval;
-let telemetryIndex = 0;
-
-function setTelemetry(message) {
-  const telemetry = document.getElementById('header-telemetry-text');
-  if (telemetry) telemetry.textContent = message;
-}
-
-function cycleTelemetry() {
-  telemetryIndex = (telemetryIndex + 1) % TELEMETRY_CYCLE.length;
-  setTelemetry(TELEMETRY_CYCLE[telemetryIndex]);
-}
-
-function updateTelemetry(sectionId) {
-  const message = TELEMETRY_MESSAGES[sectionId] || TELEMETRY_MESSAGES.default;
-  setTelemetry(message);
-}
-
-function updateScrollProgress() {
-  const progress = document.getElementById('scroll-progress');
-  if (!progress) return;
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const percent = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
-  progress.style.height = `${percent}%`;
-}
-
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 function initNav() {
   const links = [...document.querySelectorAll('.nav-links a')];
   const sections = links
@@ -282,31 +252,16 @@ function initNav() {
     links.forEach(link => {
       link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
     });
-<<<<<<< HEAD
-    updateTelemetry(current);
-    updateScrollProgress();
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
   };
 
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
-<<<<<<< HEAD
-  window.addEventListener('resize', updateScrollProgress);
-
-  if (telemetryInterval) clearInterval(telemetryInterval);
-  telemetryInterval = setInterval(cycleTelemetry, 8000);
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 }
 
 /* ---- BOOT ---- */
 document.addEventListener('DOMContentLoaded', () => {
-  renderAbout();
-<<<<<<< HEAD
   renderManifesto();
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
+  renderAbout();
   renderStack();
   renderProjects();
   renderGitHub();
@@ -314,8 +269,5 @@ document.addEventListener('DOMContentLoaded', () => {
   renderWriting();
   renderContact();
   initNav();
-<<<<<<< HEAD
-  updateScrollProgress();
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
+  initLineNumbers();
 });

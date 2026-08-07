@@ -1,8 +1,10 @@
 /* ============================================================
-   RONIT CHOUDHURY — LIGHT BRUTAL STEAMPUNK TEXT FILE
+   RONIT CHOUDHURY — CODE-EDITOR PORTFOLIO
+   Light brutalism + steampunk. Latin Roman Mono headers.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+/* ---- FONTS ---- */
+@import url('https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@master/fonts.css');
 
 /* ---- RESET & BASE ---- */
 *, *::before, *::after {
@@ -12,21 +14,29 @@
 }
 
 :root {
-  --bg:        #f7f4ed;
-  --surface:   #fbf8f1;
-  --panel:     #efebe2;
-  --text:      #211f1b;
-  --text-dim:  #4d4b46;
-  --text-faint:#7b7971;
-  --accent:    #686b66;
-  --accent-hi: #343632;
-  --accent-dim:#a5a6a0;
-  --border:    #d8d2c7;
-  --border-hi: #b7b2a8;
-  --danger:    #8a342e;
-  --ok:        #596b4e;
-  --mono:      'JetBrains Mono', 'SFMono-Regular', 'SF Mono', 'Cascadia Mono', 'Liberation Mono', 'Courier New', monospace;
-  --header-mono:'IBM Plex Mono', 'JetBrains Mono', 'SFMono-Regular', 'Courier New', monospace;
+  --bg:        #faf8f3;
+  --gutter:    #f0ede6;
+  --surface:   #fffefc;
+  --text:      #2a2825;
+  --text-dim:  #5e5c58;
+  --text-faint:#9e9a92;
+  --accent:    #a0522d;
+  --accent-hi: #7a3b1a;
+  --accent-dim:#c49a6c;
+  --border:    #ddd8cf;
+  --border-hi: #c8c3ba;
+  --danger:    #a03030;
+  --ok:        #4a6b3e;
+  --line-num:  #bdb8ae;
+  --line-active:#e8e3da;
+  --cursor:    #a0522d;
+
+  --mono:      'JetBrains Mono', 'SF Mono', 'Fira Code', 'Liberation Mono', monospace;
+  --header:    'Computer Modern Typewriter', 'Courier Prime', 'Courier New', monospace;
+
+  --gutter-w:  60px;
+  --line-h:    22px;
+  --nav-h:     52px;
 }
 
 html {
@@ -36,53 +46,69 @@ html {
 
 body {
   font-family: var(--mono);
-  font-size: 14px;
-  line-height: 1.75;
+  font-size: 17px;
+  line-height: var(--line-h);
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-<<<<<<< HEAD
   min-height: 100vh;
+  padding-left: var(--gutter-w);
   position: relative;
 }
 
-body::before {
-  content: '';
+/* ---- LINE GUTTER ---- */
+.line-gutter {
   position: fixed;
-  inset: 0;
+  left: 0;
+  top: 0;
+  width: var(--gutter-w);
+  height: 100vh;
+  background: var(--gutter);
+  border-right: 1px solid var(--border);
+  z-index: 200;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: var(--line-h);
+  color: var(--line-num);
+  text-align: right;
+  padding-right: 12px;
+  user-select: none;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle at 10% 15%, rgba(104,107,102,0.08), transparent 14%),
-    radial-gradient(circle at 85% 90%, rgba(33,31,27,0.06), transparent 16%),
-    repeating-linear-gradient(0deg, transparent 0, transparent 24px, rgba(33,31,27,0.02) 24px, rgba(33,31,27,0.02) 25px),
-    repeating-linear-gradient(90deg, transparent 0, transparent 18px, rgba(33,31,27,0.02) 18px, rgba(33,31,27,0.02) 19px);
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 }
 
+.line-gutter .line-num {
+  height: var(--line-h);
+  line-height: var(--line-h);
+}
+
+/* ---- SELECTION ---- */
 ::selection {
-  background: var(--accent);
-  color: var(--surface);
+  background: rgba(160, 82, 45, 0.22);
+  color: var(--text);
 }
 
 /* ---- NAV ---- */
 .nav {
   position: sticky;
   top: 0;
+  left: var(--gutter-w);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  height: 52px;
+  height: var(--nav-h);
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  width: calc(100% - var(--gutter-w));
 }
 
 .nav-logo {
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--header);
+  font-size: 15px;
+  font-weight: 400;
   color: var(--accent);
   text-decoration: none;
   letter-spacing: 0;
@@ -101,12 +127,14 @@ body::before {
 }
 
 .nav-links a {
+  font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0;
+  letter-spacing: 0.5px;
   color: var(--text-dim);
   text-decoration: none;
   padding: 5px 10px;
   border-bottom: 1px solid transparent;
+  transition: all 0.15s ease;
 }
 
 .nav-links a:hover,
@@ -116,110 +144,22 @@ body::before {
   background: transparent;
 }
 
-/* ---- PAPER SIGNATURE ---- */
-.paper-spine {
-  position: fixed;
-  left: 18px;
-  top: 84px;
-  z-index: 1;
-  display: flex;
-<<<<<<< HEAD
-  flex-direction: column;
-  align-items: center;
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
-  gap: 24px;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: 10px;
-  line-height: 1;
-  color: var(--text-faint);
-  pointer-events: none;
-}
-
-.paper-spine span {
-  padding-block: 8px;
-  border-block: 1px solid var(--border);
-}
-
-<<<<<<< HEAD
-.spine-progress {
-  position: relative;
-  width: 4px;
-  min-height: 120px;
-  background: rgba(33, 31, 27, 0.08);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.spine-progress-fill {
-  width: 100%;
-  height: 0%;
-  background: var(--accent);
-  transition: height 0.22s ease;
-}
-
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 /* ---- HEADER ---- */
 .header {
-  padding: 64px 24px 48px;
-  max-width: 1000px;
+  padding: 56px 24px 44px;
+  max-width: 960px;
   margin: 0 auto;
   border-bottom: 1px solid var(--border);
 }
 
-<<<<<<< HEAD
-.header-manifesto {
-  font-size: 14px;
-  line-height: 1.8;
-  color: var(--text);
-  max-width: 760px;
-  margin-bottom: 16px;
-  font-style: italic;
-}
-
-.header-telemetry {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
-  font-size: 12px;
-  color: var(--text-dim);
-  font-family: var(--mono);
-  margin-bottom: 18px;
-}
-
-.telemetry-prompt {
-  color: var(--accent-hi);
-}
-
-.telemetry-text {
-  min-width: 260px;
-  max-width: 100%;
-}
-
-.section::before {
-  content: "0" counter(folio-section) " / " attr(id);
-  position: absolute;
-  top: 56px;
-  left: -118px;
-  display: none;
-  width: 88px;
-  font-size: 10px;
-  line-height: 1.2;
-  color: var(--text-faint);
-  text-align: right;
-}
-
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
 .header-top {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  letter-spacing: 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.5px;
   color: var(--text-faint);
-  margin-bottom: 32px;
+  margin-bottom: 28px;
   text-transform: uppercase;
 }
 
@@ -229,24 +169,61 @@ body::before {
 }
 
 .header-name {
-  font-family: var(--header-mono);
-  font-size: clamp(34px, 7vw, 72px);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: 0;
+  font-family: var(--header);
+  font-size: clamp(32px, 6.5vw, 68px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--text);
+  margin-bottom: 16px;
+}
+
+.header-cursor {
+  display: inline-block;
+  font-family: var(--header);
+  color: var(--cursor);
+  animation: blink 1.1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.header-manifesto {
+  font-family: var(--header);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
   margin-bottom: 20px;
+  max-width: 720px;
+}
+
+.header-manifesto li {
+  list-style: none;
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 4px;
+}
+
+.header-manifesto li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent-dim);
 }
 
 .header-tagline {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 32px;
-  font-size: 13px;
-  letter-spacing: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 1px;
   color: var(--text-dim);
   text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .header-rule {
@@ -255,65 +232,39 @@ body::before {
   width: 100%;
 }
 
-.header-folio {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--text-faint);
-}
-
 /* ---- MAIN & SECTIONS ---- */
 .main {
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 24px;
-  counter-reset: folio-section;
 }
 
 .section {
-  counter-increment: folio-section;
   position: relative;
-  padding: 48px 0;
+  padding: 40px 0;
   border-bottom: 1px solid var(--border);
-}
-
-.section::before {
-  content: "0" counter(folio-section) " / " attr(id);
-  position: absolute;
-  top: 56px;
-  left: -118px;
-  display: none;
-  width: 88px;
-  font-size: 10px;
-  line-height: 1.2;
-  color: var(--text-faint);
-  text-align: right;
 }
 
 .section-header {
   display: flex;
   align-items: baseline;
-  gap: 16px;
+  gap: 14px;
   margin-bottom: 24px;
 }
 
 .section-num {
-  font-size: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0;
-  border: 0;
-  padding: 0;
   flex-shrink: 0;
-  background: transparent;
 }
 
 .section-header h2 {
-  font-family: var(--header-mono);
-  font-size: clamp(20px, 3vw, 30px);
-  font-weight: 600;
+  font-family: var(--header);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 400;
   letter-spacing: 0;
   color: var(--text);
 }
@@ -325,51 +276,52 @@ body::before {
 /* ---- ABOUT ---- */
 .about-text {
   max-width: 720px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  line-height: 1.8;
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.75;
   color: var(--text);
 }
 
 .about-quote {
-  margin-top: 28px;
-  padding: 16px 0 16px 18px;
-  border: 0;
-  border-left: 1px solid var(--accent-dim);
-  background: var(--surface);
-  color: var(--text);
+  margin-top: 24px;
+  padding: 14px 0 14px 18px;
+  border-left: 2px solid var(--accent-dim);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--header);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.65;
+  font-style: italic;
 }
 
 .about-quote cite {
   display: block;
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
   color: var(--text-faint);
+  font-style: normal;
 }
 
 /* ---- STACK ---- */
 .stack-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 22px 28px;
-  border: 0;
-  background: transparent;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px 32px;
 }
 
 .stack-card {
   background: transparent;
   padding: 0;
-  border: 0;
 }
 
 .stack-label {
-  font-size: 11px;
-  letter-spacing: 0;
+  font-family: var(--header);
+  font-size: 12px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--accent);
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 10px;
   padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
@@ -377,7 +329,7 @@ body::before {
 
 .stack-items {
   font-size: 13px;
-  line-height: 1.9;
+  line-height: 1.8;
   color: var(--text);
 }
 
@@ -386,12 +338,8 @@ body::before {
   background: transparent;
   border: 0;
   border-top: 1px solid var(--border);
-  padding: 18px 0 4px;
-  margin-bottom: 18px;
-}
-
-.project:hover {
-  border-color: var(--border);
+  padding: 18px 0 6px;
+  margin-bottom: 16px;
 }
 
 .project:last-child {
@@ -403,13 +351,14 @@ body::before {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .project-name {
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--header);
+  font-size: 17px;
+  font-weight: 400;
   color: var(--text);
   letter-spacing: 0;
 }
@@ -421,8 +370,9 @@ body::before {
 }
 
 .project-tag {
+  font-family: var(--mono);
   font-size: 10px;
-  letter-spacing: 0;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--accent);
   border: 0;
@@ -432,16 +382,17 @@ body::before {
 
 .project-desc {
   font-size: 13px;
-  line-height: 1.75;
-  color: var(--text);
-  margin-bottom: 14px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin-bottom: 12px;
 }
 
 .project-link {
-  font-size: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
   color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent-dim);
   padding-bottom: 1px;
 }
 
@@ -461,7 +412,7 @@ body::before {
 .gh-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
 }
@@ -471,24 +422,27 @@ body::before {
 }
 
 .gh-key {
+  font-family: var(--mono);
   color: var(--text-faint);
   text-transform: uppercase;
-  letter-spacing: 0;
-  font-size: 11px;
+  letter-spacing: 0.5px;
+  font-size: 10px;
 }
 
 .gh-val {
+  font-family: var(--mono);
   color: var(--text);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .gh-repos-label {
+  font-family: var(--header);
   font-size: 11px;
-  letter-spacing: 0;
+  letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--accent);
-  margin: 24px 0 12px;
-  padding-bottom: 8px;
+  margin: 20px 0 10px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -496,7 +450,7 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 10px 0;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
 }
@@ -506,6 +460,7 @@ body::before {
 }
 
 .gh-repo a {
+  font-family: var(--mono);
   color: var(--text);
   text-decoration: none;
   border-bottom: 1px solid var(--border);
@@ -517,44 +472,52 @@ body::before {
 }
 
 .gh-repo-meta {
+  font-family: var(--mono);
   color: var(--text-faint);
   font-size: 11px;
   white-space: nowrap;
 }
 
 .gh-loading {
+  font-family: var(--mono);
   color: var(--text-faint);
   font-size: 13px;
+  font-style: italic;
 }
 
 .gh-error {
+  font-family: var(--mono);
   color: var(--danger);
   font-size: 13px;
 }
 
 .gh-note {
-  margin-top: 20px;
-  padding: 12px 0 0 16px;
-  border-left: 1px solid var(--accent-dim);
+  margin-top: 18px;
+  padding: 10px 0 0 16px;
+  border-left: 2px solid var(--accent-dim);
   background: transparent;
+  font-family: var(--header);
   font-size: 13px;
-  color: var(--text);
+  color: var(--text-dim);
+  font-style: italic;
 }
 
 /* ---- READING ---- */
 .reading-list {
   display: grid;
   gap: 18px;
-  border: 0;
-  background: transparent;
 }
 
 .reading-item {
   background: transparent;
-  padding: 0 0 18px;
+  padding: 0 0 16px;
   display: grid;
   gap: 6px;
   border-bottom: 1px solid var(--border);
+}
+
+.reading-item:last-child {
+  border-bottom: none;
 }
 
 .reading-header {
@@ -566,22 +529,24 @@ body::before {
 }
 
 .reading-title {
-  font-size: 14px;
-  font-weight: 700;
+  font-family: var(--header);
+  font-size: 15px;
+  font-weight: 400;
   color: var(--text);
 }
 
 .reading-author {
-  font-size: 11px;
+  font-family: var(--mono);
+  font-size: 10px;
   color: var(--accent);
-  letter-spacing: 0;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
 .reading-trivia {
   font-size: 13px;
-  color: var(--text);
-  line-height: 1.65;
+  color: var(--text-dim);
+  line-height: 1.6;
   padding-left: 16px;
   border-left: 1px solid var(--border-hi);
   margin-top: 4px;
@@ -591,13 +556,11 @@ body::before {
 .writing-list {
   display: grid;
   gap: 0;
-  border: 0;
-  background: transparent;
 }
 
 .writing-item {
   background: transparent;
-  padding: 14px 0;
+  padding: 12px 0;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -606,15 +569,16 @@ body::before {
   border-bottom: 1px solid var(--border);
 }
 
-.writing-item:hover {
-  background: transparent;
+.writing-item:last-child {
+  border-bottom: none;
 }
 
 .writing-item a {
+  font-family: var(--header);
   color: var(--text);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 400;
   border-bottom: 1px solid var(--border);
 }
 
@@ -624,29 +588,29 @@ body::before {
 }
 
 .writing-date {
+  font-family: var(--mono);
   font-size: 11px;
   color: var(--text-faint);
   letter-spacing: 0;
 }
 
 .writing-more {
-  margin-top: 16px;
+  margin-top: 14px;
   font-size: 12px;
 }
 
 .writing-more a {
+  font-family: var(--mono);
   color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent-dim);
 }
 
 /* ---- CONTACT ---- */
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px 28px;
-  border: 0;
-  background: transparent;
+  gap: 10px 28px;
 }
 
 .contact-row {
@@ -654,29 +618,30 @@ body::before {
   background: transparent;
   overflow: hidden;
   border-bottom: 1px solid var(--border);
-  border-right: 0;
 }
 
 .contact-type {
-  font-size: 10px;
-  letter-spacing: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   color: var(--accent);
   background: transparent;
-  padding: 12px 0;
+  padding: 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 90px;
-  font-weight: 700;
+  min-width: 80px;
+  font-weight: 600;
 }
 
 .contact-row a {
   flex: 1;
-  padding: 12px 0 12px 18px;
+  padding: 10px 0 10px 16px;
   color: var(--text);
   text-decoration: none;
-  font-size: 13px;
+  font-family: var(--mono);
+  font-size: 11px;
   display: flex;
   align-items: center;
   border-bottom: none;
@@ -690,28 +655,39 @@ body::before {
 
 /* ---- FOOTER ---- */
 .footer {
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 40px 24px 60px;
+  padding: 36px 24px 56px;
   text-align: center;
 }
 
 .footer-rule {
   height: 1px;
   background: var(--border);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .footer p {
+  font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0;
+  letter-spacing: 1px;
   color: var(--text-faint);
   text-transform: uppercase;
 }
 
 /* ---- RESPONSIVE ---- */
 @media (max-width: 640px) {
+  .line-gutter {
+    display: none;
+  }
+
+  body {
+    padding-left: 0;
+  }
+
   .nav {
+    left: 0;
+    width: 100%;
     padding: 0 14px;
     height: auto;
     flex-wrap: wrap;
@@ -731,7 +707,7 @@ body::before {
   }
 
   .header {
-    padding: 40px 14px 32px;
+    padding: 36px 14px 28px;
   }
 
   .main {
@@ -739,12 +715,12 @@ body::before {
   }
 
   .section {
-    padding: 40px 0;
+    padding: 32px 0;
   }
 
   .project-header {
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 
   .contact-row {
@@ -756,16 +732,9 @@ body::before {
     justify-content: flex-start;
   }
 }
-<<<<<<< HEAD
 
-@media (min-width: 900px) {
-  .main {
-    padding-left: 130px;
-  }
-
-  .section::before {
-    display: block;
+@media (prefers-reduced-motion: reduce) {
+  .header-cursor {
+    animation: none;
   }
 }
-=======
->>>>>>> 9b46dee ([RONIT]: UPDATE)
