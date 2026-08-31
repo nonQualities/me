@@ -3,26 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Portfolio of Ronit Choudhury, focused on software systems, theoretical computer science, economics, and design.">
+<meta name="theme-color" content="#fbfaf6">
 <title>Ronit Choudhury</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,750&family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
 
-<nav class="nav">
-  <a href="#" class="nav-logo" target="_self">[RC]</a>
+<a class="skip-link" href="#content" target="_self">Skip to content</a>
+
+<nav class="nav" aria-label="Primary navigation">
+  <a href="#" class="nav-logo" target="_self" aria-label="Back to top">[RC]</a>
   <div class="nav-links">
-    <a href="#about" target="_self">ABOUT</a>
-    <a href="#stack" target="_self">STACK</a>
-    <a href="#projects" target="_self">PROJECTS</a>
-    <a href="#github" target="_self">GITHUB</a>
-    <a href="#reading" target="_self">READING</a>
-    <a href="#writing" target="_self">WRITING</a>
-    <a href="#contact" target="_self">CONTACT</a>
+    <a href="#about" target="_self" data-icon="⌂" data-label="About" aria-label="About">ABOUT</a>
+    <a href="#stack" target="_self" data-icon="▦" data-label="Stack" aria-label="Stack">STACK</a>
+    <a href="#projects" target="_self" data-icon="＋" data-label="Projects" aria-label="Projects">PROJECTS</a>
+    <a href="#experience" target="_self" data-icon="◫" data-label="Experience" aria-label="Experience">EXPERIENCE</a>
+    <a href="#github" target="_self" data-icon="⌘" data-label="GitHub" aria-label="GitHub">GITHUB</a>
+    <a href="#reading" target="_self" data-icon="◇" data-label="Reading" aria-label="Reading">READING</a>
+    <a href="#writing" target="_self" data-icon="✎" data-label="Writing" aria-label="Writing">WRITING</a>
+    <a href="#contact" target="_self" data-icon="@" data-label="Contact" aria-label="Contact">CONTACT</a>
   </div>
 </nav>
 
@@ -33,6 +37,7 @@
   </div>
   <h1 class="header-name">RONIT CHOUDHURY<span class="header-cursor">_</span></h1>
   <div class="header-manifesto" id="header-manifesto"></div>
+  <div class="header-snapshot" id="header-snapshot"></div>
   <div class="header-tagline">
     <span>CS / ECONOMICS / DESIGN</span>
     <span>GUWAHATI, ASSAM</span>
@@ -40,7 +45,7 @@
   <div class="header-rule"></div>
 </header>
 
-<main class="main">
+<main class="main" id="content" tabindex="-1">
 
   <section id="about" class="section">
     <div class="section-header">
@@ -74,9 +79,17 @@
     <div class="section-body" id="github-body"></div>
   </section>
 
-  <section id="reading" class="section">
+  <section id="experience" class="section">
     <div class="section-header">
       <span class="section-num">05</span>
+      <h2>EXPERIENCE</h2>
+    </div>
+    <div class="section-body" id="experience-body"></div>
+  </section>
+
+  <section id="reading" class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
       <h2>READING</h2>
     </div>
     <div class="section-body" id="reading-body"></div>
@@ -84,7 +97,7 @@
 
   <section id="writing" class="section">
     <div class="section-header">
-      <span class="section-num">06</span>
+      <span class="section-num">07</span>
       <h2>WRITING</h2>
     </div>
     <div class="section-body" id="writing-body"></div>
@@ -92,7 +105,7 @@
 
   <section id="contact" class="section">
     <div class="section-header">
-      <span class="section-num">07</span>
+      <span class="section-num">08</span>
       <h2>CONTACT</h2>
     </div>
     <div class="section-body" id="contact-body"></div>
