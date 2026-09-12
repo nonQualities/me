@@ -64,14 +64,25 @@ function initSidebar(currentPage) {
     </a>`;
   }).join('');
 
+  const currentIndex = pages.findIndex(p => p.key === currentPage);
+  const nextPageIndex = (currentIndex >= 0 && currentIndex < pages.length - 1) ? currentIndex + 1 : 0;
+  const nextPage = pages[nextPageIndex];
+
   mount.innerHTML = `
     <div class="floating-nav-container">
-      <button class="floating-trigger-btn" id="floating-trigger" aria-label="Toggle navigation" type="button">
-        <span class="accent">≡</span> Menu
-      </button>
+      <div class="floating-nav-btn-group" id="floating-btn-group">
+        <button class="floating-trigger-btn" id="floating-trigger" aria-label="Toggle navigation menu" type="button">
+          <span class="menu-icon">≡</span>
+          <span>Menu</span>
+          <span class="menu-badge">0-8</span>
+        </button>
+        <a href="${nextPage.key}.html" class="floating-next-btn" id="floating-next-btn" title="Next: ${nextPage.label}" aria-label="Go to next page: ${nextPage.label}">
+          <span class="floating-next-icon">→</span>
+        </a>
+      </div>
       <div class="floating-nav-hud is-hidden" id="floating-hud">
         <div class="floating-hud-header">
-          <span class="floating-hud-title">Index</span>
+          <span class="floating-hud-title">Navigation Index</span>
           <span style="cursor:pointer;" id="floating-close" title="Close">✕</span>
         </div>
         <nav class="floating-nav-links">${links}</nav>
@@ -83,15 +94,81 @@ function initSidebar(currentPage) {
     </div>
   `;
 
+  const btnGroup = document.getElementById('floating-btn-group');
   const trigger = document.getElementById('floating-trigger');
   const hud = document.getElementById('floating-hud');
   const closeBtn = document.getElementById('floating-close');
 
-  trigger.addEventListener('click', (e) => { e.stopPropagation(); hud.classList.toggle('is-hidden'); });
-  if (closeBtn) closeBtn.addEventListener('click', () => hud.classList.add('is-hidden'));
-  document.addEventListener('click', (e) => {
-    if (!hud.contains(e.target) && !trigger.contains(e.target)) hud.classList.add('is-hidden');
+  function openHud() {
+    if (hud) hud.classList.remove('is-hidden');
+  }
+
+  function closeHud() {
+    if (hud) hud.classList.add('is-hidden');
+  }
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hud.classList.toggle('is-hidden');
   });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeHud);
+  document.addEventListener('click', (e) => {
+    if (!hud.contains(e.target) && !trigger.contains(e.target)) closeHud();
+  });
+
+  // Trigger glowing wiggle on the menu button group when the user tries to scroll past EOF
+  let wiggleCooldown = false;
+  function triggerWiggle() {
+    const el = btnGroup || trigger;
+    if (!el || wiggleCooldown) return;
+    el.classList.remove('is-wiggling');
+    // Force DOM reflow so animation can restart
+    void el.offsetWidth;
+    el.classList.add('is-wiggling');
+    wiggleCooldown = true;
+    setTimeout(() => {
+      el.classList.remove('is-wiggling');
+      wiggleCooldown = false;
+    }, 900);
+  }
+
+  function isAtEndOfPage() {
+    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const docHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    return (scrollY + windowHeight >= docHeight - 25);
+  }
+
+  // Wheel listener: catch downward wheel attempts when at EOF
+  window.addEventListener('wheel', (e) => {
+    if (e.deltaY > 0 && isAtEndOfPage()) {
+      triggerWiggle();
+    }
+  }, { passive: true });
+
+  // Touch listener: catch mobile pull-up attempts at EOF
+  let touchStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 0) {
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches.length > 0) {
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchY;
+      if (deltaY > 8 && isAtEndOfPage()) {
+        triggerWiggle();
+      }
+    }
+  }, { passive: true });
 
   const hudThemeBtn = hud.querySelector('.theme-toggle-btn');
   if (hudThemeBtn) {
