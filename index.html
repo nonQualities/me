@@ -3,120 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Portfolio of Ronit Choudhury, focused on software systems, theoretical computer science, economics, and design.">
-<meta name="theme-color" content="#fbfaf6">
+<meta name="description" content="Portfolio of Ronit Choudhury — Software Systems, Theoretical Computer Science, Economics, and HCI.">
+<meta name="color-scheme" content="light dark">
 <title>Ronit Choudhury</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,750&family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Datatype:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<base target="_blank">
 </head>
 <body>
 
-<a class="skip-link" href="#content" target="_self">Skip to content</a>
+<div class="theme-toggle-floating">
+  <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme">[Theme: Paper]</button>
+  <button id="hotkeys-toggle-btn" class="rfc-btn" type="button" aria-label="Keyboard Shortcuts" onclick="openHotkeysModal()">[?] Keys</button>
+</div>
 
-<nav class="nav" aria-label="Primary navigation">
-  <a href="#" class="nav-logo" target="_self" aria-label="Back to top">[RC]</a>
-  <div class="nav-links">
-    <a href="#about" target="_self" data-icon="⌂" data-label="About" aria-label="About">ABOUT</a>
-    <a href="#stack" target="_self" data-icon="▦" data-label="Stack" aria-label="Stack">STACK</a>
-    <a href="#projects" target="_self" data-icon="＋" data-label="Projects" aria-label="Projects">PROJECTS</a>
-    <a href="#experience" target="_self" data-icon="◫" data-label="Experience" aria-label="Experience">EXPERIENCE</a>
-    <a href="#github" target="_self" data-icon="⌘" data-label="GitHub" aria-label="GitHub">GITHUB</a>
-    <a href="#reading" target="_self" data-icon="◇" data-label="Reading" aria-label="Reading">READING</a>
-    <a href="#writing" target="_self" data-icon="✎" data-label="Writing" aria-label="Writing">WRITING</a>
-    <a href="#contact" target="_self" data-icon="@" data-label="Contact" aria-label="Contact">CONTACT</a>
-  </div>
-</nav>
+<div class="page-landing">
+  <main class="rfc-main-content">
 
-<header class="header">
-  <div class="header-top">
-    <span class="header-status">STATUS: ONLINE</span>
-    <span class="header-coords">26.1445°N 91.7362°E</span>
-  </div>
-  <h1 class="header-name">RONIT CHOUDHURY<span class="header-cursor">_</span></h1>
-  <div class="header-manifesto" id="header-manifesto"></div>
-  <div class="header-snapshot" id="header-snapshot"></div>
-  <div class="header-tagline">
-    <span>CS / ECONOMICS / DESIGN</span>
-    <span>GUWAHATI, ASSAM</span>
-  </div>
-  <div class="header-rule"></div>
-</header>
+    <header class="hero-header">
+      <div class="hero-meta">
+        <span>Ronit Choudhury</span>
+        <span>Guwahati, Assam &middot; 26.1445&deg;N 91.7362&deg;E</span>
+        <span>September 2026</span>
+      </div>
 
-<main class="main" id="content" tabindex="-1">
+      <span class="page-kicker">Portfolio · 2026</span>
+      <h1 class="hero-name">Ronit Choudhury</h1>
 
-  <section id="about" class="section">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <h2>ABOUT</h2>
-    </div>
-    <div class="section-body" id="about-body"></div>
-  </section>
+      <div class="hero-tagline">
+        Software Systems &middot; Theoretical Computer Science &middot; Economics &middot; Design
+      </div>
 
-  <section id="stack" class="section">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2>STACK</h2>
-    </div>
-    <div class="section-body" id="stack-body"></div>
-  </section>
+      <div class="hero-abstract">
+        <p>I study Software Development at Gauhati University in an Integrated Master of Science program, concurrently reading Economics at IGNOU. My interests centers on theoretical computer science; combined with software development, especially systems programming and human-computer interaction.</p>
+        <p>I prioritize deterministic, lightweight, and fast software over unnecessary framework bloat and arbitrary complexity.</p>
+      </div>
 
-  <section id="projects" class="section">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <h2>PROJECTS</h2>
-    </div>
-    <div class="section-body" id="projects-body"></div>
-  </section>
+      <div id="landing-snapshot"></div>
+    </header>
 
-  <section id="github" class="section">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <h2>GITHUB</h2>
-    </div>
-    <div class="section-body" id="github-body"></div>
-  </section>
+    <nav class="toc-container" aria-label="Table of Contents">
+      <div class="toc-heading">Table of Contents</div>
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a href="about.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">01.</span> About &amp; Principles</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ about.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="stack.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">02.</span> Technical Stack</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ stack.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="projects.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">03.</span> Projects &amp; Systems</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ projects.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="experience.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">04.</span> Experience &amp; Internships</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ experience.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="github.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">05.</span> GitHub Telemetry</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ github.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="reading.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">06.</span> Reading &amp; Notes</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ reading.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="writing.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">07.</span> Writing &amp; Articles</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ writing.html ]</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a href="contact.html" class="toc-link">
+            <span class="toc-title"><span class="toc-num">08.</span> Contact Endpoints</span>
+            <span class="toc-dots"></span>
+            <span class="toc-page">[ contact.html ]</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-  <section id="experience" class="section">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <h2>EXPERIENCE</h2>
-    </div>
-    <div class="section-body" id="experience-body"></div>
-  </section>
+    <footer class="page-footer">
+      <span>Ronit Choudhury // 2026</span>
+      <span>Guwahati, Assam</span>
+    </footer>
 
-  <section id="reading" class="section">
-    <div class="section-header">
-      <span class="section-num">06</span>
-      <h2>READING</h2>
-    </div>
-    <div class="section-body" id="reading-body"></div>
-  </section>
-
-  <section id="writing" class="section">
-    <div class="section-header">
-      <span class="section-num">07</span>
-      <h2>WRITING</h2>
-    </div>
-    <div class="section-body" id="writing-body"></div>
-  </section>
-
-  <section id="contact" class="section">
-    <div class="section-header">
-      <span class="section-num">08</span>
-      <h2>CONTACT</h2>
-    </div>
-    <div class="section-body" id="contact-body"></div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  <div class="footer-rule"></div>
-  <p>// EOF // RONIT CHOUDHURY // 2026</p>
-</footer>
+  </main>
+</div>
 
 <script src="data.js"></script>
 <script src="main.js"></script>
