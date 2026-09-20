@@ -14,10 +14,20 @@
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<div class="theme-toggle-floating">
-  <button id="search-toggle-btn" class="rfc-btn" type="button" aria-label="Search Portfolio" onclick="openCommandPalette()">[Search /]</button>
-  <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme">[Theme: Light]</button>
-  <button id="hotkeys-toggle-btn" class="rfc-btn" type="button" aria-label="Keyboard Shortcuts" onclick="openHotkeysModal()">[?] Keys</button>
+<div class="top-utility-bar theme-toggle-floating">
+  <button id="search-btn" class="rfc-btn icon-btn" type="button" aria-label="Search Portfolio (Hotkey: /)" onclick="openCommandPalette()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <span class="btn-label">Search <kbd>/</kbd></span>
+  </button>
+  <button id="theme-toggle" class="rfc-btn icon-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme (Hotkey: t)">
+    <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <span class="btn-label theme-btn-label">Theme</span>
+  </button>
+  <button id="hotkeys-btn" class="rfc-btn icon-btn" type="button" aria-label="Keyboard Shortcuts (Hotkey: ?)" onclick="openHotkeysModal()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+    <span class="btn-label">Keys <kbd>?</kbd></span>
+  </button>
 </div>
 
 <div class="page-landing">
@@ -25,7 +35,6 @@
 
     <header class="hero-header">
       <div class="hero-meta">
-        <span>Ronit Choudhury</span>
         <span>Guwahati, Assam &middot; 26.1445&deg;N 91.7362&deg;E</span>
         <span>September 2026</span>
       </div>
@@ -38,7 +47,7 @@
       </div>
 
       <div class="hero-abstract">
-        <p>I study Software Development at Gauhati University in an Integrated Master of Science program, concurrently reading Economics at IGNOU. My work bridges theoretical computer science—formal languages, algorithms, and computation theory—with deterministic, low-level systems programming and human-computer interaction.</p>
+        <p>I study Software Development at Gauhati University in an Integrated Master of Science program, concurrently reading Economics at IGNOU. My work bridges theoretical computer science&mdash;formal languages, algorithms, and computation theory&mdash;with deterministic, low-level systems programming and human-computer interaction.</p>
         <p>I prioritize deterministic, lightweight, and fast software over unnecessary framework bloat. This document serves as a complete technical archive, indexing my engineering projects, formal technical stack, academic curricula, research writings, and verified contact channels.</p>
       </div>
 
@@ -137,7 +146,7 @@
     </section>
 
     <footer class="page-footer">
-      <span>Ronit Choudhury // 2026</span>
+      <span>Ronit Choudhury &middot; 2026</span>
       <span>Guwahati, Assam</span>
     </footer>
 

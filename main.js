@@ -32,184 +32,17 @@ function applyTheme(theme) {
   } else {
     document.documentElement.removeAttribute('data-theme');
   }
-  const label = theme === 'dark' ? '[Dark]' : '[Light]';
   document.querySelectorAll('.theme-toggle-btn, #theme-toggle').forEach(btn => {
-    btn.textContent = label;
-  });
-}
-
-/* --------------------------------------------------------------------------
-   2. FLOATING SIDEBAR HUD (inner pages only)
-   -------------------------------------------------------------------------- */
-function initSidebar(currentPage) {
-  const mount = document.getElementById('sidebar-mount');
-  if (!mount) return;
-
-  const pages = [
-    { key: 'index',      num: '00', label: 'Home' },
-    { key: 'about',      num: '01', label: 'About' },
-    { key: 'stack',      num: '02', label: 'Stack' },
-    { key: 'projects',   num: '03', label: 'Projects' },
-    { key: 'experience', num: '04', label: 'Experience' },
-    { key: 'github',     num: '05', label: 'GitHub' },
-    { key: 'reading',    num: '06', label: 'Reading' },
-    { key: 'writing',    num: '07', label: 'Writing' },
-    { key: 'contact',    num: '08', label: 'Contact' }
-  ];
-
-  const links = pages.map(p => {
-    const isCurrent = p.key === currentPage;
-    const active = isCurrent ? ' active' : '';
-    const ariaCurrent = isCurrent ? ' aria-current="page"' : '';
-    return `<a href="${p.key}.html" class="floating-link${active}"${ariaCurrent}>
-      <span class="floating-link-num">${p.num}.</span> ${p.label}
-    </a>`;
-  }).join('');
-
-  const currentIndex = pages.findIndex(p => p.key === currentPage);
-  const nextPageIndex = (currentIndex >= 0 && currentIndex < pages.length - 1) ? currentIndex + 1 : 0;
-  const nextPage = pages[nextPageIndex];
-
-  mount.innerHTML = `
-    <div class="floating-nav-container">
-      <div class="floating-nav-btn-group" id="floating-btn-group">
-        <button class="floating-trigger-btn" id="floating-trigger" aria-label="Toggle navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="floating-hud" type="button">
-          <span class="menu-icon">≡</span>
-          <span>Menu</span>
-          <span class="menu-badge">0-8</span>
-        </button>
-        <a href="${nextPage.key}.html" class="floating-next-btn" id="floating-next-btn" title="Next: ${nextPage.label}" aria-label="Go to next page: ${nextPage.label}">
-          <span class="floating-next-icon">→</span>
-        </a>
-      </div>
-      <div class="floating-nav-hud is-hidden" id="floating-hud" role="region" aria-label="Navigation Menu">
-        <div class="floating-hud-header">
-          <span class="floating-hud-title">Navigation Index</span>
-          <span style="cursor:pointer;" id="floating-close" title="Close menu" role="button" tabindex="0" aria-label="Close navigation menu">✕</span>
-        </div>
-        <nav class="floating-nav-links" aria-label="Site pages">${links}</nav>
-        <div class="floating-hud-footer">
-          <button class="rfc-btn" id="hud-search-btn" type="button" aria-label="Search Portfolio">[Search /]</button>
-          <button class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle theme">[Theme]</button>
-          <button class="rfc-btn" id="hotkeys-open-btn" type="button" aria-label="Keyboard Shortcuts">[?] Keys</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  const btnGroup = document.getElementById('floating-btn-group');
-  const trigger = document.getElementById('floating-trigger');
-  const hud = document.getElementById('floating-hud');
-  const closeBtn = document.getElementById('floating-close');
-
-  function openHud() {
-    if (hud) {
-      hud.classList.remove('is-hidden');
-      if (trigger) trigger.setAttribute('aria-expanded', 'true');
-    }
-  }
-
-  function closeHud() {
-    if (hud) {
-      hud.classList.add('is-hidden');
-      if (trigger) trigger.setAttribute('aria-expanded', 'false');
-    }
-  }
-
-  trigger.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const willBeOpen = hud.classList.contains('is-hidden');
-    if (willBeOpen) {
-      openHud();
+    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme (Hotkey: t)' : 'Switch to dark theme (Hotkey: t)');
+    const labelSpan = btn.querySelector('.theme-btn-label');
+    if (labelSpan) {
+      labelSpan.textContent = theme === 'dark' ? 'Dark' : 'Light';
     } else {
-      closeHud();
+      btn.textContent = theme === 'dark' ? '[Dark]' : '[Light]';
     }
   });
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeHud);
-    closeBtn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        closeHud();
-      }
-    });
-  }
-
-  document.addEventListener('click', (e) => {
-    if (!hud.contains(e.target) && !trigger.contains(e.target)) closeHud();
-  });
-
-  // Trigger glowing wiggle on the menu button group when the user tries to scroll past EOF
-  let wiggleCooldown = false;
-  function triggerWiggle() {
-    const el = btnGroup || trigger;
-    if (!el || wiggleCooldown) return;
-    el.classList.remove('is-wiggling');
-    // Force DOM reflow so animation can restart
-    void el.offsetWidth;
-    el.classList.add('is-wiggling');
-    wiggleCooldown = true;
-    setTimeout(() => {
-      el.classList.remove('is-wiggling');
-      wiggleCooldown = false;
-    }, 900);
-  }
-
-  function isAtEndOfPage() {
-    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-    const windowHeight = window.innerHeight;
-    const docHeight = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight
-    );
-    return (scrollY + windowHeight >= docHeight - 25);
-  }
-
-  // Wheel listener: catch downward wheel attempts when at EOF
-  window.addEventListener('wheel', (e) => {
-    if (e.deltaY > 0 && isAtEndOfPage()) {
-      triggerWiggle();
-    }
-  }, { passive: true });
-
-  // Touch listener: catch mobile pull-up attempts at EOF
-  let touchStartY = 0;
-  window.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      touchStartY = e.touches[0].clientY;
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchmove', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
-      if (deltaY > 8 && isAtEndOfPage()) {
-        triggerWiggle();
-      }
-    }
-  }, { passive: true });
-
-  const hudThemeBtn = hud.querySelector('.theme-toggle-btn');
-  if (hudThemeBtn) {
-    hudThemeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '[Dark]' : '[Light]';
-    hudThemeBtn.addEventListener('click', toggleTheme);
-  }
-
-  const keysBtn = hud.querySelector('#hotkeys-open-btn');
-  if (keysBtn) keysBtn.addEventListener('click', openHotkeysModal);
-
-  const searchBtn = hud.querySelector('#hud-search-btn');
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      closeHud();
-      if (typeof openCommandPalette === 'function') openCommandPalette();
-    });
-  }
 }
+
 
 /* --------------------------------------------------------------------------
    3. HOTKEYS & MODAL ACCESSIBILITY
@@ -257,8 +90,8 @@ function initHotkeys() {
       </div>
       <div class="hotkey-row"><span>Previous Section</span><span class="hotkey-key">[</span></div>
       <div class="hotkey-row"><span>Next Section</span><span class="hotkey-key">]</span></div>
+      <div class="hotkey-row"><span>Toggle Contents</span><span class="hotkey-key">m</span></div>
       <div class="hotkey-row"><span>Toggle Theme</span><span class="hotkey-key">t</span></div>
-      <div class="hotkey-row"><span>Toggle Menu</span><span class="hotkey-key">m</span></div>
       <div class="hotkey-row"><span>Close Dialog</span><span class="hotkey-key">Esc</span></div>
     </div>
   `;
@@ -317,29 +150,20 @@ function initHotkeys() {
     if (e.key === 'Escape') {
       closeHotkeysModal();
       if (typeof closeCommandPalette === 'function') closeCommandPalette();
-      const hud = document.getElementById('floating-hud');
-      const trigger = document.getElementById('floating-trigger');
-      if (hud) {
-        hud.classList.add('is-hidden');
-        if (trigger) trigger.setAttribute('aria-expanded', 'false');
-      }
+      if (typeof closeFloatingContents === 'function') closeFloatingContents();
+      return;
+    }
+
+    // Floating contents toggle: 'm'
+    if (e.key.toLowerCase() === 'm') {
+      e.preventDefault();
+      toggleFloatingContents();
       return;
     }
 
     // Theme toggle: 't'
     if (e.key.toLowerCase() === 't') {
       toggleTheme();
-      return;
-    }
-
-    // Menu toggle: 'm'
-    if (e.key.toLowerCase() === 'm') {
-      const hud = document.getElementById('floating-hud');
-      const trigger = document.getElementById('floating-trigger');
-      if (hud) {
-        const isHidden = hud.classList.toggle('is-hidden');
-        if (trigger) trigger.setAttribute('aria-expanded', !isHidden);
-      }
       return;
     }
 
@@ -416,8 +240,8 @@ function buildSearchCatalog() {
     { title: '00. Overview / Home', desc: 'Landing, summary, core focus, and contact endpoints', url: 'index.html', cat: 'Page' },
     { title: '01. About & Principles', desc: 'Academic training, theoretical CS interests, fine arts background, and manifesto', url: 'about.html', cat: 'Page' },
     { title: '02. Technical Stack', desc: 'Languages, Systems, Machine Learning, Tooling, Theory, and Web/HCI', url: 'stack.html', cat: 'Page' },
-    { title: '03. Projects & Systems', desc: 'SimpOS, PneumoTrack, VeritasEngine, Turing-C, AetherOS', url: 'projects.html', cat: 'Page' },
-    { title: '04. Experience & Work', desc: 'Engineering internships, roles, and academic appointments', url: 'experience.html', cat: 'Page' },
+    { title: '03. Projects & Systems', desc: 'Upagraha, Dasam FSM Simulator, Fluid Simulation Engine, DSL Prototype & Evaluator, FSynth', url: 'projects.html', cat: 'Page' },
+    { title: '04. Experience & Work', desc: 'DITEC, NIELIT, Funked Media, Campus Project Group', url: 'experience.html', cat: 'Page' },
     { title: '05. GitHub Telemetry', desc: 'Repository metrics, language distributions, and commit telemetry', url: 'github.html', cat: 'Page' },
     { title: '06. Reading & Notes', desc: 'Literature, Philosophy, Essays, and 21 Foundational Textbooks', url: 'reading.html', cat: 'Page' },
     { title: '07. Writing & Articles', desc: 'Research essays, technical papers, and system reflections', url: 'writing.html', cat: 'Page' },
@@ -788,28 +612,26 @@ function renderPagePagination(currentPage) {
     : SUBPAGES_MANIFEST[currentIndex + 1];
 
   const pagerNav = document.createElement('nav');
-  pagerNav.className = 'page-pagination';
-  pagerNav.setAttribute('aria-label', 'Section pagination');
+  pagerNav.className = 'page-pagination-compact';
+  pagerNav.setAttribute('aria-label', 'Section navigation');
   pagerNav.innerHTML = `
-    <a href="${prevItem.file}" class="pager-link pager-link-prev" rel="prev" title="Previous: ${prevItem.title} (Hotkey: [)">
-      <span class="pager-arrow" aria-hidden="true">&larr;</span>
-      <span class="pager-meta">
-        <span class="pager-direction">Previous [</span>
-        <span class="pager-name">${prevItem.num}. ${prevItem.title}</span>
-      </span>
+    <a href="${prevItem.file}" class="pager-icon-btn pager-prev" rel="prev" title="Previous: ${prevItem.num}. ${prevItem.title} (Hotkey: [)" aria-label="Previous section: ${prevItem.num}. ${prevItem.title}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
     </a>
-    <a href="index.html" class="pager-link pager-link-home" aria-label="Return to Table of Contents" title="Table of Contents">
-      <span class="pager-meta">
-        <span class="pager-direction">Index</span>
-        <span class="pager-name">00. Overview</span>
-      </span>
+    <a href="index.html" class="pager-icon-btn pager-home" title="Return to Overview / Home (Hotkey: 0)" aria-label="Return to Overview / Home">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
     </a>
-    <a href="${nextItem.file}" class="pager-link pager-link-next" rel="next" title="Next: ${nextItem.title} (Hotkey: ])">
-      <span class="pager-meta">
-        <span class="pager-direction">Next ]</span>
-        <span class="pager-name">${nextItem.num}. ${nextItem.title}</span>
-      </span>
-      <span class="pager-arrow" aria-hidden="true">&rarr;</span>
+    <a href="${nextItem.file}" class="pager-icon-btn pager-next" rel="next" title="Next: ${nextItem.num}. ${nextItem.title} (Hotkey: ])" aria-label="Next section: ${nextItem.num}. ${nextItem.title}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
     </a>
   `;
 
@@ -820,9 +642,132 @@ function renderPagePagination(currentPage) {
   }
 }
 
+/* --------------------------------------------------------------------------
+   3D. MINIMAL FLOATING CONTENTS BUTTON (Collapsible TOC Popover)
+   -------------------------------------------------------------------------- */
+let floatingContentsContainer = null;
+let floatingContentsBtn = null;
+let floatingContentsPanel = null;
+
+function initFloatingContents() {
+  const container = document.createElement('div');
+  container.className = 'floating-contents-container';
+  container.id = 'floating-contents-wrap';
+
+  const path = window.location.pathname;
+  let activeKey = 'index';
+  SUBPAGES_MANIFEST.forEach(p => {
+    if (path.includes(p.key)) activeKey = p.key;
+  });
+
+  const allPages = [
+    { key: 'index', num: '00', title: 'Overview', file: 'index.html' },
+    ...SUBPAGES_MANIFEST
+  ];
+
+  const listHtml = allPages.map(p => {
+    const isActive = p.key === activeKey;
+    const activeClass = isActive ? ' is-active' : '';
+    const currentAttr = isActive ? ' aria-current="page"' : '';
+    return `<a href="${p.file}" class="floating-contents-item${activeClass}"${currentAttr} role="menuitem">
+      <span class="fci-num">${p.num}.</span>
+      <span class="fci-title">${p.title}</span>
+    </a>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="floating-contents-panel" id="floating-contents-panel" role="menu" aria-label="Table of Contents" hidden>
+      <div class="floating-contents-header">
+        <span class="floating-contents-title">Contents</span>
+        <button type="button" class="floating-contents-close" id="floating-contents-close" aria-label="Close contents">✕</button>
+      </div>
+      <nav class="floating-contents-nav" aria-label="Site pages">
+        ${listHtml}
+      </nav>
+    </div>
+    <button type="button" class="floating-contents-btn rfc-btn icon-btn" id="floating-contents-btn"
+            aria-haspopup="true" aria-expanded="false" aria-controls="floating-contents-panel"
+            aria-label="Table of Contents (Hotkey: m)" title="Table of Contents (Hotkey: m)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="17" y2="12"></line>
+        <line x1="3" y1="18" x2="13" y2="18"></line>
+      </svg>
+    </button>
+  `;
+
+  document.body.appendChild(container);
+
+  floatingContentsContainer = container;
+  floatingContentsBtn = container.querySelector('#floating-contents-btn') || document.getElementById('floating-contents-btn');
+  floatingContentsPanel = container.querySelector('#floating-contents-panel') || document.getElementById('floating-contents-panel');
+  const closeBtn = container.querySelector('#floating-contents-close') || document.getElementById('floating-contents-close');
+
+  if (floatingContentsBtn) {
+    floatingContentsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFloatingContents();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeFloatingContents();
+      if (floatingContentsBtn) floatingContentsBtn.focus();
+    });
+  }
+
+  // Close when clicking an item
+  container.querySelectorAll('.floating-contents-item').forEach(item => {
+    item.addEventListener('click', () => {
+      closeFloatingContents();
+    });
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (floatingContentsContainer && !floatingContentsContainer.contains(e.target)) {
+      closeFloatingContents();
+    }
+  });
+
+  // Close on Escape inside panel
+  floatingContentsPanel.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      closeFloatingContents();
+      if (floatingContentsBtn) floatingContentsBtn.focus();
+    }
+  });
+}
+
+function openFloatingContents() {
+  if (!floatingContentsPanel || !floatingContentsBtn) return;
+  floatingContentsPanel.removeAttribute('hidden');
+  floatingContentsPanel.classList.add('is-open');
+  floatingContentsBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeFloatingContents() {
+  if (!floatingContentsPanel || !floatingContentsBtn) return;
+  floatingContentsPanel.classList.remove('is-open');
+  floatingContentsPanel.setAttribute('hidden', '');
+  floatingContentsBtn.setAttribute('aria-expanded', 'false');
+}
+
+function toggleFloatingContents() {
+  if (!floatingContentsPanel) return;
+  if (floatingContentsPanel.classList.contains('is-open')) {
+    closeFloatingContents();
+  } else {
+    openFloatingContents();
+  }
+}
+
 
 /* --------------------------------------------------------------------------
-   4. LANDING PAGE (Unclipped Dual-Mode ASCII Snapshot Table)
+   4. SYSTEM SNAPSHOT TABLE (Used on About Page)
    -------------------------------------------------------------------------- */
 function buildSnapshotTables() {
   if (!Array.isArray(PORTFOLIO_DATA.snapshot)) return { desktop: '', mobile: '' };
@@ -865,8 +810,8 @@ function renderLanding() {
 
   const tables = buildSnapshotTables();
   container.innerHTML = `
-    <pre class="ascii-box ascii-desktop" aria-label="System Snapshot Desktop">${esc(tables.desktop)}</pre>
-    <pre class="ascii-box ascii-mobile" aria-label="System Snapshot Mobile">${esc(tables.mobile)}</pre>
+    <pre class="ascii-box ascii-desktop" aria-label="System Snapshot Desktop">${escapeHtml(tables.desktop)}</pre>
+    <pre class="ascii-box ascii-mobile" aria-label="System Snapshot Mobile">${escapeHtml(tables.mobile)}</pre>
   `;
 }
 
@@ -989,12 +934,6 @@ function renderStackPage() {
   const mobileProfBox = mLines.join('\n');
 
   c.innerHTML = `
-    <div class="newspaper-masthead">
-      <span>Volume 02 · Capability Specification</span>
-      <span>Guwahati, Assam</span>
-      <span>September 2026</span>
-    </div>
-
     <div class="newspaper-grid">
       <div class="newspaper-col">
         ${renderColumnDomains(col1Domains, 0)}
@@ -1232,14 +1171,6 @@ function renderReadingPage() {
   const c = document.getElementById('reading-page-content');
   if (!c) return;
 
-  const mastheadHtml = `
-    <div class="newspaper-masthead">
-      <span>Volume 06 · Reading &amp; Field Catalog</span>
-      <span>Guwahati, Assam</span>
-      <span>September 2026</span>
-    </div>
-  `;
-
   // Column 1: Literature, Philosophy & Essays
   let col1Html = `
     <div class="reading-col-header">
@@ -1351,7 +1282,6 @@ function renderReadingPage() {
   }
 
   c.innerHTML = `
-    ${mastheadHtml}
     <div class="newspaper-grid">
       <div class="newspaper-col">
         ${col1Html}
@@ -1477,6 +1407,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initHotkeys();
   initCommandPalette();
+  initFloatingContents();
 
   const path = window.location.pathname;
   let page = 'index';
@@ -1488,8 +1419,6 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (path.includes('reading'))    page = 'reading';
   else if (path.includes('writing'))    page = 'writing';
   else if (path.includes('contact'))    page = 'contact';
-
-  if (page !== 'index') initSidebar(page);
 
   const renderers = {
     index: renderLanding,
