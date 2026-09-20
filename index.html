@@ -8,20 +8,20 @@
 <title>Ronit Choudhury</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Datatype:wght@100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Montserrat:ital,wght@0,400..900;1,400..900&family=Datatype:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
 <div class="theme-toggle-floating">
-  <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme">[Theme: Paper]</button>
+  <button id="search-toggle-btn" class="rfc-btn" type="button" aria-label="Search Portfolio" onclick="openCommandPalette()">[Search /]</button>
+  <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme">[Theme: Light]</button>
   <button id="hotkeys-toggle-btn" class="rfc-btn" type="button" aria-label="Keyboard Shortcuts" onclick="openHotkeysModal()">[?] Keys</button>
 </div>
 
 <div class="page-landing">
-  <main class="rfc-main-content">
+  <main id="main-content" class="rfc-main-content" tabindex="-1">
 
     <header class="hero-header">
       <div class="hero-meta">
@@ -30,7 +30,7 @@
         <span>September 2026</span>
       </div>
 
-      <span class="page-kicker">Portfolio · 2026</span>
+      <span class="page-kicker">Section 00 · Overview</span>
       <h1 class="hero-name">Ronit Choudhury</h1>
 
       <div class="hero-tagline">
@@ -38,8 +38,8 @@
       </div>
 
       <div class="hero-abstract">
-        <p>I study Software Development at Gauhati University in an Integrated Master of Science program, concurrently reading Economics at IGNOU. My interests centers on theoretical computer science; combined with software development, especially systems programming and human-computer interaction.</p>
-        <p>I prioritize deterministic, lightweight, and fast software over unnecessary framework bloat and arbitrary complexity.</p>
+        <p>I study Software Development at Gauhati University in an Integrated Master of Science program, concurrently reading Economics at IGNOU. My work bridges theoretical computer science—formal languages, algorithms, and computation theory—with deterministic, low-level systems programming and human-computer interaction.</p>
+        <p>I prioritize deterministic, lightweight, and fast software over unnecessary framework bloat. This document serves as a complete technical archive, indexing my engineering projects, formal technical stack, academic curricula, research writings, and verified contact channels.</p>
       </div>
 
       <div id="landing-snapshot"></div>
@@ -106,6 +106,35 @@
         </li>
       </ul>
     </nav>
+
+    <section class="landing-contacts-block" aria-label="Direct Contact Endpoints">
+      <div class="landing-contacts-header">
+        <span class="landing-contacts-title">Direct Contact &amp; Verification Endpoints</span>
+        <span class="landing-contacts-sub">[ Direct Channels ]</span>
+      </div>
+      <div class="landing-contacts-grid">
+        <a href="https://github.com/nonQualities" target="_blank" rel="noopener noreferrer" class="landing-contact-item" data-channel="github">
+          <span class="contact-ch-badge">GitHub</span>
+          <span class="contact-ch-val">@nonQualities</span>
+          <span class="contact-ch-action">&rarr; View Repositories</span>
+        </a>
+        <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank" rel="noopener noreferrer" class="landing-contact-item" data-channel="linkedin">
+          <span class="contact-ch-badge">LinkedIn</span>
+          <span class="contact-ch-val">Ronit Choudhury</span>
+          <span class="contact-ch-action">&rarr; View Profile</span>
+        </a>
+        <a href="mailto:choudhury.ronit@proton.me" class="landing-contact-item" data-channel="proton">
+          <span class="contact-ch-badge">Proton</span>
+          <span class="contact-ch-val">choudhury.ronit@proton.me</span>
+          <span class="contact-ch-action">&rarr; Send Direct Mail</span>
+        </a>
+        <a href="mailto:ronitchoudhury965@gmail.com" class="landing-contact-item" data-channel="gmail">
+          <span class="contact-ch-badge">Gmail</span>
+          <span class="contact-ch-val">ronitchoudhury965@gmail.com</span>
+          <span class="contact-ch-action">&rarr; Send Direct Mail</span>
+        </a>
+      </div>
+    </section>
 
     <footer class="page-footer">
       <span>Ronit Choudhury // 2026</span>

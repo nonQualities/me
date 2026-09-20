@@ -1,7 +1,7 @@
 /* ==========================================================================
    PORTFOLIO ENGINE — Ronit Choudhury
    Architecture: Multi-Page with Floating HUD & Hotkeys
-   Fonts: Courier Prime (body) · Inconsolata (headings & accents)
+   Fonts: Cascadia Code (body) · Montserrat BOLD (headings & accents)
    Accents: Turkish Blue (Light) / Teal Blue (Dark)
    Data source: PORTFOLIO_DATA (data.js)
    ========================================================================== */
@@ -12,7 +12,7 @@
 function initTheme() {
   const stored = localStorage.getItem('rfc-theme');
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(stored || (prefersDark ? 'dark' : 'paper'));
+  applyTheme(stored || (prefersDark ? 'dark' : 'light'));
 
   document.querySelectorAll('.theme-toggle-btn, #theme-toggle').forEach(btn => {
     btn.addEventListener('click', toggleTheme);
@@ -21,7 +21,7 @@ function initTheme() {
 
 function toggleTheme() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  const next = isDark ? 'paper' : 'dark';
+  const next = isDark ? 'light' : 'dark';
   applyTheme(next);
   localStorage.setItem('rfc-theme', next);
 }
@@ -32,7 +32,7 @@ function applyTheme(theme) {
   } else {
     document.documentElement.removeAttribute('data-theme');
   }
-  const label = theme === 'dark' ? '[Dark]' : '[Paper]';
+  const label = theme === 'dark' ? '[Dark]' : '[Light]';
   document.querySelectorAll('.theme-toggle-btn, #theme-toggle').forEach(btn => {
     btn.textContent = label;
   });
@@ -58,8 +58,10 @@ function initSidebar(currentPage) {
   ];
 
   const links = pages.map(p => {
-    const active = p.key === currentPage ? ' active' : '';
-    return `<a href="${p.key}.html" class="floating-link${active}">
+    const isCurrent = p.key === currentPage;
+    const active = isCurrent ? ' active' : '';
+    const ariaCurrent = isCurrent ? ' aria-current="page"' : '';
+    return `<a href="${p.key}.html" class="floating-link${active}"${ariaCurrent}>
       <span class="floating-link-num">${p.num}.</span> ${p.label}
     </a>`;
   }).join('');
@@ -71,7 +73,7 @@ function initSidebar(currentPage) {
   mount.innerHTML = `
     <div class="floating-nav-container">
       <div class="floating-nav-btn-group" id="floating-btn-group">
-        <button class="floating-trigger-btn" id="floating-trigger" aria-label="Toggle navigation menu" type="button">
+        <button class="floating-trigger-btn" id="floating-trigger" aria-label="Toggle navigation menu" aria-haspopup="true" aria-expanded="false" aria-controls="floating-hud" type="button">
           <span class="menu-icon">≡</span>
           <span>Menu</span>
           <span class="menu-badge">0-8</span>
@@ -80,15 +82,16 @@ function initSidebar(currentPage) {
           <span class="floating-next-icon">→</span>
         </a>
       </div>
-      <div class="floating-nav-hud is-hidden" id="floating-hud">
+      <div class="floating-nav-hud is-hidden" id="floating-hud" role="region" aria-label="Navigation Menu">
         <div class="floating-hud-header">
           <span class="floating-hud-title">Navigation Index</span>
-          <span style="cursor:pointer;" id="floating-close" title="Close">✕</span>
+          <span style="cursor:pointer;" id="floating-close" title="Close menu" role="button" tabindex="0" aria-label="Close navigation menu">✕</span>
         </div>
-        <nav class="floating-nav-links">${links}</nav>
+        <nav class="floating-nav-links" aria-label="Site pages">${links}</nav>
         <div class="floating-hud-footer">
-          <button class="rfc-btn theme-toggle-btn" type="button">[Theme]</button>
-          <button class="rfc-btn" id="hotkeys-open-btn" type="button">[?] Keys</button>
+          <button class="rfc-btn" id="hud-search-btn" type="button" aria-label="Search Portfolio">[Search /]</button>
+          <button class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle theme">[Theme]</button>
+          <button class="rfc-btn" id="hotkeys-open-btn" type="button" aria-label="Keyboard Shortcuts">[?] Keys</button>
         </div>
       </div>
     </div>
@@ -100,19 +103,39 @@ function initSidebar(currentPage) {
   const closeBtn = document.getElementById('floating-close');
 
   function openHud() {
-    if (hud) hud.classList.remove('is-hidden');
+    if (hud) {
+      hud.classList.remove('is-hidden');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    }
   }
 
   function closeHud() {
-    if (hud) hud.classList.add('is-hidden');
+    if (hud) {
+      hud.classList.add('is-hidden');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    hud.classList.toggle('is-hidden');
+    const willBeOpen = hud.classList.contains('is-hidden');
+    if (willBeOpen) {
+      openHud();
+    } else {
+      closeHud();
+    }
   });
 
-  if (closeBtn) closeBtn.addEventListener('click', closeHud);
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeHud);
+    closeBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        closeHud();
+      }
+    });
+  }
+
   document.addEventListener('click', (e) => {
     if (!hud.contains(e.target) && !trigger.contains(e.target)) closeHud();
   });
@@ -172,26 +195,50 @@ function initSidebar(currentPage) {
 
   const hudThemeBtn = hud.querySelector('.theme-toggle-btn');
   if (hudThemeBtn) {
-    hudThemeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '[Dark]' : '[Paper]';
+    hudThemeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? '[Dark]' : '[Light]';
     hudThemeBtn.addEventListener('click', toggleTheme);
   }
 
   const keysBtn = hud.querySelector('#hotkeys-open-btn');
   if (keysBtn) keysBtn.addEventListener('click', openHotkeysModal);
+
+  const searchBtn = hud.querySelector('#hud-search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      closeHud();
+      if (typeof openCommandPalette === 'function') openCommandPalette();
+    });
+  }
 }
 
 /* --------------------------------------------------------------------------
-   3. HOTKEYS
+   3. HOTKEYS & MODAL ACCESSIBILITY
    -------------------------------------------------------------------------- */
+const SUBPAGES_MANIFEST = [
+  { key: 'about',      num: '01', title: 'About & Principles', file: 'about.html' },
+  { key: 'stack',      num: '02', title: 'Technical Stack', file: 'stack.html' },
+  { key: 'projects',   num: '03', title: 'Projects & Systems', file: 'projects.html' },
+  { key: 'experience', num: '04', title: 'Experience & Internships', file: 'experience.html' },
+  { key: 'github',     num: '05', title: 'GitHub Telemetry', file: 'github.html' },
+  { key: 'reading',    num: '06', title: 'Reading & Notes', file: 'reading.html' },
+  { key: 'writing',    num: '07', title: 'Writing & Articles', file: 'writing.html' },
+  { key: 'contact',    num: '08', title: 'Contact Endpoints', file: 'contact.html' }
+];
+
+let hotkeysPreviousFocus = null;
+
 function initHotkeys() {
   const modal = document.createElement('div');
   modal.className = 'hotkeys-modal-backdrop';
   modal.id = 'hotkeys-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Keyboard Shortcuts');
   modal.innerHTML = `
-    <div class="hotkeys-dialog" role="dialog" aria-label="Keyboard Shortcuts">
+    <div class="hotkeys-dialog">
       <div class="hotkeys-title">
         <span>Keyboard Shortcuts</span>
-        <span style="cursor:pointer;" id="hotkeys-close">Esc</span>
+        <span style="cursor:pointer;" id="hotkeys-close" role="button" tabindex="0" aria-label="Close dialog">Esc</span>
       </div>
       <div style="margin-bottom:12px; font-size:12px; color:var(--dim);">
         Press a number key to navigate:
@@ -206,33 +253,116 @@ function initHotkeys() {
       <div class="hotkey-row"><span>Writing</span><span class="hotkey-key">7</span></div>
       <div class="hotkey-row"><span>Contact</span><span class="hotkey-key">8</span></div>
       <div class="hotkey-row" style="margin-top:8px; border-top:1px solid var(--border-light); padding-top:6px;">
-        <span>Toggle Theme</span><span class="hotkey-key">t</span>
+        <span>Quick Search</span><span class="hotkey-key">/ or ⌘K</span>
       </div>
+      <div class="hotkey-row"><span>Previous Section</span><span class="hotkey-key">[</span></div>
+      <div class="hotkey-row"><span>Next Section</span><span class="hotkey-key">]</span></div>
+      <div class="hotkey-row"><span>Toggle Theme</span><span class="hotkey-key">t</span></div>
       <div class="hotkey-row"><span>Toggle Menu</span><span class="hotkey-key">m</span></div>
       <div class="hotkey-row"><span>Close Dialog</span><span class="hotkey-key">Esc</span></div>
     </div>
   `;
   document.body.appendChild(modal);
 
-  document.getElementById('hotkeys-close').addEventListener('click', closeHotkeysModal);
+  const closeBtn = document.getElementById('hotkeys-close');
+  closeBtn.addEventListener('click', closeHotkeysModal);
+  closeBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      closeHotkeysModal();
+    }
+  });
+
   modal.addEventListener('click', (e) => { if (e.target === modal) closeHotkeysModal(); });
 
-  window.addEventListener('keydown', (e) => {
-    if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+  // Trap focus inside modal
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      closeBtn.focus();
+    }
+  });
 
+  window.addEventListener('keydown', (e) => {
+    // 1. If Command Palette is open, block all other page functions and hotkeys completely
+    if (cmdPaletteModal && cmdPaletteModal.classList.contains('is-visible')) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeCommandPalette();
+      }
+      return;
+    }
+
+    // 2. If the user is currently typing inside any input, textarea, or editable element, do NOT trigger any hotkeys
+    if (['INPUT', 'TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable) {
+      return;
+    }
+
+    // Command palette triggers: '/' or Cmd+K / Ctrl+K
+    if (e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+      e.preventDefault();
+      e.stopPropagation();
+      openCommandPalette();
+      return;
+    }
+
+    // Hotkeys modal triggers: '?' or Shift+'/'
     if (e.key === '?' || (e.shiftKey && e.key === '/')) {
       e.preventDefault();
       toggleHotkeysModal();
-    } else if (e.key === 'Escape') {
+      return;
+    }
+
+    // Close overlays: Esc
+    if (e.key === 'Escape') {
       closeHotkeysModal();
+      if (typeof closeCommandPalette === 'function') closeCommandPalette();
       const hud = document.getElementById('floating-hud');
-      if (hud) hud.classList.add('is-hidden');
-    } else if (e.key.toLowerCase() === 't') {
+      const trigger = document.getElementById('floating-trigger');
+      if (hud) {
+        hud.classList.add('is-hidden');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      }
+      return;
+    }
+
+    // Theme toggle: 't'
+    if (e.key.toLowerCase() === 't') {
       toggleTheme();
-    } else if (e.key.toLowerCase() === 'm') {
+      return;
+    }
+
+    // Menu toggle: 'm'
+    if (e.key.toLowerCase() === 'm') {
       const hud = document.getElementById('floating-hud');
-      if (hud) hud.classList.toggle('is-hidden');
-    } else if (e.key >= '0' && e.key <= '8') {
+      const trigger = document.getElementById('floating-trigger');
+      if (hud) {
+        const isHidden = hud.classList.toggle('is-hidden');
+        if (trigger) trigger.setAttribute('aria-expanded', !isHidden);
+      }
+      return;
+    }
+
+    // Subpage pagination shortcuts: '[' (prev) and ']' (next)
+    if (e.key === '[' || e.key === ']') {
+      const path = window.location.pathname;
+      const currentSub = SUBPAGES_MANIFEST.find(p => path.includes(p.key));
+      if (currentSub) {
+        e.preventDefault();
+        const idx = SUBPAGES_MANIFEST.indexOf(currentSub);
+        if (e.key === '[') {
+          const target = idx === 0 ? 'index.html' : SUBPAGES_MANIFEST[idx - 1].file;
+          window.location.href = target;
+        } else {
+          const target = idx === SUBPAGES_MANIFEST.length - 1 ? 'index.html' : SUBPAGES_MANIFEST[idx + 1].file;
+          window.location.href = target;
+        }
+      }
+      return;
+    }
+
+    // Number keys 0-8 for direct section jump
+    if (e.key >= '0' && e.key <= '8') {
       const pages = ['index','about','stack','projects','experience','github','reading','writing','contact'];
       window.location.href = pages[parseInt(e.key)] + '.html';
     }
@@ -241,18 +371,455 @@ function initHotkeys() {
 
 function openHotkeysModal() {
   const m = document.getElementById('hotkeys-modal');
-  if (m) m.classList.add('is-visible');
+  if (m) {
+    hotkeysPreviousFocus = document.activeElement;
+    m.classList.add('is-visible');
+    const closeBtn = document.getElementById('hotkeys-close');
+    if (closeBtn) closeBtn.focus();
+  }
 }
 
 function closeHotkeysModal() {
   const m = document.getElementById('hotkeys-modal');
-  if (m) m.classList.remove('is-visible');
+  if (m) {
+    m.classList.remove('is-visible');
+    if (hotkeysPreviousFocus && typeof hotkeysPreviousFocus.focus === 'function') {
+      hotkeysPreviousFocus.focus();
+    }
+  }
 }
 
 function toggleHotkeysModal() {
   const m = document.getElementById('hotkeys-modal');
-  if (m) m.classList.toggle('is-visible');
+  if (m && m.classList.contains('is-visible')) {
+    closeHotkeysModal();
+  } else {
+    openHotkeysModal();
+  }
 }
+
+/* --------------------------------------------------------------------------
+   3B. COMMAND PALETTE / QUICK SEARCH ENGINE (HCI: Jakob's Law)
+   -------------------------------------------------------------------------- */
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function buildSearchCatalog() {
+  const items = [
+    { title: '00. Overview / Home', desc: 'Landing, summary, core focus, and contact endpoints', url: 'index.html', cat: 'Page' },
+    { title: '01. About & Principles', desc: 'Academic training, theoretical CS interests, fine arts background, and manifesto', url: 'about.html', cat: 'Page' },
+    { title: '02. Technical Stack', desc: 'Languages, Systems, Machine Learning, Tooling, Theory, and Web/HCI', url: 'stack.html', cat: 'Page' },
+    { title: '03. Projects & Systems', desc: 'SimpOS, PneumoTrack, VeritasEngine, Turing-C, AetherOS', url: 'projects.html', cat: 'Page' },
+    { title: '04. Experience & Work', desc: 'Engineering internships, roles, and academic appointments', url: 'experience.html', cat: 'Page' },
+    { title: '05. GitHub Telemetry', desc: 'Repository metrics, language distributions, and commit telemetry', url: 'github.html', cat: 'Page' },
+    { title: '06. Reading & Notes', desc: 'Literature, Philosophy, Essays, and 21 Foundational Textbooks', url: 'reading.html', cat: 'Page' },
+    { title: '07. Writing & Articles', desc: 'Research essays, technical papers, and system reflections', url: 'writing.html', cat: 'Page' },
+    { title: '08. Contact Endpoints', desc: 'GitHub, LinkedIn, Proton Mail, Gmail direct communication channels', url: 'contact.html', cat: 'Page' }
+  ];
+
+  if (typeof PORTFOLIO_DATA !== 'undefined' && PORTFOLIO_DATA) {
+    if (PORTFOLIO_DATA.projects) {
+      PORTFOLIO_DATA.projects.forEach(p => {
+        items.push({
+          title: p.name,
+          desc: `${p.tagline || p.desc || ''} [${p.domain || 'Systems'}]`,
+          url: 'projects.html#' + encodeURIComponent(p.name.toLowerCase().replace(/\s+/g, '-')),
+          cat: 'Project'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.stack) {
+      PORTFOLIO_DATA.stack.forEach(s => {
+        items.push({
+          title: s.label,
+          desc: s.items,
+          url: 'stack.html',
+          cat: 'Stack'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.reading) {
+      PORTFOLIO_DATA.reading.forEach(r => {
+        items.push({
+          title: r.title,
+          desc: `${r.author} · ${r.genre || 'Literature'}`,
+          url: 'reading.html',
+          cat: 'Book'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.textbooks) {
+      PORTFOLIO_DATA.textbooks.forEach(t => {
+        items.push({
+          title: t.title,
+          desc: `${t.author} · ${t.publisher || ''} [${t.discipline || 'Textbook'}]`,
+          url: 'reading.html',
+          cat: 'Textbook'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.experience) {
+      PORTFOLIO_DATA.experience.forEach(e => {
+        items.push({
+          title: `${e.role} · ${e.org}`,
+          desc: `${e.period || ''} · ${(e.tags || []).join(', ')}`,
+          url: 'experience.html',
+          cat: 'Experience'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.writing && PORTFOLIO_DATA.writing.items) {
+      PORTFOLIO_DATA.writing.items.forEach(w => {
+        items.push({
+          title: w.title,
+          desc: `Published ${w.date || ''} · Essay & Publication`,
+          url: w.url || 'writing.html',
+          cat: 'Article'
+        });
+      });
+    }
+
+    if (PORTFOLIO_DATA.contact) {
+      const contacts = Array.isArray(PORTFOLIO_DATA.contact)
+        ? PORTFOLIO_DATA.contact
+        : (PORTFOLIO_DATA.contact.channels || []);
+      contacts.forEach(c => {
+        items.push({
+          title: `${c.type}: ${c.value}`,
+          desc: 'Direct Communication Endpoint',
+          url: c.href || c.link || 'contact.html',
+          cat: 'Contact'
+        });
+      });
+    }
+  }
+
+  return items;
+}
+
+let cmdPaletteModal = null;
+let cmdPaletteInput = null;
+let cmdPaletteResults = null;
+let cmdPaletteLive = null;
+let cmdPaletteActiveIndex = 0;
+let cmdPaletteFiltered = [];
+let cmdPalettePreviousFocus = null;
+
+function initCommandPalette() {
+  const catalog = buildSearchCatalog();
+
+  const modal = document.createElement('div');
+  modal.className = 'cmd-palette-backdrop';
+  modal.id = 'cmd-palette-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Command Palette and Quick Search');
+
+  modal.innerHTML = `
+    <div class="cmd-palette-dialog">
+      <div class="cmd-palette-header">
+        <span class="cmd-palette-prompt" aria-hidden="true">&gt;</span>
+        <input class="cmd-palette-input" id="cmd-palette-input" type="text"
+               placeholder="Search pages, projects, books, stack, contacts..."
+               autocomplete="off" spellcheck="false"
+               role="combobox" aria-expanded="true" aria-autocomplete="list"
+               aria-controls="cmd-palette-results">
+        <span class="cmd-palette-esc-hint" id="cmd-palette-close" role="button" tabindex="0" aria-label="Close dialog">ESC</span>
+      </div>
+      <div class="sr-only" role="status" aria-live="polite" id="cmd-palette-live"></div>
+      <ul class="cmd-palette-results" id="cmd-palette-results" role="listbox"></ul>
+      <div class="cmd-palette-footer">
+        <div class="cmd-palette-shortcuts">
+          <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>
+          <span><kbd>&crarr;</kbd> Select</span>
+          <span><kbd>Esc</kbd> Close</span>
+        </div>
+        <div>[ &cmd;K / / ]</div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  cmdPaletteModal = modal;
+  cmdPaletteInput = modal.querySelector('#cmd-palette-input');
+  cmdPaletteResults = modal.querySelector('#cmd-palette-results');
+  cmdPaletteLive = modal.querySelector('#cmd-palette-live');
+
+  function renderList(items) {
+    cmdPaletteFiltered = items;
+    cmdPaletteActiveIndex = 0;
+
+    if (items.length === 0) {
+      cmdPaletteResults.innerHTML = `
+        <div class="cmd-palette-empty">
+          No matching items found. Try searching for a project, book, technology, or page.
+        </div>
+      `;
+      cmdPaletteLive.textContent = 'No matching items found.';
+      return;
+    }
+
+    cmdPaletteLive.textContent = `${items.length} items available.`;
+
+    // Group items by category
+    const groups = {};
+    items.forEach((item, idx) => {
+      if (!groups[item.cat]) groups[item.cat] = [];
+      groups[item.cat].push(item);
+    });
+
+    let html = '';
+    let globalIdx = 0;
+    const catOrder = ['Page', 'Project', 'Experience', 'Article', 'Stack', 'Book', 'Textbook', 'Contact'];
+
+    const sortedCats = Object.keys(groups).sort((a, b) => {
+      let ia = catOrder.indexOf(a);
+      let ib = catOrder.indexOf(b);
+      if (ia === -1) ia = 99;
+      if (ib === -1) ib = 99;
+      return ia - ib;
+    });
+
+    sortedCats.forEach(cat => {
+      html += `<div class="cmd-palette-group-title" aria-hidden="true">${escapeHtml(cat)}s</div>`;
+      groups[cat].forEach(item => {
+        const isSelected = globalIdx === cmdPaletteActiveIndex;
+        html += `
+          <li class="cmd-palette-item${isSelected ? ' is-selected' : ''}"
+              id="cmd-item-${globalIdx}"
+              data-idx="${globalIdx}"
+              data-url="${escapeHtml(item.url)}"
+              role="option"
+              aria-selected="${isSelected}">
+            <div class="cmd-palette-item-main">
+              <span class="cmd-palette-item-title">${escapeHtml(item.title)}</span>
+              <span class="cmd-palette-item-desc">${escapeHtml(item.desc)}</span>
+            </div>
+            <span class="cmd-palette-badge" data-cat="${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
+          </li>
+        `;
+        globalIdx++;
+      });
+    });
+
+    cmdPaletteResults.innerHTML = html;
+
+    cmdPaletteResults.querySelectorAll('.cmd-palette-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const url = el.getAttribute('data-url');
+        if (url) {
+          closeCommandPalette();
+          if (url.startsWith('http')) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+          } else {
+            window.location.href = url;
+          }
+        }
+      });
+      el.addEventListener('mouseenter', () => {
+        const idx = parseInt(el.getAttribute('data-idx'), 10);
+        updateActiveIndex(idx);
+      });
+    });
+  }
+
+  function updateActiveIndex(newIndex) {
+    if (cmdPaletteFiltered.length === 0) return;
+    cmdPaletteActiveIndex = (newIndex + cmdPaletteFiltered.length) % cmdPaletteFiltered.length;
+
+    const allItems = cmdPaletteResults.querySelectorAll('.cmd-palette-item');
+    allItems.forEach((el, idx) => {
+      const isSelected = idx === cmdPaletteActiveIndex;
+      el.classList.toggle('is-selected', isSelected);
+      el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      if (isSelected) {
+        el.scrollIntoView({ block: 'nearest' });
+        cmdPaletteInput.setAttribute('aria-activedescendant', el.id);
+      }
+    });
+  }
+
+  function filterItems(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      renderList(catalog.slice(0, 16));
+      return;
+    }
+
+    const tokens = q.split(/\s+/).filter(Boolean);
+    const matches = catalog.filter(item => {
+      const text = `${item.title} ${item.desc} ${item.cat}`.toLowerCase();
+      return tokens.every(tok => text.includes(tok));
+    });
+
+    renderList(matches.slice(0, 30));
+  }
+
+  cmdPaletteInput.addEventListener('input', (e) => {
+    filterItems(e.target.value);
+  });
+
+  cmdPaletteInput.addEventListener('keydown', (e) => {
+    // Completely isolate search input typing from document/window event listeners
+    e.stopPropagation();
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      updateActiveIndex(cmdPaletteActiveIndex + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      updateActiveIndex(cmdPaletteActiveIndex - 1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (cmdPaletteFiltered[cmdPaletteActiveIndex]) {
+        const url = cmdPaletteFiltered[cmdPaletteActiveIndex].url;
+        closeCommandPalette();
+        if (url.startsWith('http')) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+        } else {
+          window.location.href = url;
+        }
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      closeCommandPalette();
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+    }
+  });
+
+  cmdPaletteInput.addEventListener('keypress', (e) => e.stopPropagation());
+  cmdPaletteInput.addEventListener('keyup', (e) => e.stopPropagation());
+
+  const closeBtn = modal.querySelector('#cmd-palette-close');
+  closeBtn.addEventListener('click', closeCommandPalette);
+  closeBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      closeCommandPalette();
+    }
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeCommandPalette();
+  });
+}
+
+function openCommandPalette() {
+  if (!cmdPaletteModal) return;
+  cmdPalettePreviousFocus = document.activeElement;
+  cmdPaletteModal.classList.add('is-visible');
+  
+  if (cmdPaletteInput) {
+    cmdPaletteInput.value = '';
+    cmdPaletteInput.dispatchEvent(new Event('input'));
+    
+    // Immediate autofocus
+    cmdPaletteInput.focus();
+    
+    // Ensure focus is committed across all browser engines
+    requestAnimationFrame(() => {
+      if (cmdPaletteInput) {
+        cmdPaletteInput.focus();
+        cmdPaletteInput.select();
+      }
+    });
+    setTimeout(() => {
+      if (cmdPaletteInput && document.activeElement !== cmdPaletteInput) {
+        cmdPaletteInput.focus();
+      }
+    }, 25);
+    setTimeout(() => {
+      if (cmdPaletteInput && document.activeElement !== cmdPaletteInput) {
+        cmdPaletteInput.focus();
+      }
+    }, 75);
+  }
+}
+
+function closeCommandPalette() {
+  if (!cmdPaletteModal) return;
+  cmdPaletteModal.classList.remove('is-visible');
+  if (cmdPaletteInput) {
+    cmdPaletteInput.blur();
+  }
+  if (cmdPalettePreviousFocus && typeof cmdPalettePreviousFocus.focus === 'function') {
+    cmdPalettePreviousFocus.focus();
+  }
+}
+
+function toggleCommandPalette() {
+  if (cmdPaletteModal && cmdPaletteModal.classList.contains('is-visible')) {
+    closeCommandPalette();
+  } else {
+    openCommandPalette();
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3C. BIDIRECTIONAL SUBPAGE PAGER (HCI: Hick's Law & Reading Continuity)
+   -------------------------------------------------------------------------- */
+function renderPagePagination(currentPage) {
+  const main = document.querySelector('.rfc-main-content');
+  if (!main) return;
+  const footer = main.querySelector('.page-footer');
+
+  const currentIndex = SUBPAGES_MANIFEST.findIndex(p => p.key === currentPage);
+  if (currentIndex === -1) return;
+
+  const prevItem = currentIndex === 0
+    ? { num: '00', title: 'Overview', file: 'index.html' }
+    : SUBPAGES_MANIFEST[currentIndex - 1];
+
+  const nextItem = currentIndex === SUBPAGES_MANIFEST.length - 1
+    ? { num: '00', title: 'Overview', file: 'index.html' }
+    : SUBPAGES_MANIFEST[currentIndex + 1];
+
+  const pagerNav = document.createElement('nav');
+  pagerNav.className = 'page-pagination';
+  pagerNav.setAttribute('aria-label', 'Section pagination');
+  pagerNav.innerHTML = `
+    <a href="${prevItem.file}" class="pager-link pager-link-prev" rel="prev" title="Previous: ${prevItem.title} (Hotkey: [)">
+      <span class="pager-arrow" aria-hidden="true">&larr;</span>
+      <span class="pager-meta">
+        <span class="pager-direction">Previous [</span>
+        <span class="pager-name">${prevItem.num}. ${prevItem.title}</span>
+      </span>
+    </a>
+    <a href="index.html" class="pager-link pager-link-home" aria-label="Return to Table of Contents" title="Table of Contents">
+      <span class="pager-meta">
+        <span class="pager-direction">Index</span>
+        <span class="pager-name">00. Overview</span>
+      </span>
+    </a>
+    <a href="${nextItem.file}" class="pager-link pager-link-next" rel="next" title="Next: ${nextItem.title} (Hotkey: ])">
+      <span class="pager-meta">
+        <span class="pager-direction">Next ]</span>
+        <span class="pager-name">${nextItem.num}. ${nextItem.title}</span>
+      </span>
+      <span class="pager-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  `;
+
+  if (footer) {
+    main.insertBefore(pagerNav, footer);
+  } else {
+    main.appendChild(pagerNav);
+  }
+}
+
 
 /* --------------------------------------------------------------------------
    4. LANDING PAGE (Unclipped Dual-Mode ASCII Snapshot Table)
@@ -447,6 +1014,14 @@ function renderStackPage() {
 /* --------------------------------------------------------------------------
    7. PROJECTS PAGE
    -------------------------------------------------------------------------- */
+function getTagDomain(tag) {
+  const t = String(tag).toLowerCase();
+  if (['c++', 'rust', 'systems', 'ipc', 'simd', 'memory', 'linux', 'actors'].some(k => t.includes(k))) return 'systems';
+  if (['compilers', 'formal languages', 'algorithms', 'dsl', 'theory', 'dsp', 'audio', 'sound'].some(k => t.includes(k))) return 'theory';
+  if (['hci', 'ui', 'wcag', 'typography', 'accessibility', 'brand', 'vector'].some(k => t.includes(k))) return 'design';
+  return 'general';
+}
+
 function renderProjectsPage() {
   const c = document.getElementById('projects-page-content');
   if (!c || !Array.isArray(PORTFOLIO_DATA.projects)) return;
@@ -454,7 +1029,7 @@ function renderProjectsPage() {
   let html = '';
   PORTFOLIO_DATA.projects.forEach((proj, idx) => {
     const num = String(idx + 1).padStart(2, '0');
-    const tags = (proj.tags || []).map(t => `<span class="project-tag">${esc(t)}</span>`).join(' ');
+    const tags = (proj.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
     const link = proj.link
       ? `<div class="project-link">&rarr; <a href="${esc(proj.link.url)}" target="_blank" rel="noopener noreferrer">${esc(proj.link.text)}</a></div>`
       : '';
@@ -483,7 +1058,7 @@ function renderExperiencePage() {
 
   let html = '';
   PORTFOLIO_DATA.experience.forEach(exp => {
-    const tags = (exp.tags || []).map(t => `<span class="project-tag">${esc(t)}</span>`).join(' ');
+    const tags = (exp.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
     html += `
       <div class="item-card">
         <div class="item-title">${esc(exp.role)} &mdash; ${esc(exp.org)}</div>
@@ -651,23 +1226,141 @@ async function renderGitHubPage() {
 }
 
 /* --------------------------------------------------------------------------
-   10. READING PAGE
+   10. READING PAGE (Dual-Column Broadsheet: Literature vs Textbooks)
    -------------------------------------------------------------------------- */
 function renderReadingPage() {
   const c = document.getElementById('reading-page-content');
-  if (!c || !Array.isArray(PORTFOLIO_DATA.reading)) return;
+  if (!c) return;
 
-  let html = '';
-  PORTFOLIO_DATA.reading.forEach(book => {
-    html += `
-      <div class="item-card">
-        <div class="item-title">${esc(book.title)} &mdash; <span class="dim">${esc(book.author)}</span></div>
-        <div class="item-body">${esc(book.trivia)}</div>
+  const mastheadHtml = `
+    <div class="newspaper-masthead">
+      <span>Volume 06 · Reading &amp; Field Catalog</span>
+      <span>Guwahati, Assam</span>
+      <span>September 2026</span>
+    </div>
+  `;
+
+  // Column 1: Literature, Philosophy & Essays
+  let col1Html = `
+    <div class="reading-col-header">
+      <span class="reading-col-kicker">Division I</span>
+      <h2 class="reading-col-heading">Literature, Philosophy &amp; Essays</h2>
+    </div>
+  `;
+
+  if (Array.isArray(PORTFOLIO_DATA.reading) && PORTFOLIO_DATA.reading.length > 0) {
+    const genreGroups = new Map();
+    PORTFOLIO_DATA.reading.forEach(book => {
+      const genre = book.genre || 'General';
+      if (!genreGroups.has(genre)) {
+        genreGroups.set(genre, []);
+      }
+      genreGroups.get(genre).push(book);
+    });
+
+    let globalIndex = 1;
+    genreGroups.forEach((books, genreName) => {
+      const countLabel = `${books.length} title${books.length !== 1 ? 's' : ''}`;
+      col1Html += `
+        <section class="reading-genre-section">
+          <div class="reading-genre-header">
+            <span class="reading-genre-title">${esc(genreName)}</span>
+            <span class="reading-genre-count">[ ${countLabel} ]</span>
+          </div>
+          <div class="reading-books-list">
+      `;
+
+      books.forEach(book => {
+        const idxStr = String(globalIndex).padStart(2, '0');
+        col1Html += `
+          <div class="reading-book-card">
+            <span class="reading-book-index">[${idxStr}]</span>
+            <div class="reading-book-content">
+              <span class="reading-book-title">${esc(book.title)}</span>
+              <span class="reading-book-sep">&mdash;</span>
+              <span class="reading-book-author">${esc(book.author)}</span>
+            </div>
+          </div>
+        `;
+        globalIndex++;
+      });
+
+      col1Html += `
+          </div>
+        </section>
+      `;
+    });
+  }
+
+  // Column 2: Foundational Textbooks & Academic References
+  let col2Html = `
+    <div class="reading-col-header">
+      <span class="reading-col-kicker">Division II</span>
+      <h2 class="reading-col-heading">Foundational Textbooks</h2>
+    </div>
+  `;
+
+  if (PORTFOLIO_DATA.textbooksNote) {
+    col2Html += `<div class="reading-section-note">${esc(PORTFOLIO_DATA.textbooksNote)}</div>`;
+  }
+
+  if (Array.isArray(PORTFOLIO_DATA.textbooks) && PORTFOLIO_DATA.textbooks.length > 0) {
+    const tbGroups = new Map();
+    PORTFOLIO_DATA.textbooks.forEach(tb => {
+      const genre = tb.genre || 'General';
+      if (!tbGroups.has(genre)) {
+        tbGroups.set(genre, []);
+      }
+      tbGroups.get(genre).push(tb);
+    });
+
+    let tbIndex = 1;
+    tbGroups.forEach((books, genreName) => {
+      const countLabel = `${books.length} volume${books.length !== 1 ? 's' : ''}`;
+      col2Html += `
+        <section class="reading-genre-section">
+          <div class="reading-genre-header">
+            <span class="reading-genre-title">${esc(genreName)}</span>
+            <span class="reading-genre-count">[ ${countLabel} ]</span>
+          </div>
+          <div class="reading-books-list">
+      `;
+
+      books.forEach(tb => {
+        const idxStr = String(tbIndex).padStart(2, '0');
+        const pubHtml = tb.publisher ? `<span class="reading-book-pub">${esc(tb.publisher)}</span>` : '';
+        col2Html += `
+          <div class="reading-book-card">
+            <span class="reading-book-index">[T${idxStr}]</span>
+            <div class="reading-book-content">
+              <span class="reading-book-title">${esc(tb.title)}</span>
+              <span class="reading-book-sep">&mdash;</span>
+              <span class="reading-book-author">${esc(tb.author)}</span>
+              ${pubHtml}
+            </div>
+          </div>
+        `;
+        tbIndex++;
+      });
+
+      col2Html += `
+          </div>
+        </section>
+      `;
+    });
+  }
+
+  c.innerHTML = `
+    ${mastheadHtml}
+    <div class="newspaper-grid">
+      <div class="newspaper-col">
+        ${col1Html}
       </div>
-    `;
-  });
-
-  c.innerHTML = html;
+      <div class="newspaper-col">
+        ${col2Html}
+      </div>
+    </div>
+  `;
 }
 
 /* --------------------------------------------------------------------------
@@ -783,6 +1476,7 @@ function wrapWords(str, maxLen) {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initHotkeys();
+  initCommandPalette();
 
   const path = window.location.pathname;
   let page = 'index';
@@ -810,4 +1504,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   if (renderers[page]) renderers[page]();
+
+  if (page !== 'index') {
+    renderPagePagination(page);
+  }
 });
+
