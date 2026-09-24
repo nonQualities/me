@@ -260,6 +260,17 @@ function buildSearchCatalog() {
       });
     }
 
+    if (PORTFOLIO_DATA.education) {
+      PORTFOLIO_DATA.education.forEach(ed => {
+        items.push({
+          title: `${ed.institution} — ${ed.degree}`,
+          desc: `${ed.department ? ed.department + ' · ' : ''}${ed.status}${ed.cgpa ? ' · CGPA: ' + ed.cgpa : ''}`,
+          url: 'about.html#education',
+          cat: 'Education'
+        });
+      });
+    }
+
     if (PORTFOLIO_DATA.stack) {
       PORTFOLIO_DATA.stack.forEach(s => {
         items.push({
@@ -830,6 +841,22 @@ function renderAboutPage() {
     html += `<p class="rfc-p">${esc(p)}</p>`;
   });
 
+  // Education & Academics
+  if (Array.isArray(PORTFOLIO_DATA.education) && PORTFOLIO_DATA.education.length > 0) {
+    html += '<h2 class="section-heading" id="education">Education &amp; Academics</h2>';
+    html += '<div class="landing-education-block" style="margin-bottom: var(--sp-5);">';
+    html += '<ul class="summary-points-list">';
+    PORTFOLIO_DATA.education.forEach(ed => {
+      if (ed.department) {
+        html += `<li><strong>${esc(ed.institution)}:</strong> ${esc(ed.degree)}, ${esc(ed.department)} (${esc(ed.status)}${ed.cgpa ? ' &middot; Current CGPA: <strong>' + esc(ed.cgpa) + '</strong>' : ''})</li>`;
+      } else {
+        html += `<li><strong>${esc(ed.institution)}:</strong> ${esc(ed.degree)} (${esc(ed.status)})</li>`;
+      }
+    });
+    html += '</ul>';
+    html += '</div>';
+  }
+
   // Quote
   if (PORTFOLIO_DATA.about.quote) {
     html += `
@@ -897,42 +924,6 @@ function renderStackPage() {
     }).join('');
   }
 
-  // 72-char Desktop Telemetry Box using Datatype font
-  const dTag = "+-- [CAPABILITY METRICS & PROFICIENCY PROFILE] ";
-  const dTop = dTag + "-".repeat(72 - dTag.length - 1) + "+";
-  const dHeader = "| DOMAIN             PROFICIENCY TELEMETRY (0% -> 100%)          LEVEL |";
-  const dSep = "+" + "-".repeat(70) + "+";
-  const dLines = [dTop, dHeader, dSep];
-
-  stack.forEach(cat => {
-    const barWidth = 41;
-    const filled = Math.round((cat.level / 100) * barWidth);
-    const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
-    const label = padEnd(truncate(cat.label, 18), 18);
-    const pct = padStart(String(cat.level) + '%', 5);
-    dLines.push(`| ${label} [${bar}] ${pct} |`);
-  });
-  dLines.push(dSep);
-  const desktopProfBox = dLines.join('\n');
-
-  // 46-char Mobile Telemetry Box using Datatype font
-  const mTag = "+-- [CAPABILITY PROFILE] ";
-  const mTop = mTag + "-".repeat(46 - mTag.length - 1) + "+";
-  const mHeader = "| DOMAIN                LEVEL [BAR]      PCT |";
-  const mSep = "+" + "-".repeat(44) + "+";
-  const mLines = [mTop, mHeader, mSep];
-
-  stack.forEach(cat => {
-    const barWidth = 18;
-    const filled = Math.round((cat.level / 100) * barWidth);
-    const bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
-    const label = padEnd(truncate(cat.label, 16), 16);
-    const pct = padStart(String(cat.level) + '%', 4);
-    mLines.push(`| ${label} [${bar}] ${pct} |`);
-  });
-  mLines.push(mSep);
-  const mobileProfBox = mLines.join('\n');
-
   c.innerHTML = `
     <div class="newspaper-grid">
       <div class="newspaper-col">
@@ -941,11 +932,6 @@ function renderStackPage() {
       <div class="newspaper-col">
         ${renderColumnDomains(col2Domains, 2)}
       </div>
-    </div>
-
-    <div class="newspaper-proficiency-box">
-      <pre class="ascii-box datatype-graphic ascii-desktop" aria-label="Competency Matrix Desktop">${esc(desktopProfBox)}</pre>
-      <pre class="ascii-box datatype-graphic ascii-mobile" aria-label="Competency Matrix Mobile">${esc(mobileProfBox)}</pre>
     </div>
   `;
 }

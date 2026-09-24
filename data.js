@@ -9,8 +9,8 @@ const PORTFOLIO_DATA = {
   // ---- ABOUT ----
   about: {
     paragraphs: [
-      "I study Software Development at Gauhati University in an Integrated Master of Science program. Concurrently, I read Economics at Indira Gandhi National Open University (IGNOU).",
-      "My primary interests include theoretical computer science,specifically Programming languages, Theory of Computation and Algorithms. I like programming in general, but I enjoy small, simple yet powerful tools to do so. In development, I am interested more on the systems side of things",
+      "I study Software Development at Gauhati University in an Integrated Master of Science program within the Department of Information Technology (current CGPA: 8.5). Completed Higher Secondary education at B.Borooah College, Guwahati.",
+      "My primary interests include theoretical computer science—specifically programming languages, theory of computation, algorithms—and systems programming. I am currently working on delay-tolerant networks (DTN), building deterministic and resource-efficient network communication software.",
       "I have formal training in Fine Arts. This background directs my approach to human-computer interaction, accessible design, and typography. I prioritize software that is deterministic, lightweight, and fast."
     ],
     quote: {
@@ -18,6 +18,22 @@ const PORTFOLIO_DATA = {
       cite: "Saunders Mac Lane, Categories for the Working Mathematician (1971)"
     }
   },
+
+  // ---- EDUCATION & ACADEMICS ----
+  education: [
+    {
+      institution: "Gauhati University",
+      degree: "Integrated Master of Science (MSc) in Software Development",
+      department: "Department of Information Technology (IT)",
+      status: "Currently Enrolled",
+      cgpa: "8.5"
+    },
+    {
+      institution: "B.Borooah College, Guwahati",
+      degree: "Higher Secondary (HS)",
+      status: "Completed"
+    }
+  ],
 
   // ---- MANIFESTO / PRINCIPLES (ASD-STE100) ----
   manifesto: [
@@ -34,12 +50,12 @@ const PORTFOLIO_DATA = {
       value: "Integrated MSc (Software Development)"
     },
     {
-      label: "Secondary",
-      value: "Economics (BA, IGNOU)"
+      label: "Department",
+      value: "Department of IT, Gauhati University"
     },
     {
       label: "Core Focus",
-      value: "Theory, Systems Architecture, HCI"
+      value: "Delay-Tolerant Networks, Systems, Theory"
     },
     {
       label: "Base",
