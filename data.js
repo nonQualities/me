@@ -11,7 +11,8 @@ const PORTFOLIO_DATA = {
     paragraphs: [
       "I study Software Development at Gauhati University in an Integrated Master of Science program within the Department of Information Technology (current CGPA: 8.5). Completed Higher Secondary education at B.Borooah College, Guwahati.",
       "My primary interests include theoretical computer science—specifically programming languages, theory of computation, algorithms—and systems programming. I am currently working on delay-tolerant networks (DTN), building deterministic and resource-efficient network communication software.",
-      "I have formal training in Fine Arts. This background directs my approach to human-computer interaction, accessible design, and typography. I prioritize software that is deterministic, lightweight, and fast."
+      "I have formal training in Fine Arts. This background directs my approach to human-computer interaction, accessible design, and typography. I prioritize software that is deterministic, lightweight, and fast.",
+      "I serve as the Community Lead for The Free Code Subculture (previously, The Free Code Syndicate), directing our public initiative dedicated to free software, collective systems study, and careful engineering."
     ],
     quote: {
       text: "A monad is a monoid in the category of endofunctors.",
@@ -56,6 +57,10 @@ const PORTFOLIO_DATA = {
     {
       label: "Core Focus",
       value: "Delay-Tolerant Networks, Systems, Theory"
+    },
+    {
+      label: "Community",
+      value: "Community Lead @ Free Code Subculture"
     },
     {
       label: "Base",
@@ -112,12 +117,21 @@ const PORTFOLIO_DATA = {
       }
     },
     {
-      name: "Fluid Simulation Engine",
-      tags: ["C++", "SIMD", "Numerical Physics"],
-      desc: "Two-dimensional fluid dynamics engine based on the Lattice Boltzmann Method (LBM) with a D2Q9 discretization grid. Utilizes cache-aligned structure-of-arrays to maximize memory throughput.",
+      name: "ErgoProxy",
+      tags: ["C#", ".NET", "Linux", "Networking", "TUN"],
+      desc: "Device-wide transparent network tunnel for Linux utilizing virtual TUN interfaces (ergo0), kernel policy routing (fwmark), and a fake-IP DNS resolver. Routes application TCP traffic through upstream HTTP proxies via standard HTTP CONNECT tunnels while preserving end-to-end TLS encryption without root certificate spoofing.",
       link: {
-        text: "github.com/nonQualities/vayunicus",
-        url: "https://github.com/nonQualities/vayunicus"
+        text: "github.com/nonQualities/ergoproxy",
+        url: "https://github.com/nonQualities/ergoproxy"
+      }
+    },
+    {
+      name: "AntiProxy",
+      tags: ["Kotlin", "Android", "BLE", "Cryptography"],
+      desc: "Decentralized classroom attendance verification system operating over Bluetooth Low Energy (BLE) GATT without internet connectivity. Mitigates remote proxy attendance via asymmetric cryptographic proofs signed inside hardware-backed Android Keystore (TEE/StrongBox), physical RSSI proximity validation, and ephemeral session nonces.",
+      link: {
+        text: "github.com/The3AMOrg/anti-proxy",
+        url: "https://github.com/The3AMOrg/anti-proxy"
       }
     },
     {
@@ -148,6 +162,14 @@ const PORTFOLIO_DATA = {
 
   // ---- EXPERIENCE (ASD-STE100) ----
   experience: [
+    {
+      role: "Community Lead",
+      org: "The Free Code Subculture (previously, Syndicate)",
+      period: "April 2026 – Present",
+      url: "https://thefreecodesyndicate.github.io/fcs-site/",
+      summary: "Directing the community for open software, collective study, and careful engineering. Organizing public RFCs, collaborative systems study, and open-source infrastructure.",
+      tags: ["Community Lead", "Free Software", "Open Source", "Systems", "RFCs"]
+    },
     {
       role: "Technical Intern",
       org: "Directorate of Information Technology, Electronics and Communications",
@@ -518,6 +540,11 @@ const PORTFOLIO_DATA = {
   writing: {
     items: [
       {
+        title: "Software as Engineering in Constraints.",
+        date: "Oct 2026",
+        url: "https://medium.com/@ronitchoudhury965/software-as-engineering-in-constraints-7962630ca0c4"
+      },
+      {
         title: "I Built a CSMA Simulator and Accidentally Read a 1975 Paper About It",
         date: "Apr 2026",
         url: "https://medium.com/@ronitchoudhury965/i-built-a-csma-simulator-and-accidentally-read-a-1975-paper-about-it-66dfe56c35ea"
@@ -536,6 +563,11 @@ const PORTFOLIO_DATA = {
 
   // ---- CONTACT ----
   contact: [
+    {
+      type: "Subculture",
+      value: "Free Code Subculture",
+      href: "https://thefreecodesyndicate.github.io/fcs-site/"
+    },
     {
       type: "Proton",
       value: "choudhury.ronit@proton.me",

@@ -240,8 +240,8 @@ function buildSearchCatalog() {
     { title: '00. Overview / Home', desc: 'Landing, summary, core focus, and contact endpoints', url: 'index.html', cat: 'Page' },
     { title: '01. About & Principles', desc: 'Academic training, theoretical CS interests, fine arts background, and manifesto', url: 'about.html', cat: 'Page' },
     { title: '02. Technical Stack', desc: 'Languages, Systems, Machine Learning, Tooling, Theory, and Web/HCI', url: 'stack.html', cat: 'Page' },
-    { title: '03. Projects & Systems', desc: 'Upagraha, Dasam FSM Simulator, Fluid Simulation Engine, DSL Prototype & Evaluator, FSynth', url: 'projects.html', cat: 'Page' },
-    { title: '04. Experience & Work', desc: 'DITEC, NIELIT, Funked Media, Campus Project Group', url: 'experience.html', cat: 'Page' },
+    { title: '03. Projects & Systems', desc: 'Upagraha, Dasam FSM Simulator, ErgoProxy, AntiProxy, DSL Prototype & Evaluator, FSynth', url: 'projects.html', cat: 'Page' },
+    { title: '04. Experience & Work', desc: 'The Free Code Subculture, DITEC, NIELIT, Funked Media, Campus Group', url: 'experience.html', cat: 'Page' },
     { title: '05. GitHub Telemetry', desc: 'Repository metrics, language distributions, and commit telemetry', url: 'github.html', cat: 'Page' },
     { title: '06. Reading & Notes', desc: 'Literature, Philosophy, Essays, and 21 Foundational Textbooks', url: 'reading.html', cat: 'Page' },
     { title: '07. Writing & Articles', desc: 'Research essays, technical papers, and system reflections', url: 'writing.html', cat: 'Page' },
@@ -835,11 +835,13 @@ function renderAboutPage() {
 
   let html = '';
 
-  // Background
-  html += '<h2 class="section-heading">Background</h2>';
+  // Background Narrative Card
+  html += '<article class="about-card glass-panel">';
+  html += '<div class="about-card-header"><span class="about-card-kicker">[ NARRATIVE // ACADEMIC FOUNDATIONS ]</span><h2 class="section-heading">Background</h2></div>';
   PORTFOLIO_DATA.about.paragraphs.forEach(p => {
     html += `<p class="rfc-p">${esc(p)}</p>`;
   });
+  html += '</article>';
 
   // Education & Academics
   if (Array.isArray(PORTFOLIO_DATA.education) && PORTFOLIO_DATA.education.length > 0) {
@@ -867,14 +869,16 @@ function renderAboutPage() {
     `;
   }
 
-  // Principles
+  // Principles Card
   if (Array.isArray(PORTFOLIO_DATA.manifesto) && PORTFOLIO_DATA.manifesto.length > 0) {
-    html += '<h2 class="section-heading">Principles</h2>';
+    html += '<article class="about-card glass-panel">';
+    html += '<div class="about-card-header"><span class="about-card-kicker">[ OPERATIONAL DIRECTIVES // MANIFESTO ]</span><h2 class="section-heading">Principles</h2></div>';
     html += '<ul class="newspaper-items">';
     PORTFOLIO_DATA.manifesto.forEach(item => {
       html += `<li>${esc(item)}</li>`;
     });
     html += '</ul>';
+    html += '</article>';
   }
 
   // System Snapshot ASCII Box
@@ -941,8 +945,8 @@ function renderStackPage() {
    -------------------------------------------------------------------------- */
 function getTagDomain(tag) {
   const t = String(tag).toLowerCase();
-  if (['c++', 'rust', 'systems', 'ipc', 'simd', 'memory', 'linux', 'actors'].some(k => t.includes(k))) return 'systems';
-  if (['compilers', 'formal languages', 'algorithms', 'dsl', 'theory', 'dsp', 'audio', 'sound'].some(k => t.includes(k))) return 'theory';
+  if (['c++', 'rust', 'systems', 'ipc', 'simd', 'memory', 'linux', 'actors', 'networking', 'tun', 'c#', '.net', 'kotlin', 'ble', 'android'].some(k => t.includes(k))) return 'systems';
+  if (['compilers', 'formal languages', 'algorithms', 'dsl', 'theory', 'dsp', 'audio', 'sound', 'cryptography', 'automata'].some(k => t.includes(k))) return 'theory';
   if (['hci', 'ui', 'wcag', 'typography', 'accessibility', 'brand', 'vector'].some(k => t.includes(k))) return 'design';
   return 'general';
 }
@@ -954,13 +958,14 @@ function renderProjectsPage() {
   let html = '';
   PORTFOLIO_DATA.projects.forEach((proj, idx) => {
     const num = String(idx + 1).padStart(2, '0');
+    const slug = proj.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const tags = (proj.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
     const link = proj.link
       ? `<div class="project-link">&rarr; <a href="${esc(proj.link.url)}" target="_blank" rel="noopener noreferrer">${esc(proj.link.text)}</a></div>`
       : '';
 
     html += `
-      <article class="project-card">
+      <article class="project-card" id="${slug}">
         <div class="project-name-line">
           <span class="project-title"><span class="project-num">${num}.</span>${esc(proj.name)}</span>
           <div class="project-tags">${tags}</div>
@@ -983,16 +988,28 @@ function renderExperiencePage() {
 
   let html = '';
   PORTFOLIO_DATA.experience.forEach(exp => {
+    const isCommunityLead = exp.role.includes('Community Lead');
     const tags = (exp.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
+    const orgLink = exp.url
+      ? `<div class="item-link">&rarr; <a href="${esc(exp.url)}" target="_blank" rel="noopener noreferrer">${esc(exp.url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a></div>`
+      : '';
+    const featuredBadge = isCommunityLead
+      ? `<span class="featured-role-badge">[ COMMUNITY LEADERSHIP ]</span>`
+      : '';
+
     html += `
-      <div class="item-card">
-        <div class="item-title">${esc(exp.role)} &mdash; ${esc(exp.org)}</div>
+      <article class="item-card exp-card ${isCommunityLead ? 'featured-card' : ''}">
+        <div class="item-header-row">
+          <div class="item-title">${esc(exp.role)} &mdash; ${esc(exp.org)}</div>
+          ${featuredBadge}
+        </div>
         <div class="item-meta">
-          <span>${esc(exp.period)}</span>
-          <span>${tags}</span>
+          <span class="exp-period">${esc(exp.period)}</span>
+          <span class="exp-tags">${tags}</span>
         </div>
         <div class="item-body">${esc(exp.summary)}</div>
-      </div>
+        ${orgLink}
+      </article>
     `;
   });
 
@@ -1282,28 +1299,128 @@ function renderReadingPage() {
 /* --------------------------------------------------------------------------
    11. WRITING PAGE
    -------------------------------------------------------------------------- */
+function renderWritingCards(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return '<p class="rfc-p">No articles available.</p>';
+  }
+  return items.map(item => {
+    const snippetHtml = item.snippet
+      ? `<div class="item-snippet">${esc(item.snippet)}</div>`
+      : '';
+    return `
+      <article class="item-card writing-card">
+        <div class="writing-card-header">
+          <div class="item-title"><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a></div>
+          <span class="writing-pub-badge">Medium</span>
+        </div>
+        <div class="item-meta">
+          <span class="writing-date">${esc(item.date)}</span>
+          <span class="meta-sep">&middot;</span>
+          <span class="writing-author">Ronit Choudhury</span>
+        </div>
+        ${snippetHtml}
+        <div class="item-link">
+          <a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" class="writing-read-link">
+            Read Publication &rarr;
+          </a>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+async function fetchLiveMediumArticles(forceRefresh = false) {
+  const statusEl = document.getElementById('medium-status-text');
+  const dotEl = document.getElementById('medium-status-dot');
+  const listEl = document.getElementById('medium-articles-list');
+  if (!listEl) return;
+
+  if (statusEl) statusEl.textContent = 'Synchronizing with Medium RSS feed...';
+  if (dotEl) dotEl.className = 'medium-status-dot is-fetching';
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6500);
+
+    const res = await fetch('https://feed2json.org/convert?url=https://medium.com/feed/@ronitchoudhury965', {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (Array.isArray(data.items) && data.items.length > 0) {
+      const fetchedItems = data.items.map(entry => {
+        let dateStr = 'Medium';
+        if (entry.date_published) {
+          const d = new Date(entry.date_published);
+          if (!isNaN(d.getTime())) {
+            dateStr = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          }
+        }
+        let snippet = '';
+        const rawText = entry.summary || entry.content_html || '';
+        if (rawText) {
+          const tmp = document.createElement('div');
+          tmp.innerHTML = rawText;
+          snippet = (tmp.textContent || tmp.innerText || '').trim();
+          if (snippet.length > 180) snippet = snippet.slice(0, 180).trim() + '...';
+        }
+
+        return {
+          title: entry.title,
+          date: dateStr,
+          url: entry.url,
+          snippet: snippet
+        };
+      });
+
+      listEl.innerHTML = renderWritingCards(fetchedItems);
+      if (statusEl) statusEl.textContent = `Live Synced (${fetchedItems.length} publications from @ronitchoudhury965)`;
+      if (dotEl) dotEl.className = 'medium-status-dot is-online';
+      return;
+    }
+  } catch (err) {
+    console.warn('Medium feed live synchronization fallback:', err.message);
+  }
+
+  // Fallback to verified cached entries
+  if (statusEl) statusEl.textContent = 'Displaying Verified Stored Articles (Offline / Cached)';
+  if (dotEl) dotEl.className = 'medium-status-dot is-cached';
+}
+
 function renderWritingPage() {
   const c = document.getElementById('writing-page-content');
   if (!c || !PORTFOLIO_DATA.writing) return;
 
-  let html = '';
+  const cachedItems = Array.isArray(PORTFOLIO_DATA.writing.items) ? PORTFOLIO_DATA.writing.items : [];
 
-  if (Array.isArray(PORTFOLIO_DATA.writing.items)) {
-    PORTFOLIO_DATA.writing.items.forEach(item => {
-      html += `
-        <div class="item-card">
-          <div class="item-title"><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a></div>
-          <div class="item-meta">${esc(item.date)} · Medium</div>
-        </div>
-      `;
-    });
-  }
+  c.innerHTML = `
+    <div class="medium-feed-hud-header">
+      <div class="medium-feed-status">
+        <span id="medium-status-dot" class="medium-status-dot is-cached"></span>
+        <span id="medium-status-text">Displaying Verified Stored Articles</span>
+      </div>
+      <button type="button" class="medium-refresh-btn" onclick="fetchLiveMediumArticles(true)" aria-label="Refresh latest Medium articles">
+        ⟲ Sync Latest Feed
+      </button>
+    </div>
+    <div id="medium-articles-list">
+      ${renderWritingCards(cachedItems)}
+    </div>
+  `;
 
   if (PORTFOLIO_DATA.writing.moreLink) {
-    html += `<p class="rfc-p" style="margin-top:24px;">&rarr; <a href="${esc(PORTFOLIO_DATA.writing.moreLink.url)}" target="_blank" rel="noopener noreferrer">${esc(PORTFOLIO_DATA.writing.moreLink.text)}</a></p>`;
+    const moreP = document.createElement('p');
+    moreP.className = 'rfc-p';
+    moreP.style.marginTop = '28px';
+    moreP.innerHTML = `&rarr; <a href="${esc(PORTFOLIO_DATA.writing.moreLink.url)}" target="_blank" rel="noopener noreferrer">${esc(PORTFOLIO_DATA.writing.moreLink.text)}</a>`;
+    c.appendChild(moreP);
   }
 
-  c.innerHTML = html;
+  // Trigger live background fetch
+  fetchLiveMediumArticles(false);
 }
 
 /* --------------------------------------------------------------------------
@@ -1423,5 +1540,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page !== 'index') {
     renderPagePagination(page);
   }
+
+  // Dynamic light focal tracking for optical glass specular glints
+  window.addEventListener('mousemove', (e) => {
+    const px = ((e.clientX / window.innerWidth) * 100).toFixed(2);
+    const py = ((e.clientY / window.innerHeight) * 100).toFixed(2);
+    document.documentElement.style.setProperty('--mouse-x', px + '%');
+    document.documentElement.style.setProperty('--mouse-y', py + '%');
+  }, { passive: true });
 });
 
