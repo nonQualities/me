@@ -55,7 +55,8 @@ const SUBPAGES_MANIFEST = [
   { key: 'github',     num: '05', title: 'GitHub Telemetry', file: 'github.html' },
   { key: 'reading',    num: '06', title: 'Reading & Notes', file: 'reading.html' },
   { key: 'writing',    num: '07', title: 'Writing & Articles', file: 'writing.html' },
-  { key: 'contact',    num: '08', title: 'Contact Endpoints', file: 'contact.html' }
+  { key: 'contact',    num: '08', title: 'Contact Endpoints', file: 'contact.html' },
+  { key: 'watchlist',  num: '09', title: 'Watchlist & Leisure', file: 'watchlist.html' }
 ];
 
 let hotkeysPreviousFocus = null;
@@ -85,6 +86,7 @@ function initHotkeys() {
       <div class="hotkey-row"><span>Reading</span><span class="hotkey-key">6</span></div>
       <div class="hotkey-row"><span>Writing</span><span class="hotkey-key">7</span></div>
       <div class="hotkey-row"><span>Contact</span><span class="hotkey-key">8</span></div>
+      <div class="hotkey-row"><span>Watchlist</span><span class="hotkey-key">9</span></div>
       <div class="hotkey-row" style="margin-top:8px; border-top:1px solid var(--border-light); padding-top:6px;">
         <span>Quick Search</span><span class="hotkey-key">/ or ⌘K</span>
       </div>
@@ -185,9 +187,9 @@ function initHotkeys() {
       return;
     }
 
-    // Number keys 0-8 for direct section jump
-    if (e.key >= '0' && e.key <= '8') {
-      const pages = ['index','about','stack','projects','experience','github','reading','writing','contact'];
+    // Number keys 0-9 for direct section jump
+    if (e.key >= '0' && e.key <= '9') {
+      const pages = ['index','about','stack','projects','experience','github','reading','writing','contact','watchlist'];
       window.location.href = pages[parseInt(e.key)] + '.html';
     }
   });
@@ -245,7 +247,8 @@ function buildSearchCatalog() {
     { title: '05. GitHub Telemetry', desc: 'Repository metrics, language distributions, and commit telemetry', url: 'github.html', cat: 'Page' },
     { title: '06. Reading & Notes', desc: 'Literature, Philosophy, Essays, and 21 Foundational Textbooks', url: 'reading.html', cat: 'Page' },
     { title: '07. Writing & Articles', desc: 'Research essays, technical papers, and system reflections', url: 'writing.html', cat: 'Page' },
-    { title: '08. Contact Endpoints', desc: 'GitHub, LinkedIn, Proton Mail, Gmail direct communication channels', url: 'contact.html', cat: 'Page' }
+    { title: '08. Contact Endpoints', desc: 'GitHub, LinkedIn, Proton Mail, Gmail direct communication channels', url: 'contact.html', cat: 'Page' },
+    { title: '09. Watchlist & Leisure', desc: 'Anime series, anime films, western television, and non-academic media', url: 'watchlist.html', cat: 'Page' }
   ];
 
   if (typeof PORTFOLIO_DATA !== 'undefined' && PORTFOLIO_DATA) {
@@ -338,6 +341,39 @@ function buildSearchCatalog() {
           cat: 'Contact'
         });
       });
+    }
+
+    if (PORTFOLIO_DATA.watchlist) {
+      if (Array.isArray(PORTFOLIO_DATA.watchlist.animeSeries)) {
+        PORTFOLIO_DATA.watchlist.animeSeries.forEach(item => {
+          items.push({
+            title: item.title,
+            desc: 'Anime Series · Watchlist',
+            url: 'watchlist.html',
+            cat: 'Anime'
+          });
+        });
+      }
+      if (Array.isArray(PORTFOLIO_DATA.watchlist.animeMovies)) {
+        PORTFOLIO_DATA.watchlist.animeMovies.forEach(item => {
+          items.push({
+            title: item.title,
+            desc: 'Anime Feature Film · Watchlist',
+            url: 'watchlist.html',
+            cat: 'Anime Film'
+          });
+        });
+      }
+      if (Array.isArray(PORTFOLIO_DATA.watchlist.liveActionSeries)) {
+        PORTFOLIO_DATA.watchlist.liveActionSeries.forEach(item => {
+          items.push({
+            title: item.title,
+            desc: 'Television Series · Watchlist',
+            url: 'watchlist.html',
+            cat: 'TV Series'
+          });
+        });
+      }
     }
   }
 
@@ -1458,6 +1494,414 @@ function renderContactPage() {
 }
 
 /* --------------------------------------------------------------------------
+   12B. WATCHLIST & LEISURE PAGE (Non-Academic Catalog)
+   -------------------------------------------------------------------------- */
+function renderWatchlistPage() {
+  const c = document.getElementById('watchlist-page-content');
+  if (!c || !PORTFOLIO_DATA.watchlist) return;
+
+  const quotes = PORTFOLIO_DATA.watchlist.quotes || [];
+  const animeSeries = PORTFOLIO_DATA.watchlist.animeSeries || [];
+  const animeMovies = PORTFOLIO_DATA.watchlist.animeMovies || [];
+  const liveSeries = PORTFOLIO_DATA.watchlist.liveActionSeries || [];
+  const totalCount = animeSeries.length + animeMovies.length + liveSeries.length;
+
+  const allSpotlights = [
+    ...animeSeries.filter(s => s.spotlight).map(s => ({ ...s, format: 'series' })),
+    ...animeMovies.filter(m => m.spotlight).map(m => ({ ...m, format: 'movies' })),
+    ...liveSeries.filter(l => l.spotlight).map(l => ({ ...l, format: 'live' }))
+  ];
+
+  let activeCategory = 'all'; // 'all', 'series', 'movies', 'live', 'spotlight'
+  let activeGenre = 'all'; // 'all', 'scifi', 'romance', 'action', 'psychological', 'drama'
+  let searchQuery = '';
+  let quoteIndex = 0;
+
+  function renderGenreTags(genreStr) {
+    if (!genreStr) return '';
+    const tags = genreStr.split('·').map(s => s.trim()).filter(Boolean);
+    return tags.map(tag => {
+      let cls = 'anime-tag-general';
+      const t = tag.toLowerCase();
+      if (t.includes('sci-fi') || t.includes('cyberpunk') || t.includes('space') || t.includes('mecha') || t.includes('time travel')) {
+        cls = 'anime-tag-scifi';
+      } else if (t.includes('romance') || t.includes('shoujo')) {
+        cls = 'anime-tag-romance';
+      } else if (t.includes('action') || t.includes('shonen') || t.includes('adventure') || t.includes('supernatural') || t.includes('fantasy')) {
+        cls = 'anime-tag-action';
+      } else if (t.includes('psychological') || t.includes('thriller') || t.includes('mystery') || t.includes('crime') || t.includes('horror')) {
+        cls = 'anime-tag-psycho';
+      } else if (t.includes('drama') || t.includes('music') || t.includes('slice of life') || t.includes('comedy') || t.includes('historical')) {
+        cls = 'anime-tag-drama';
+      }
+      return `<span class="anime-genre-pill ${cls}">${esc(tag)}</span>`;
+    }).join('');
+  }
+
+  function matchesGenre(item) {
+    if (activeGenre === 'all') return true;
+    const g = (item.genre || '').toLowerCase();
+    if (activeGenre === 'scifi') return /sci-fi|cyberpunk|space|mecha|time travel/i.test(g);
+    if (activeGenre === 'romance') return /romance|shoujo/i.test(g);
+    if (activeGenre === 'action') return /action|shonen|adventure|supernatural|fantasy/i.test(g);
+    if (activeGenre === 'psychological') return /psychological|thriller|mystery|crime|horror/i.test(g);
+    if (activeGenre === 'drama') return /drama|music|slice of life|comedy|historical/i.test(g);
+    return true;
+  }
+
+  function matchesSearch(item, q) {
+    if (!q) return true;
+    const titleMatch = (item.title || '').toLowerCase().includes(q);
+    const jpMatch = (item.jp || '').toLowerCase().includes(q);
+    const genreMatch = (item.genre || '').toLowerCase().includes(q);
+    return titleMatch || jpMatch || genreMatch;
+  }
+
+  function renderQuoteHtml() {
+    if (!quotes.length) return '';
+    const q = quotes[quoteIndex];
+    return `
+      <div class="anime-quote-hud" role="region" aria-label="Featured Anime Quote">
+        <div class="anime-quote-telemetry">
+          <span class="anime-quote-status"><span class="pulse-dot"></span> QUOTE STREAM // 心に残る名言</span>
+          <button type="button" class="anime-quote-cycle-btn" id="anime-next-quote-btn" title="Cycle featured quote">
+            <span>次へ NEXT</span> <span class="quote-cycle-icon">↻</span>
+          </button>
+        </div>
+        <div class="anime-quote-content">
+          <p class="anime-quote-jp" lang="ja">${esc(q.jp)}</p>
+          <blockquote class="anime-quote-en">&ldquo;${esc(q.text)}&rdquo;</blockquote>
+          <cite class="anime-quote-cite">
+            <span class="quote-author">${esc(q.author)}</span>
+            <span class="quote-sep">//</span>
+            <span class="quote-source">${esc(q.source)}</span>
+          </cite>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindQuoteListener() {
+    const nextBtn = document.getElementById('anime-next-quote-btn');
+    if (!nextBtn) return;
+    nextBtn.onclick = () => {
+      quoteIndex = (quoteIndex + 1) % (quotes.length || 1);
+      const qContainer = document.getElementById('anime-quote-container');
+      if (qContainer) {
+        qContainer.innerHTML = renderQuoteHtml();
+        bindQuoteListener();
+      }
+    };
+  }
+
+  function render() {
+    const q = searchQuery.trim().toLowerCase();
+
+    // Filter Series
+    const filteredSeries = animeSeries.filter(item => {
+      if (activeCategory === 'spotlight' && !item.spotlight) return false;
+      if (activeCategory !== 'all' && activeCategory !== 'series' && activeCategory !== 'spotlight') return false;
+      return matchesGenre(item) && matchesSearch(item, q);
+    });
+
+    // Filter Movies
+    const filteredMovies = animeMovies.filter(item => {
+      if (activeCategory === 'spotlight' && !item.spotlight) return false;
+      if (activeCategory !== 'all' && activeCategory !== 'movies' && activeCategory !== 'spotlight') return false;
+      return matchesGenre(item) && matchesSearch(item, q);
+    });
+
+    // Filter Live
+    const filteredLive = liveSeries.filter(item => {
+      if (activeCategory === 'spotlight' && !item.spotlight) return false;
+      if (activeCategory !== 'all' && activeCategory !== 'live' && activeCategory !== 'spotlight') return false;
+      return matchesGenre(item) && matchesSearch(item, q);
+    });
+
+    const currentMatches = filteredSeries.length + filteredMovies.length + filteredLive.length;
+
+    let html = `
+      <!-- Featured Anime Quote HUD -->
+      <div id="anime-quote-container">
+        ${renderQuoteHtml()}
+      </div>
+
+      <!-- Cyberpunk HUD Telemetry Metrics -->
+      <div class="anime-stats-hud" role="region" aria-label="Anime Telemetry Overview">
+        <button type="button" class="anime-stat-card ${activeCategory === 'all' ? 'is-active' : ''}" data-cat="all">
+          <span class="stat-meta">
+            <span class="stat-indicator"></span>
+            <span class="stat-en">TOTAL ARCHIVE</span>
+          </span>
+          <span class="stat-num">${totalCount}</span>
+          <span class="stat-jp">全タイトル</span>
+        </button>
+        <button type="button" class="anime-stat-card ${activeCategory === 'series' ? 'is-active' : ''}" data-cat="series">
+          <span class="stat-meta">
+            <span class="stat-indicator series-ind"></span>
+            <span class="stat-en">TV SERIES</span>
+          </span>
+          <span class="stat-num">${animeSeries.length}</span>
+          <span class="stat-jp">テレビアニメ</span>
+        </button>
+        <button type="button" class="anime-stat-card ${activeCategory === 'movies' ? 'is-active' : ''}" data-cat="movies">
+          <span class="stat-meta">
+            <span class="stat-indicator movies-ind"></span>
+            <span class="stat-en">FILMS &amp; MOVIES</span>
+          </span>
+          <span class="stat-num">${animeMovies.length}</span>
+          <span class="stat-jp">劇場版映画</span>
+        </button>
+        <button type="button" class="anime-stat-card ${activeCategory === 'live' ? 'is-active' : ''}" data-cat="live">
+          <span class="stat-meta">
+            <span class="stat-indicator live-ind"></span>
+            <span class="stat-en">TV &amp; DRAMA</span>
+          </span>
+          <span class="stat-num">${liveSeries.length}</span>
+          <span class="stat-jp">実写ドラマ</span>
+        </button>
+        <button type="button" class="anime-stat-card ${activeCategory === 'spotlight' ? 'is-active' : ''}" data-cat="spotlight">
+          <span class="stat-meta">
+            <span class="stat-indicator spot-ind"></span>
+            <span class="stat-en">MASTERWORKS</span>
+          </span>
+          <span class="stat-num">${allSpotlights.length}</span>
+          <span class="stat-jp">殿堂入り名作</span>
+        </button>
+      </div>
+
+      <!-- Spotlight Hall of Fame (Showcase on initial view or spotlight filter) -->
+      ${(activeCategory === 'all' && !q && activeGenre === 'all') ? `
+        <section class="anime-spotlight-section" aria-label="Masterwork Spotlight Showcase">
+          <div class="anime-section-header">
+            <div>
+              <span class="anime-section-badge">HALL OF FAME // 殿堂入り名作選</span>
+              <h2 class="anime-section-title">Iconic Masterworks &amp; Standouts</h2>
+            </div>
+            <span class="anime-section-tag">CURATED ARCHIVE</span>
+          </div>
+          <div class="anime-spotlight-grid">
+            ${[
+              { id: 26, title: "Steins;Gate", jp: "シュタインズ・ゲート", format: "TV SERIES", genre: "Sci-Fi · Psychological · Thriller" },
+              { id: 1, title: "Your Lie in April", jp: "四月は君の嘘", format: "TV SERIES", genre: "Music · Romance · Drama" },
+              { id: 104, title: "Neon Genesis Evangelion", jp: "新世紀エヴァンゲリオン", format: "TV SERIES", genre: "Mecha · Psychological · Sci-Fi" },
+              { id: 106, title: "Cowboy Bebop", jp: "カウボーイビバップ", format: "TV SERIES", genre: "Space Western · Sci-Fi · Noir" },
+              { id: 1, title: "Your Name", jp: "君の名は。", format: "FILM", genre: "Romance · Supernatural · Drama" },
+              { id: 21, title: "Attack on Titan", jp: "進撃の巨人", format: "TV SERIES", genre: "Action · Dark Fantasy · Mystery" },
+              { id: 103, title: "Frieren: Beyond Journey's End", jp: "葬送のフリーレン", format: "TV SERIES", genre: "Fantasy · Adventure · Slice of Life" },
+              { id: 4, title: "A Silent Voice", jp: "聲の形", format: "FILM", genre: "Drama · Romance · Redemption" }
+            ].map(spot => `
+              <div class="anime-spotlight-card">
+                <div class="spotlight-card-top">
+                  <span class="spotlight-format-badge">${esc(spot.format)}</span>
+                  <span class="spotlight-star-badge">★ MASTERPIECE</span>
+                </div>
+                <div class="spotlight-card-jp" lang="ja">${esc(spot.jp)}</div>
+                <h3 class="spotlight-card-title">${esc(spot.title)}</h3>
+                <div class="spotlight-genre-wrap">${renderGenreTags(spot.genre)}</div>
+                <div class="spotlight-card-foot">
+                  <span class="spotlight-status-dot"></span>
+                  <span class="spotlight-status-txt">ARCHIVED // 視聴済</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- Cyber Control HUD: Format Filter Tabs, Genre Quick Chips, and Search -->
+      <div class="anime-controls-hud">
+        <div class="anime-category-tabs" role="tablist" aria-label="Filter by media category">
+          <button type="button" role="tab" class="anime-cat-btn ${activeCategory === 'all' ? 'is-active' : ''}" data-cat="all" aria-selected="${activeCategory === 'all'}">
+            All Archive <span class="tab-count">${totalCount}</span>
+          </button>
+          <button type="button" role="tab" class="anime-cat-btn ${activeCategory === 'series' ? 'is-active' : ''}" data-cat="series" aria-selected="${activeCategory === 'series'}">
+            Anime Series <span class="tab-count">${animeSeries.length}</span>
+          </button>
+          <button type="button" role="tab" class="anime-cat-btn ${activeCategory === 'movies' ? 'is-active' : ''}" data-cat="movies" aria-selected="${activeCategory === 'movies'}">
+            Anime Films <span class="tab-count">${animeMovies.length}</span>
+          </button>
+          <button type="button" role="tab" class="anime-cat-btn ${activeCategory === 'live' ? 'is-active' : ''}" data-cat="live" aria-selected="${activeCategory === 'live'}">
+            TV &amp; Drama <span class="tab-count">${liveSeries.length}</span>
+          </button>
+          <button type="button" role="tab" class="anime-cat-btn ${activeCategory === 'spotlight' ? 'is-active' : ''}" data-cat="spotlight" aria-selected="${activeCategory === 'spotlight'}">
+            ★ Masterpieces <span class="tab-count">${allSpotlights.length}</span>
+          </button>
+        </div>
+
+        <!-- Quick Genre Chips -->
+        <div class="anime-genre-scroll-wrap" role="region" aria-label="Genre quick filters">
+          <span class="genre-filter-label">GENRE // ジャンル:</span>
+          <div class="anime-genre-chips">
+            <button type="button" class="anime-genre-chip ${activeGenre === 'all' ? 'is-active' : ''}" data-genre="all">All Genres</button>
+            <button type="button" class="anime-genre-chip ${activeGenre === 'scifi' ? 'is-active' : ''}" data-genre="scifi">Sci-Fi &amp; Cyberpunk</button>
+            <button type="button" class="anime-genre-chip ${activeGenre === 'romance' ? 'is-active' : ''}" data-genre="romance">Romance &amp; Slice of Life</button>
+            <button type="button" class="anime-genre-chip ${activeGenre === 'psychological' ? 'is-active' : ''}" data-genre="psychological">Psychological &amp; Mystery</button>
+            <button type="button" class="anime-genre-chip ${activeGenre === 'action' ? 'is-active' : ''}" data-genre="action">Action &amp; Shonen</button>
+            <button type="button" class="anime-genre-chip ${activeGenre === 'drama' ? 'is-active' : ''}" data-genre="drama">Drama &amp; Music</button>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="anime-search-hud">
+          <div class="anime-search-input-wrap">
+            <span class="anime-scan-icon" aria-hidden="true">⌕</span>
+            <input type="search" id="watchlist-search-input" class="anime-search-input"
+                   placeholder="TARGET ACQUISITION // Search by title, Japanese kanji, or genre..."
+                   value="${esc(searchQuery)}" autocomplete="off" autocorrect="off" spellcheck="false"
+                   aria-label="Search anime archive">
+            ${searchQuery ? `<button type="button" id="watchlist-clear-btn" class="anime-clear-btn" aria-label="Clear filter">✕</button>` : ''}
+          </div>
+          <div class="anime-telemetry-status">
+            <span class="telemetry-dot"></span>
+            <span class="telemetry-txt">
+              ${q || activeGenre !== 'all' || activeCategory !== 'all' ? `FILTERED: ${currentMatches} OF ${totalCount} ACQUIRED` : `ALL RECORDS ONLINE: ${totalCount} TITLES`}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Results Catalog -->
+      <div class="anime-results-container" id="watchlist-results-area">
+    `;
+
+    if (currentMatches === 0) {
+      html += `
+        <div class="anime-empty-state">
+          <div class="anime-empty-scanner">
+            <span class="scanner-grid"></span>
+            <span class="empty-kanji">無</span>
+          </div>
+          <p class="anime-empty-title">[ ∅ NO FREQUENCY DETECTED ]</p>
+          <p class="anime-empty-desc">No archive entries matching <strong>&ldquo;${esc(searchQuery || activeGenre)}&rdquo;</strong> in this sector.</p>
+          <button type="button" class="rfc-btn icon-btn" id="watchlist-reset-btn">Reset Radar // 全記録を再表示</button>
+        </div>
+      `;
+    } else {
+      function renderAnimeGroup(groupTitle, groupDivision, items, prefix, badgeCls, badgeText) {
+        if (!items || items.length === 0) return '';
+        let sec = `
+          <section class="anime-group-section" aria-label="${esc(groupTitle)}">
+            <div class="anime-group-header">
+              <div class="anime-group-meta">
+                <span class="anime-group-div">${esc(groupDivision)}</span>
+                <h2 class="anime-group-title">${esc(groupTitle)}</h2>
+              </div>
+              <span class="anime-group-count">[ ${items.length} ${items.length === 1 ? 'RECORD' : 'RECORDS'} ]</span>
+            </div>
+            <div class="anime-cards-grid">
+        `;
+
+        items.forEach(item => {
+          const idxStr = `${prefix}.${String(item.id).padStart(3, '0')}`;
+          sec += `
+            <article class="anime-card ${item.spotlight ? 'is-spotlight' : ''}">
+              <div class="anime-card-header">
+                <span class="anime-card-code">${idxStr}</span>
+                <div class="anime-card-badges">
+                  ${item.spotlight ? `<span class="anime-spot-tag">★ ICON</span>` : ''}
+                  <span class="anime-format-tag ${badgeCls}">${esc(badgeText)}</span>
+                </div>
+              </div>
+              <div class="anime-card-titles">
+                <h3 class="anime-card-en">${esc(item.title)}</h3>
+                ${item.jp ? `<div class="anime-card-jp" lang="ja">${esc(item.jp)}</div>` : ''}
+              </div>
+              <div class="anime-card-genres">
+                ${renderGenreTags(item.genre)}
+              </div>
+              <div class="anime-card-footer">
+                <span class="anime-status-badge">
+                  <span class="status-pip"></span>
+                  <span>COMPLETED // 完</span>
+                </span>
+              </div>
+            </article>
+          `;
+        });
+
+        sec += `
+            </div>
+          </section>
+        `;
+        return sec;
+      }
+
+      html += renderAnimeGroup('Broadcast & OVA Series', 'SECTOR 09-A // テレビシリーズ', filteredSeries, 'EP', 'badge-series', 'TV');
+      html += renderAnimeGroup('Feature Films & Cinematic Releases', 'SECTOR 09-B // 劇場版アニメ', filteredMovies, 'FILM', 'badge-film', 'FILM');
+      html += renderAnimeGroup('Television & Drama Series', 'SECTOR 09-C // 実写ドラマ', filteredLive, 'DRAMA', 'badge-live', 'SERIES');
+    }
+
+    html += `</div>`;
+    c.innerHTML = html;
+
+    bindQuoteListener();
+
+    // Attach Event Listeners
+    const searchInput = c.querySelector('#watchlist-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        render();
+        const reInput = document.getElementById('watchlist-search-input');
+        if (reInput) {
+          reInput.focus();
+          const len = reInput.value.length;
+          reInput.setSelectionRange(len, len);
+        }
+      });
+    }
+
+    const clearBtn = c.querySelector('#watchlist-clear-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        searchQuery = '';
+        render();
+        const reInput = document.getElementById('watchlist-search-input');
+        if (reInput) reInput.focus();
+      });
+    }
+
+    const resetBtn = c.querySelector('#watchlist-reset-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        searchQuery = '';
+        activeCategory = 'all';
+        activeGenre = 'all';
+        render();
+      });
+    }
+
+    // Category Tabs
+    c.querySelectorAll('.anime-cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeCategory = btn.getAttribute('data-cat') || 'all';
+        render();
+      });
+    });
+
+    // Stat Cards
+    c.querySelectorAll('.anime-stat-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const cat = card.getAttribute('data-cat') || 'all';
+        activeCategory = cat;
+        render();
+      });
+    });
+
+    // Genre Chips
+    c.querySelectorAll('.anime-genre-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        activeGenre = chip.getAttribute('data-genre') || 'all';
+        render();
+      });
+    });
+  }
+
+  render();
+}
+
+/* --------------------------------------------------------------------------
    13. UTILITIES
    -------------------------------------------------------------------------- */
 function esc(str) {
@@ -1514,7 +1958,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const path = window.location.pathname;
   let page = 'index';
-  if (path.includes('about'))      page = 'about';
+  if (path.includes('about'))           page = 'about';
   else if (path.includes('stack'))      page = 'stack';
   else if (path.includes('projects'))   page = 'projects';
   else if (path.includes('experience')) page = 'experience';
@@ -1522,6 +1966,7 @@ document.addEventListener('DOMContentLoaded', () => {
   else if (path.includes('reading'))    page = 'reading';
   else if (path.includes('writing'))    page = 'writing';
   else if (path.includes('contact'))    page = 'contact';
+  else if (path.includes('watchlist'))  page = 'watchlist';
 
   const renderers = {
     index: renderLanding,
@@ -1532,7 +1977,8 @@ document.addEventListener('DOMContentLoaded', () => {
     github: renderGitHubPage,
     reading: renderReadingPage,
     writing: renderWritingPage,
-    contact: renderContactPage
+    contact: renderContactPage,
+    watchlist: renderWatchlistPage
   };
 
   if (renderers[page]) renderers[page]();

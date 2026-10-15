@@ -50,6 +50,11 @@
      1. INITIALIZATION & RESIZE
      -------------------------------------------------------------------------- */
   function initSpacetime() {
+    // Only run the interactive 3D simulation on the homepage
+    if (!document.querySelector('.page-landing') && !document.getElementById('spacetime-intro-overlay')) {
+      return;
+    }
+
     canvas = document.getElementById('spacetime-canvas');
     if (!canvas) return;
     ctx = canvas.getContext('2d', { alpha: true });
