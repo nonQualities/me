@@ -66,15 +66,13 @@
     initStars();
     initPhotons();
 
-    // Mouse tracking for interactive gravitational lensing & glass refraction highlights
-    window.addEventListener('mousemove', (e) => {
-      targetMouseX = (e.clientX - cx);
-      targetMouseY = (e.clientY - cy);
-      const px = ((e.clientX / window.innerWidth) * 100).toFixed(2);
-      const py = ((e.clientY / window.innerHeight) * 100).toFixed(2);
-      document.documentElement.style.setProperty('--mouse-x', px + '%');
-      document.documentElement.style.setProperty('--mouse-y', py + '%');
-    }, { passive: true });
+    // Mouse tracking for interactive gravitational lensing on desktop pointers only
+    if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      window.addEventListener('mousemove', (e) => {
+        targetMouseX = (e.clientX - cx);
+        targetMouseY = (e.clientY - cy);
+      }, { passive: true });
+    }
 
     window.addEventListener('scroll', () => {
       scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
@@ -86,6 +84,22 @@
         skipIntro();
       }
     });
+
+    const isMobile = window.innerWidth <= 768;
+    const mobileOptIn = sessionStorage.getItem('spacetime-mobile-optin') === 'true';
+
+    // On mobile devices, 3D simulation is opt-in to eliminate GPU/battery bloat and load instantly
+    if (isMobile && !mobileOptIn) {
+      introActive = false;
+      introProgress = 1.0;
+      isTornOff = true;
+      tearRadius = Math.hypot(width, height);
+      notifyTearoffComplete();
+      if (canvas) canvas.style.display = 'none';
+      const replayBtn = document.querySelector('.warp-replay-btn');
+      if (replayBtn) replayBtn.textContent = '⟲ 3D Warp';
+      return;
+    }
 
     // Check if intro overlay exists on this page, or already played, or reduced motion
     const hasIntroOverlay = !!document.getElementById('spacetime-intro-overlay');
@@ -193,6 +207,15 @@
   }
 
   window.replaySpacetimeWarp = function () {
+    sessionStorage.setItem('spacetime-mobile-optin', 'true');
+    if (canvas) {
+      canvas.style.display = 'block';
+      canvas.classList.add('is-opted-in');
+    }
+    if (!animId) {
+      startTime = performance.now();
+      animId = requestAnimationFrame(renderLoop);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     startIntro();
   };

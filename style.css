@@ -344,10 +344,10 @@ a:hover {
 
 .theme-toggle-floating,
 .top-utility-bar {
-  position: absolute;
-  top: var(--sp-5);
-  right: var(--sp-5);
-  z-index: 30;
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top, 16px));
+  right: max(16px, env(safe-area-inset-right, 16px));
+  z-index: 90;
   display: flex;
   gap: var(--sp-2);
 }
@@ -1841,38 +1841,40 @@ body.space-theme-active .top-utility-bar .rfc-btn:hover {
 
 /* ── Dynamic Optical Specular Glint Layer (Follows cursor light focal point) ── */
 
-.space-theme-active .hero-header::after,
-.space-theme-active .page-header-block::after,
-.space-theme-active .hud-card::after,
-.space-theme-active .stack-badge-item::after,
-.space-theme-active .toc-card::after,
-.space-theme-active .project-card::after,
-.space-theme-active .item-card::after,
-.space-theme-active .gh-repo-card::after,
-.space-theme-active .newspaper-col::after,
-.space-theme-active .reading-genre-section::after,
-.space-theme-active .about-card::after,
-.space-theme-active .glass-panel::after,
-.space-theme-active .landing-contact-item::after,
-.space-theme-active .contact-item::after,
-.space-theme-active .top-utility-bar::after,
-.space-theme-active .page-footer::after,
-.space-theme-active .cmd-palette-dialog::after,
-.space-theme-active .hotkeys-dialog::after,
-.space-theme-active .floating-contents-panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(
-    650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    var(--glass-refraction-light),
-    transparent 55%
-  );
-  opacity: 0.65;
-  transition: opacity 0.3s ease;
-  z-index: 1;
+@media (hover: hover) and (pointer: fine) {
+  .space-theme-active .hero-header::after,
+  .space-theme-active .page-header-block::after,
+  .space-theme-active .hud-card::after,
+  .space-theme-active .stack-badge-item::after,
+  .space-theme-active .toc-card::after,
+  .space-theme-active .project-card::after,
+  .space-theme-active .item-card::after,
+  .space-theme-active .gh-repo-card::after,
+  .space-theme-active .newspaper-col::after,
+  .space-theme-active .reading-genre-section::after,
+  .space-theme-active .about-card::after,
+  .space-theme-active .glass-panel::after,
+  .space-theme-active .landing-contact-item::after,
+  .space-theme-active .contact-item::after,
+  .space-theme-active .top-utility-bar::after,
+  .space-theme-active .page-footer::after,
+  .space-theme-active .cmd-palette-dialog::after,
+  .space-theme-active .hotkeys-dialog::after,
+  .space-theme-active .floating-contents-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--glass-refraction-light),
+      transparent 55%
+    );
+    opacity: 0.65;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
 }
 
 /* Ensure interactive links, buttons, and content stay elevated above glass glint */
@@ -4282,6 +4284,34 @@ body.anime-page-theme {
 }
 
 @media (max-width: 860px) {
+  :root {
+    --glass-blur: none;
+    --glass-blur-hover: none;
+    --hud-bg: rgba(255, 255, 255, 0.95);
+    --hud-bg-hover: #ffffff;
+    --hud-glow: none;
+    --hud-glow-hover: none;
+  }
+
+  [data-theme="dark"] {
+    --hud-bg: rgba(13, 20, 36, 0.95);
+    --hud-bg-hover: #111a2e;
+    --hud-glow: none;
+    --hud-glow-hover: none;
+  }
+
+  /* Disable heavy background-attachment: fixed on mobile which causes full-screen redraws */
+  body.subpage-static-bg,
+  body.space-theme-active,
+  body.anime-page-theme {
+    background-attachment: scroll !important;
+  }
+
+  /* Hide 3D spacetime canvas unless opted-in on mobile */
+  #spacetime-canvas:not(.is-opted-in) {
+    display: none !important;
+  }
+
   .page-inner-layout,
   .page-landing {
     padding: calc(env(safe-area-inset-top, 0px) + 72px) var(--sp-4) var(--sp-8);
@@ -4289,8 +4319,8 @@ body.anime-page-theme {
 
   .theme-toggle-floating,
   .top-utility-bar {
-    top: max(16px, env(safe-area-inset-top, 16px));
-    right: max(16px, env(safe-area-inset-right, 16px));
+    top: max(14px, env(safe-area-inset-top, 14px));
+    right: max(14px, env(safe-area-inset-right, 14px));
   }
 
   .stack-badges-grid {
