@@ -1,13 +1,14 @@
 /* ==========================================================================
    PORTFOLIO ENGINE — Ronit Choudhury
-   Architecture: Multi-Page with Floating HUD & Hotkeys
-   Fonts: Cascadia Code (body) · Montserrat BOLD (headings & accents)
-   Accents: Turkish Blue (Light) / Teal Blue (Dark)
+   Architecture: High-Performance Multi-Page Engine with Terminal HUD
+   Typography: Space Grotesk (Headings) · JetBrains Mono (Data & Body)
+   Accents: Electric Terminal Green (#00ff66) / Deep Emerald (#059669)
    Data source: PORTFOLIO_DATA (data.js)
+   Specification: ASD-STE100 Compliant, Zero-Bloat
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. THEME
+   1. THEME ENGINE
    -------------------------------------------------------------------------- */
 function initTheme() {
   const stored = localStorage.getItem('rfc-theme');
@@ -43,9 +44,8 @@ function applyTheme(theme) {
   });
 }
 
-
 /* --------------------------------------------------------------------------
-   3. HOTKEYS & MODAL ACCESSIBILITY
+   2. SUBPAGES MANIFEST & SIDEBAR NAVIGATION
    -------------------------------------------------------------------------- */
 const SUBPAGES_MANIFEST = [
   { key: 'about',      num: '01', title: 'About & Principles', file: 'about.html' },
@@ -59,6 +59,34 @@ const SUBPAGES_MANIFEST = [
   { key: 'watchlist',  num: '09', title: 'Watchlist & Leisure', file: 'watchlist.html' }
 ];
 
+function initSidebar() {
+  const path = window.location.pathname;
+  let page = 'index';
+  if (path.includes('about'))           page = 'about';
+  else if (path.includes('stack'))      page = 'stack';
+  else if (path.includes('projects'))   page = 'projects';
+  else if (path.includes('experience')) page = 'experience';
+  else if (path.includes('github'))     page = 'github';
+  else if (path.includes('reading'))    page = 'reading';
+  else if (path.includes('writing'))    page = 'writing';
+  else if (path.includes('contact'))    page = 'contact';
+  else if (path.includes('watchlist'))  page = 'watchlist';
+
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    const itemPage = item.getAttribute('data-page');
+    if (itemPage === page) {
+      item.classList.add('is-active');
+      item.setAttribute('aria-current', 'page');
+    } else {
+      item.classList.remove('is-active');
+      item.removeAttribute('aria-current');
+    }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   3. HOTKEYS & MODAL ACCESSIBILITY
+   -------------------------------------------------------------------------- */
 let hotkeysPreviousFocus = null;
 
 function initHotkeys() {
@@ -74,26 +102,25 @@ function initHotkeys() {
         <span>Keyboard Shortcuts</span>
         <span style="cursor:pointer;" id="hotkeys-close" role="button" tabindex="0" aria-label="Close dialog">Esc</span>
       </div>
-      <div style="margin-bottom:12px; font-size:12px; color:var(--dim);">
-        Press a number key to navigate:
+      <div style="margin-bottom:12px; font-size:12px; color:var(--fg-subtle);">
+        Press a number key to navigate directly:
       </div>
-      <div class="hotkey-row"><span>Home</span><span class="hotkey-key">0</span></div>
-      <div class="hotkey-row"><span>About</span><span class="hotkey-key">1</span></div>
-      <div class="hotkey-row"><span>Stack</span><span class="hotkey-key">2</span></div>
-      <div class="hotkey-row"><span>Projects</span><span class="hotkey-key">3</span></div>
-      <div class="hotkey-row"><span>Experience</span><span class="hotkey-key">4</span></div>
-      <div class="hotkey-row"><span>GitHub</span><span class="hotkey-key">5</span></div>
-      <div class="hotkey-row"><span>Reading</span><span class="hotkey-key">6</span></div>
-      <div class="hotkey-row"><span>Writing</span><span class="hotkey-key">7</span></div>
-      <div class="hotkey-row"><span>Contact</span><span class="hotkey-key">8</span></div>
-      <div class="hotkey-row"><span>Watchlist</span><span class="hotkey-key">9</span></div>
-      <div class="hotkey-row" style="margin-top:8px; border-top:1px solid var(--border-light); padding-top:6px;">
+      <div class="hotkey-row"><span>Home / Overview</span><span class="hotkey-key">0</span></div>
+      <div class="hotkey-row"><span>About &amp; Principles</span><span class="hotkey-key">1</span></div>
+      <div class="hotkey-row"><span>Technical Stack</span><span class="hotkey-key">2</span></div>
+      <div class="hotkey-row"><span>Projects &amp; Systems</span><span class="hotkey-key">3</span></div>
+      <div class="hotkey-row"><span>Experience &amp; Internships</span><span class="hotkey-key">4</span></div>
+      <div class="hotkey-row"><span>GitHub Telemetry</span><span class="hotkey-key">5</span></div>
+      <div class="hotkey-row"><span>Reading &amp; Notes</span><span class="hotkey-key">6</span></div>
+      <div class="hotkey-row"><span>Writing &amp; Articles</span><span class="hotkey-key">7</span></div>
+      <div class="hotkey-row"><span>Contact Endpoints</span><span class="hotkey-key">8</span></div>
+      <div class="hotkey-row"><span>Watchlist &amp; Leisure</span><span class="hotkey-key">9</span></div>
+      <div class="hotkey-row" style="margin-top:8px; border-top:1px solid var(--border); padding-top:6px;">
         <span>Quick Search</span><span class="hotkey-key">/ or ⌘K</span>
       </div>
       <div class="hotkey-row"><span>Previous Section</span><span class="hotkey-key">[</span></div>
       <div class="hotkey-row"><span>Next Section</span><span class="hotkey-key">]</span></div>
-      <div class="hotkey-row"><span>Toggle Contents</span><span class="hotkey-key">m</span></div>
-      <div class="hotkey-row"><span>Toggle Theme</span><span class="hotkey-key">t</span></div>
+      <div class="hotkey-row"><span>Toggle Visual Theme</span><span class="hotkey-key">t</span></div>
       <div class="hotkey-row"><span>Close Dialog</span><span class="hotkey-key">Esc</span></div>
     </div>
   `;
@@ -110,7 +137,6 @@ function initHotkeys() {
 
   modal.addEventListener('click', (e) => { if (e.target === modal) closeHotkeysModal(); });
 
-  // Trap focus inside modal
   modal.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -119,7 +145,7 @@ function initHotkeys() {
   });
 
   window.addEventListener('keydown', (e) => {
-    // 1. If Command Palette is open, block all other page functions and hotkeys completely
+    // If Command Palette is open, let palette handle keys
     if (cmdPaletteModal && cmdPaletteModal.classList.contains('is-visible')) {
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -128,7 +154,7 @@ function initHotkeys() {
       return;
     }
 
-    // 2. If the user is currently typing inside any input, textarea, or editable element, do NOT trigger any hotkeys
+    // Do NOT trigger shortcuts when typing inside form inputs
     if (['INPUT', 'TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable) {
       return;
     }
@@ -151,15 +177,7 @@ function initHotkeys() {
     // Close overlays: Esc
     if (e.key === 'Escape') {
       closeHotkeysModal();
-      if (typeof closeCommandPalette === 'function') closeCommandPalette();
-      if (typeof closeFloatingContents === 'function') closeFloatingContents();
-      return;
-    }
-
-    // Floating contents toggle: 'm'
-    if (e.key.toLowerCase() === 'm') {
-      e.preventDefault();
-      toggleFloatingContents();
+      closeCommandPalette();
       return;
     }
 
@@ -187,7 +205,7 @@ function initHotkeys() {
       return;
     }
 
-    // Number keys 0-9 for direct section jump
+    // Number keys 0-9 for direct jump
     if (e.key >= '0' && e.key <= '9') {
       const pages = ['index','about','stack','projects','experience','github','reading','writing','contact','watchlist'];
       window.location.href = pages[parseInt(e.key)] + '.html';
@@ -225,7 +243,7 @@ function toggleHotkeysModal() {
 }
 
 /* --------------------------------------------------------------------------
-   3B. COMMAND PALETTE / QUICK SEARCH ENGINE (HCI: Jakob's Law)
+   4. COMMAND PALETTE / QUICK SEARCH
    -------------------------------------------------------------------------- */
 function escapeHtml(str) {
   if (str == null) return '';
@@ -434,7 +452,7 @@ function initCommandPalette() {
 
     if (items.length === 0) {
       cmdPaletteResults.innerHTML = `
-        <div class="cmd-palette-empty">
+        <div style="padding: 16px; color: var(--fg-subtle); text-align: center; font-size: var(--fs-xs);">
           No matching items found. Try searching for a project, book, technology, or page.
         </div>
       `;
@@ -444,9 +462,8 @@ function initCommandPalette() {
 
     cmdPaletteLive.textContent = `${items.length} items available.`;
 
-    // Group items by category
     const groups = {};
-    items.forEach((item, idx) => {
+    items.forEach(item => {
       if (!groups[item.cat]) groups[item.cat] = [];
       groups[item.cat].push(item);
     });
@@ -478,7 +495,7 @@ function initCommandPalette() {
               <span class="cmd-palette-item-title">${escapeHtml(item.title)}</span>
               <span class="cmd-palette-item-desc">${escapeHtml(item.desc)}</span>
             </div>
-            <span class="cmd-palette-badge" data-cat="${escapeHtml(item.cat)}">${escapeHtml(item.cat)}</span>
+            <span class="cmd-palette-badge">${escapeHtml(item.cat)}</span>
           </li>
         `;
         globalIdx++;
@@ -543,7 +560,6 @@ function initCommandPalette() {
   });
 
   cmdPaletteInput.addEventListener('keydown', (e) => {
-    // Completely isolate search input typing from document/window event listeners
     e.stopPropagation();
 
     if (e.key === 'ArrowDown') {
@@ -596,8 +612,6 @@ function openCommandPalette() {
   if (cmdPaletteInput) {
     cmdPaletteInput.value = '';
     cmdPaletteInput.dispatchEvent(new Event('input'));
-    
-    // Immediate autofocus
     cmdPaletteInput.focus();
     requestAnimationFrame(() => {
       if (cmdPaletteInput && document.activeElement !== cmdPaletteInput) {
@@ -619,16 +633,8 @@ function closeCommandPalette() {
   }
 }
 
-function toggleCommandPalette() {
-  if (cmdPaletteModal && cmdPaletteModal.classList.contains('is-visible')) {
-    closeCommandPalette();
-  } else {
-    openCommandPalette();
-  }
-}
-
 /* --------------------------------------------------------------------------
-   3C. BIDIRECTIONAL SUBPAGE PAGER (HCI: Hick's Law & Reading Continuity)
+   5. BIDIRECTIONAL PAGER & TOUCH SWIPES
    -------------------------------------------------------------------------- */
 function renderPagePagination(currentPage) {
   const main = document.querySelector('.rfc-main-content');
@@ -705,11 +711,9 @@ function initSwipeNavigation() {
       if (!currentSub) return;
       const idx = SUBPAGES_MANIFEST.indexOf(currentSub);
       if (deltaX < 0) {
-        // Swipe left -> Next
         const target = idx === SUBPAGES_MANIFEST.length - 1 ? 'index.html' : SUBPAGES_MANIFEST[idx + 1].file;
         window.location.href = target;
       } else {
-        // Swipe right -> Prev
         const target = idx === 0 ? 'index.html' : SUBPAGES_MANIFEST[idx - 1].file;
         window.location.href = target;
       }
@@ -718,136 +722,11 @@ function initSwipeNavigation() {
 }
 
 /* --------------------------------------------------------------------------
-   3D. MINIMAL FLOATING CONTENTS BUTTON (Collapsible TOC Popover)
-   -------------------------------------------------------------------------- */
-let floatingContentsContainer = null;
-let floatingContentsBtn = null;
-let floatingContentsPanel = null;
-
-function initFloatingContents() {
-  const container = document.createElement('div');
-  container.className = 'floating-contents-container';
-  container.id = 'floating-contents-wrap';
-
-  const path = window.location.pathname;
-  let activeKey = 'index';
-  SUBPAGES_MANIFEST.forEach(p => {
-    if (path.includes(p.key)) activeKey = p.key;
-  });
-
-  const allPages = [
-    { key: 'index', num: '00', title: 'Overview', file: 'index.html' },
-    ...SUBPAGES_MANIFEST
-  ];
-
-  const listHtml = allPages.map(p => {
-    const isActive = p.key === activeKey;
-    const activeClass = isActive ? ' is-active' : '';
-    const currentAttr = isActive ? ' aria-current="page"' : '';
-    return `<a href="${p.file}" class="floating-contents-item${activeClass}"${currentAttr} role="menuitem">
-      <span class="fci-num">${p.num}.</span>
-      <span class="fci-title">${p.title}</span>
-    </a>`;
-  }).join('');
-
-  container.innerHTML = `
-    <div class="floating-contents-panel" id="floating-contents-panel" role="menu" aria-label="Table of Contents" hidden>
-      <div class="floating-contents-header">
-        <span class="floating-contents-title">Contents</span>
-        <button type="button" class="floating-contents-close" id="floating-contents-close" aria-label="Close contents">✕</button>
-      </div>
-      <nav class="floating-contents-nav" aria-label="Site pages">
-        ${listHtml}
-      </nav>
-    </div>
-    <button type="button" class="floating-contents-btn rfc-btn icon-btn" id="floating-contents-btn"
-            aria-haspopup="true" aria-expanded="false" aria-controls="floating-contents-panel"
-            aria-label="Table of Contents (Hotkey: m)" title="Table of Contents (Hotkey: m)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="17" y2="12"></line>
-        <line x1="3" y1="18" x2="13" y2="18"></line>
-      </svg>
-    </button>
-  `;
-
-  document.body.appendChild(container);
-
-  floatingContentsContainer = container;
-  floatingContentsBtn = container.querySelector('#floating-contents-btn') || document.getElementById('floating-contents-btn');
-  floatingContentsPanel = container.querySelector('#floating-contents-panel') || document.getElementById('floating-contents-panel');
-  const closeBtn = container.querySelector('#floating-contents-close') || document.getElementById('floating-contents-close');
-
-  if (floatingContentsBtn) {
-    floatingContentsBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleFloatingContents();
-    });
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeFloatingContents();
-      if (floatingContentsBtn) floatingContentsBtn.focus();
-    });
-  }
-
-  // Close when clicking an item
-  container.querySelectorAll('.floating-contents-item').forEach(item => {
-    item.addEventListener('click', () => {
-      closeFloatingContents();
-    });
-  });
-
-  // Close when clicking outside
-  document.addEventListener('click', (e) => {
-    if (floatingContentsContainer && !floatingContentsContainer.contains(e.target)) {
-      closeFloatingContents();
-    }
-  });
-
-  // Close on Escape inside panel
-  floatingContentsPanel.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      e.stopPropagation();
-      closeFloatingContents();
-      if (floatingContentsBtn) floatingContentsBtn.focus();
-    }
-  });
-}
-
-function openFloatingContents() {
-  if (!floatingContentsPanel || !floatingContentsBtn) return;
-  floatingContentsPanel.removeAttribute('hidden');
-  floatingContentsPanel.classList.add('is-open');
-  floatingContentsBtn.setAttribute('aria-expanded', 'true');
-}
-
-function closeFloatingContents() {
-  if (!floatingContentsPanel || !floatingContentsBtn) return;
-  floatingContentsPanel.classList.remove('is-open');
-  floatingContentsPanel.setAttribute('hidden', '');
-  floatingContentsBtn.setAttribute('aria-expanded', 'false');
-}
-
-function toggleFloatingContents() {
-  if (!floatingContentsPanel) return;
-  if (floatingContentsPanel.classList.contains('is-open')) {
-    closeFloatingContents();
-  } else {
-    openFloatingContents();
-  }
-}
-
-
-/* --------------------------------------------------------------------------
-   4. SYSTEM SNAPSHOT TABLE (Used on About Page)
+   6. SYSTEM SNAPSHOT TABLE (Used on About Page)
    -------------------------------------------------------------------------- */
 function buildSnapshotTables() {
   if (!Array.isArray(PORTFOLIO_DATA.snapshot)) return { desktop: '', mobile: '' };
 
-  // Desktop (66 chars wide, completely unclipped)
   const dC1 = 14, dC2 = 45;
   const dSep = `+-${'-'.repeat(dC1)}-+-${'-'.repeat(dC2)}-+`;
   const dHeader = `| ${padEnd('PARAMETER', dC1)} | ${padEnd('VALUE', dC2)} |`;
@@ -858,7 +737,6 @@ function buildSnapshotTables() {
   });
   dLines.push(dSep);
 
-  // Mobile (46 chars wide, wrapped words cleanly without cutting off)
   const mC1 = 12, mC2 = 27;
   const mSep = `+-${'-'.repeat(mC1)}-+-${'-'.repeat(mC2)}-+`;
   const mHeader = `| ${padEnd('PARAMETER', mC1)} | ${padEnd('VALUE', mC2)} |`;
@@ -879,28 +757,21 @@ function buildSnapshotTables() {
   };
 }
 
+/* --------------------------------------------------------------------------
+   7. PAGE RENDERERS
+   -------------------------------------------------------------------------- */
 function renderLanding() {
-  const container = document.getElementById('landing-snapshot');
-  if (!container || !Array.isArray(PORTFOLIO_DATA.snapshot)) return;
-
-  const tables = buildSnapshotTables();
-  container.innerHTML = `
-    <pre class="ascii-box ascii-desktop" aria-label="System Snapshot Desktop">${escapeHtml(tables.desktop)}</pre>
-    <pre class="ascii-box ascii-mobile" aria-label="System Snapshot Mobile">${escapeHtml(tables.mobile)}</pre>
-  `;
+  // Static HTML is rendered in index.html; nothing dynamic needed for landing.
 }
 
-/* --------------------------------------------------------------------------
-   5. ABOUT PAGE
-   -------------------------------------------------------------------------- */
 function renderAboutPage() {
   const c = document.getElementById('about-page-content');
   if (!c || !PORTFOLIO_DATA.about) return;
 
   let html = '';
 
-  // Background Narrative Card
-  html += '<article class="about-card glass-panel">';
+  // Background Narrative
+  html += '<article class="about-card hud-box-cross">';
   html += '<div class="about-card-header"><span class="about-card-kicker">[ NARRATIVE // ACADEMIC FOUNDATIONS ]</span><h2 class="section-heading">Background</h2></div>';
   PORTFOLIO_DATA.about.paragraphs.forEach(p => {
     html += `<p class="rfc-p">${esc(p)}</p>`;
@@ -933,9 +804,9 @@ function renderAboutPage() {
     `;
   }
 
-  // Principles Card
+  // Principles / Manifesto
   if (Array.isArray(PORTFOLIO_DATA.manifesto) && PORTFOLIO_DATA.manifesto.length > 0) {
-    html += '<article class="about-card glass-panel">';
+    html += '<article class="about-card hud-box-cross">';
     html += '<div class="about-card-header"><span class="about-card-kicker">[ OPERATIONAL DIRECTIVES // MANIFESTO ]</span><h2 class="section-heading">Principles</h2></div>';
     html += '<ul class="newspaper-items">';
     PORTFOLIO_DATA.manifesto.forEach(item => {
@@ -958,25 +829,20 @@ function renderAboutPage() {
   c.innerHTML = html;
 }
 
-/* --------------------------------------------------------------------------
-   6. STACK PAGE (Dual-Column Newspaper Layout)
-   -------------------------------------------------------------------------- */
 function renderStackPage() {
   const c = document.getElementById('stack-page-content');
   if (!c || !Array.isArray(PORTFOLIO_DATA.stack)) return;
 
   const stack = PORTFOLIO_DATA.stack;
-  
-  // Distribute domains into 2 newspaper columns
-  const col1Domains = [stack[0], stack[1]].filter(Boolean); // Languages, Frameworks & Tools
-  const col2Domains = [stack[3], stack[2]].filter(Boolean); // Theory, Design & HCI
+  const col1Domains = [stack[0], stack[1]].filter(Boolean);
+  const col2Domains = [stack[3], stack[2]].filter(Boolean);
 
   function renderColumnDomains(domains, startIndex) {
     return domains.map((cat, idx) => {
       const num = String(startIndex + idx + 1).padStart(2, '0');
       const items = cat.items.split(',').map(s => s.trim()).filter(Boolean);
       return `
-        <div class="newspaper-domain">
+        <div class="newspaper-domain hud-box-cross">
           <div class="newspaper-domain-title">
             <span>${esc(cat.label)}</span>
             <span class="newspaper-domain-num">[${num}]</span>
@@ -1004,9 +870,6 @@ function renderStackPage() {
   `;
 }
 
-/* --------------------------------------------------------------------------
-   7. PROJECTS PAGE
-   -------------------------------------------------------------------------- */
 function getTagDomain(tag) {
   const t = String(tag).toLowerCase();
   if (['c++', 'rust', 'systems', 'ipc', 'simd', 'memory', 'linux', 'actors', 'networking', 'tun', 'c#', '.net', 'kotlin', 'ble', 'android'].some(k => t.includes(k))) return 'systems';
@@ -1023,7 +886,7 @@ function renderProjectsPage() {
   PORTFOLIO_DATA.projects.forEach((proj, idx) => {
     const num = String(idx + 1).padStart(2, '0');
     const slug = proj.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const tags = (proj.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
+    const tags = (proj.tags || []).map(t => `<span class="project-tag">${esc(t)}</span>`).join(' ');
     const link = proj.link
       ? `<div class="project-link">&rarr; <a href="${esc(proj.link.url)}" target="_blank" rel="noopener noreferrer">${esc(proj.link.text)}</a></div>`
       : '';
@@ -1043,9 +906,6 @@ function renderProjectsPage() {
   c.innerHTML = html;
 }
 
-/* --------------------------------------------------------------------------
-   8. EXPERIENCE PAGE
-   -------------------------------------------------------------------------- */
 function renderExperiencePage() {
   const c = document.getElementById('experience-page-content');
   if (!c || !Array.isArray(PORTFOLIO_DATA.experience)) return;
@@ -1053,7 +913,7 @@ function renderExperiencePage() {
   let html = '';
   PORTFOLIO_DATA.experience.forEach(exp => {
     const isCommunityLead = exp.role.includes('Community Lead');
-    const tags = (exp.tags || []).map(t => `<span class="project-tag" data-domain="${getTagDomain(t)}">${esc(t)}</span>`).join(' ');
+    const tags = (exp.tags || []).map(t => `<span class="project-tag">${esc(t)}</span>`).join(' ');
     const orgLink = exp.url
       ? `<div class="item-link">&rarr; <a href="${esc(exp.url)}" target="_blank" rel="noopener noreferrer">${esc(exp.url.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a></div>`
       : '';
@@ -1062,7 +922,7 @@ function renderExperiencePage() {
       : '';
 
     html += `
-      <article class="item-card exp-card ${isCommunityLead ? 'featured-card' : ''}">
+      <article class="item-card">
         <div class="item-header-row">
           <div class="item-title">${esc(exp.role)} &mdash; ${esc(exp.org)}</div>
           ${featuredBadge}
@@ -1080,9 +940,6 @@ function renderExperiencePage() {
   c.innerHTML = html;
 }
 
-/* --------------------------------------------------------------------------
-   9. GITHUB PAGE (Dual-Column: Summary/Analytics on Left, Repos on Right)
-   -------------------------------------------------------------------------- */
 async function renderGitHubPage() {
   const c = document.getElementById('github-page-content');
   if (!c || !PORTFOLIO_DATA.github) return;
@@ -1110,7 +967,6 @@ async function renderGitHubPage() {
     const repos = await reposRes.json();
     const publicRepos = repos.filter(r => !r.fork);
 
-    // Language counts
     const langCounts = {};
     let totalLangs = 0;
     publicRepos.forEach(r => {
@@ -1120,7 +976,6 @@ async function renderGitHubPage() {
     });
     const sortedLangs = Object.entries(langCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
 
-    // 48-char clean ASCII Language chart
     let langChart = `+-- [LANGUAGE DISTRIBUTION] -------------------+`;
     sortedLangs.forEach(([lang, count]) => {
       const pct = Math.round((count / totalLangs) * 100);
@@ -1136,7 +991,6 @@ async function renderGitHubPage() {
     });
     langChart += `\n+----------------------------------------------+`;
 
-    // Repo list for Column 2
     let repoCardsHtml = '';
     publicRepos.slice(0, 8).forEach(r => {
       const desc = r.description || 'Source repository and technical implementation.';
@@ -1158,7 +1012,7 @@ async function renderGitHubPage() {
     const telemetryCard = `+-- [TELEMETRY: @nonQualities] ----------------+
 | Status   : api.github.com synchronized       |
 | Identity : Systems & Theoretical CS          |
-| Standard : Deterministic (ASD-STE100)        |
+| Standard : Deterministic Systems            |
 +----------------------------------------------+`;
 
     const ecosystemBox = `+-- [ECOSYSTEM AUDIT] -------------------------+
@@ -1169,7 +1023,6 @@ async function renderGitHubPage() {
 
     c.innerHTML = `
       <div class="github-dual-grid">
-        <!-- Column 1: Summary & Analytics (Sized bigger) -->
         <div class="github-summary-col">
           <pre class="ascii-box" aria-label="Account Telemetry">${telemetryCard}</pre>
 
@@ -1200,7 +1053,6 @@ async function renderGitHubPage() {
           </p>
         </div>
 
-        <!-- Column 2: Active Repositories -->
         <div class="github-repos-col">
           <div class="github-section-title">Active Repositories</div>
           ${repoCardsHtml}
@@ -1209,7 +1061,6 @@ async function renderGitHubPage() {
     `;
 
   } catch (err) {
-    // Offline / rate limit fallback
     let fallbackBox = `+-- [GITHUB TELEMETRY: OFFLINE] ---------------+
 | User   : @${padEnd(truncate(username, 34), 34)} |
 | Status : API rate limit reached              |
@@ -1231,14 +1082,10 @@ async function renderGitHubPage() {
   }
 }
 
-/* --------------------------------------------------------------------------
-   10. READING PAGE (Dual-Column Broadsheet: Literature vs Textbooks)
-   -------------------------------------------------------------------------- */
 function renderReadingPage() {
   const c = document.getElementById('reading-page-content');
   if (!c) return;
 
-  // Column 1: Literature, Philosophy & Essays
   let col1Html = `
     <div class="reading-col-header">
       <span class="reading-col-kicker">Division I</span>
@@ -1290,7 +1137,6 @@ function renderReadingPage() {
     });
   }
 
-  // Column 2: Foundational Textbooks & Academic References
   let col2Html = `
     <div class="reading-col-header">
       <span class="reading-col-kicker">Division II</span>
@@ -1360,9 +1206,6 @@ function renderReadingPage() {
   `;
 }
 
-/* --------------------------------------------------------------------------
-   11. WRITING PAGE
-   -------------------------------------------------------------------------- */
 function renderWritingCards(items) {
   if (!Array.isArray(items) || items.length === 0) {
     return '<p class="rfc-p">No articles available.</p>';
@@ -1372,7 +1215,7 @@ function renderWritingCards(items) {
       ? `<div class="item-snippet">${esc(item.snippet)}</div>`
       : '';
     return `
-      <article class="item-card writing-card">
+      <article class="item-card">
         <div class="writing-card-header">
           <div class="item-title"><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a></div>
           <span class="writing-pub-badge">Medium</span>
@@ -1449,7 +1292,6 @@ async function fetchLiveMediumArticles(forceRefresh = false) {
     console.warn('Medium feed live synchronization fallback:', err.message);
   }
 
-  // Fallback to verified cached entries
   if (statusEl) statusEl.textContent = 'Displaying Verified Stored Articles (Offline / Cached)';
   if (dotEl) dotEl.className = 'medium-status-dot is-cached';
 }
@@ -1483,13 +1325,9 @@ function renderWritingPage() {
     c.appendChild(moreP);
   }
 
-  // Trigger live background fetch
   fetchLiveMediumArticles(false);
 }
 
-/* --------------------------------------------------------------------------
-   12. CONTACT PAGE (with 46-char clean ASCII routing directory)
-   -------------------------------------------------------------------------- */
 function renderContactPage() {
   const c = document.getElementById('contact-page-content');
   if (!c || !Array.isArray(PORTFOLIO_DATA.contact)) return;
@@ -1521,9 +1359,6 @@ function renderContactPage() {
   c.innerHTML = html;
 }
 
-/* --------------------------------------------------------------------------
-   12B. WATCHLIST & LEISURE PAGE (Non-Academic Catalog)
-   -------------------------------------------------------------------------- */
 function renderWatchlistPage() {
   const c = document.getElementById('watchlist-page-content');
   if (!c || !PORTFOLIO_DATA.watchlist) return;
@@ -1540,8 +1375,8 @@ function renderWatchlistPage() {
     ...liveSeries.filter(l => l.spotlight).map(l => ({ ...l, format: 'live' }))
   ];
 
-  let activeCategory = 'all'; // 'all', 'series', 'movies', 'live', 'spotlight'
-  let activeGenre = 'all'; // 'all', 'scifi', 'romance', 'action', 'psychological', 'drama'
+  let activeCategory = 'all';
+  let activeGenre = 'all';
   let searchQuery = '';
   let quoteIndex = 0;
 
@@ -1549,20 +1384,7 @@ function renderWatchlistPage() {
     if (!genreStr) return '';
     const tags = genreStr.split('·').map(s => s.trim()).filter(Boolean);
     return tags.map(tag => {
-      let cls = 'anime-tag-general';
-      const t = tag.toLowerCase();
-      if (t.includes('sci-fi') || t.includes('cyberpunk') || t.includes('space') || t.includes('mecha') || t.includes('time travel')) {
-        cls = 'anime-tag-scifi';
-      } else if (t.includes('romance') || t.includes('shoujo')) {
-        cls = 'anime-tag-romance';
-      } else if (t.includes('action') || t.includes('shonen') || t.includes('adventure') || t.includes('supernatural') || t.includes('fantasy')) {
-        cls = 'anime-tag-action';
-      } else if (t.includes('psychological') || t.includes('thriller') || t.includes('mystery') || t.includes('crime') || t.includes('horror')) {
-        cls = 'anime-tag-psycho';
-      } else if (t.includes('drama') || t.includes('music') || t.includes('slice of life') || t.includes('comedy') || t.includes('historical')) {
-        cls = 'anime-tag-drama';
-      }
-      return `<span class="anime-genre-pill ${cls}">${esc(tag)}</span>`;
+      return `<span class="anime-genre-pill">${esc(tag)}</span>`;
     }).join('');
   }
 
@@ -1589,20 +1411,20 @@ function renderWatchlistPage() {
     if (!quotes.length) return '';
     const q = quotes[quoteIndex];
     return `
-      <div class="anime-quote-hud" role="region" aria-label="Featured Anime Quote">
+      <div class="anime-quote-hud hud-box-cross" role="region" aria-label="Featured Anime Quote">
         <div class="anime-quote-telemetry">
-          <span class="anime-quote-status"><span class="pulse-dot"></span> QUOTE STREAM // 心に残る名言</span>
+          <span>QUOTE STREAM // 心に残る名言</span>
           <button type="button" class="anime-quote-cycle-btn" id="anime-next-quote-btn" title="Cycle featured quote">
-            <span>次へ NEXT</span> <span class="quote-cycle-icon">↻</span>
+            <span>次へ NEXT</span> <span>↻</span>
           </button>
         </div>
         <div class="anime-quote-content">
           <p class="anime-quote-jp" lang="ja">${esc(q.jp)}</p>
           <blockquote class="anime-quote-en">&ldquo;${esc(q.text)}&rdquo;</blockquote>
           <cite class="anime-quote-cite">
-            <span class="quote-author">${esc(q.author)}</span>
-            <span class="quote-sep">//</span>
-            <span class="quote-source">${esc(q.source)}</span>
+            <span>${esc(q.author)}</span>
+            <span>//</span>
+            <span>${esc(q.source)}</span>
           </cite>
         </div>
       </div>
@@ -1622,16 +1444,13 @@ function renderWatchlistPage() {
     };
   }
 
-  function renderAnimeGroup(groupTitle, groupDivision, items, prefix, badgeCls, badgeText) {
+  function renderAnimeGroup(groupTitle, groupDivision, items, prefix, badgeText) {
     if (!items || items.length === 0) return '';
     let sec = `
-      <section class="anime-group-section" aria-label="${esc(groupTitle)}">
-        <div class="anime-group-header">
-          <div class="anime-group-meta">
-            <span class="anime-group-div">${esc(groupDivision)}</span>
-            <h2 class="anime-group-title">${esc(groupTitle)}</h2>
-          </div>
-          <span class="anime-group-count">[ ${items.length} ${items.length === 1 ? 'RECORD' : 'RECORDS'} ]</span>
+      <section class="anime-group-section" aria-label="${esc(groupTitle)}" style="margin-bottom: var(--sp-6);">
+        <div class="hud-header">
+          <span class="hud-title">${esc(groupTitle)}</span>
+          <span class="hud-sub">${esc(groupDivision)} [ ${items.length} RECORDS ]</span>
         </div>
         <div class="anime-cards-grid">
     `;
@@ -1644,21 +1463,18 @@ function renderWatchlistPage() {
             <span class="anime-card-code">${idxStr}</span>
             <div class="anime-card-badges">
               ${item.spotlight ? `<span class="anime-spot-tag">★ ICON</span>` : ''}
-              <span class="anime-format-tag ${badgeCls}">${esc(badgeText)}</span>
+              <span class="anime-format-tag">${esc(badgeText)}</span>
             </div>
           </div>
-          <div class="anime-card-titles">
+          <div>
             <h3 class="anime-card-en">${esc(item.title)}</h3>
             ${item.jp ? `<div class="anime-card-jp" lang="ja">${esc(item.jp)}</div>` : ''}
           </div>
-          <div class="anime-card-genres">
+          <div style="margin-top: 8px;">
             ${renderGenreTags(item.genre)}
           </div>
           <div class="anime-card-footer">
-            <span class="anime-status-badge">
-              <span class="status-pip"></span>
-              <span>COMPLETED // 完</span>
-            </span>
+            <span>COMPLETED // 完</span>
           </div>
         </article>
       `;
@@ -1671,58 +1487,39 @@ function renderWatchlistPage() {
     return sec;
   }
 
-  // Initial shell mount
   c.innerHTML = `
-    <!-- Featured Anime Quote HUD -->
     <div id="anime-quote-container">
       ${renderQuoteHtml()}
     </div>
 
-    <!-- Cyberpunk HUD Telemetry Metrics -->
     <div class="anime-stats-hud" role="region" aria-label="Anime Telemetry Overview">
       <button type="button" class="anime-stat-card is-active" data-cat="all">
-        <span class="stat-meta">
-          <span class="stat-indicator"></span>
-          <span class="stat-en">TOTAL ARCHIVE</span>
-        </span>
+        <span class="stat-en">TOTAL ARCHIVE</span>
         <span class="stat-num">${totalCount}</span>
         <span class="stat-jp">全タイトル</span>
       </button>
       <button type="button" class="anime-stat-card" data-cat="series">
-        <span class="stat-meta">
-          <span class="stat-indicator series-ind"></span>
-          <span class="stat-en">TV SERIES</span>
-        </span>
+        <span class="stat-en">TV SERIES</span>
         <span class="stat-num">${animeSeries.length}</span>
         <span class="stat-jp">テレビアニメ</span>
       </button>
       <button type="button" class="anime-stat-card" data-cat="movies">
-        <span class="stat-meta">
-          <span class="stat-indicator movies-ind"></span>
-          <span class="stat-en">FILMS &amp; MOVIES</span>
-        </span>
+        <span class="stat-en">FILMS &amp; MOVIES</span>
         <span class="stat-num">${animeMovies.length}</span>
         <span class="stat-jp">劇場版映画</span>
       </button>
       <button type="button" class="anime-stat-card" data-cat="live">
-        <span class="stat-meta">
-          <span class="stat-indicator live-ind"></span>
-          <span class="stat-en">TV &amp; DRAMA</span>
-        </span>
+        <span class="stat-en">TV &amp; DRAMA</span>
         <span class="stat-num">${liveSeries.length}</span>
         <span class="stat-jp">実写ドラマ</span>
       </button>
       <button type="button" class="anime-stat-card" data-cat="spotlight">
-        <span class="stat-meta">
-          <span class="stat-indicator spot-ind"></span>
-          <span class="stat-en">MASTERWORKS</span>
-        </span>
+        <span class="stat-en">MASTERWORKS</span>
         <span class="stat-num">${allSpotlights.length}</span>
         <span class="stat-jp">殿堂入り名作</span>
       </button>
     </div>
 
-    <!-- Cyber Control HUD: Format Filter Tabs, Genre Quick Chips, and Search -->
     <div class="anime-controls-hud">
       <div class="anime-category-tabs" role="tablist" aria-label="Filter by media category">
         <button type="button" role="tab" class="anime-cat-btn is-active" data-cat="all" aria-selected="true">
@@ -1742,9 +1539,8 @@ function renderWatchlistPage() {
         </button>
       </div>
 
-      <!-- Quick Genre Chips -->
       <div class="anime-genre-scroll-wrap" role="region" aria-label="Genre quick filters">
-        <span class="genre-filter-label">GENRE // ジャンル:</span>
+        <span class="genre-filter-label">GENRE //:</span>
         <div class="anime-genre-chips">
           <button type="button" class="anime-genre-chip is-active" data-genre="all">All Genres</button>
           <button type="button" class="anime-genre-chip" data-genre="scifi">Sci-Fi &amp; Cyberpunk</button>
@@ -1755,24 +1551,21 @@ function renderWatchlistPage() {
         </div>
       </div>
 
-      <!-- Search Bar -->
       <div class="anime-search-hud">
         <div class="anime-search-input-wrap">
-          <span class="anime-scan-icon" aria-hidden="true">⌕</span>
+          <span class="anime-scan-icon" aria-hidden="true">&gt;</span>
           <input type="search" id="watchlist-search-input" class="anime-search-input"
-                 placeholder="TARGET ACQUISITION // Search by title, Japanese kanji, or genre..."
+                 placeholder="Search by title, Japanese kanji, or genre..."
                  autocomplete="off" autocorrect="off" spellcheck="false"
                  aria-label="Search anime archive">
-          <button type="button" id="watchlist-clear-btn" class="anime-clear-btn" style="display:none;" aria-label="Clear filter">✕</button>
+          <button type="button" id="watchlist-clear-btn" style="display:none; padding: 0 8px; color: var(--fg-subtle);" aria-label="Clear filter">✕</button>
         </div>
         <div class="anime-telemetry-status">
-          <span class="telemetry-dot"></span>
           <span class="telemetry-txt">ALL RECORDS ONLINE: ${totalCount} TITLES</span>
         </div>
       </div>
     </div>
 
-    <!-- Main Results Catalog -->
     <div class="anime-results-container" id="watchlist-results-area"></div>
   `;
 
@@ -1781,21 +1574,18 @@ function renderWatchlistPage() {
   function updateResults() {
     const q = searchQuery.trim().toLowerCase();
 
-    // Filter Series
     const filteredSeries = animeSeries.filter(item => {
       if (activeCategory === 'spotlight' && !item.spotlight) return false;
       if (activeCategory !== 'all' && activeCategory !== 'series' && activeCategory !== 'spotlight') return false;
       return matchesGenre(item) && matchesSearch(item, q);
     });
 
-    // Filter Movies
     const filteredMovies = animeMovies.filter(item => {
       if (activeCategory === 'spotlight' && !item.spotlight) return false;
       if (activeCategory !== 'all' && activeCategory !== 'movies' && activeCategory !== 'spotlight') return false;
       return matchesGenre(item) && matchesSearch(item, q);
     });
 
-    // Filter Live
     const filteredLive = liveSeries.filter(item => {
       if (activeCategory === 'spotlight' && !item.spotlight) return false;
       if (activeCategory !== 'all' && activeCategory !== 'live' && activeCategory !== 'spotlight') return false;
@@ -1804,7 +1594,6 @@ function renderWatchlistPage() {
 
     const currentMatches = filteredSeries.length + filteredMovies.length + filteredLive.length;
 
-    // Update Telemetry Text
     const telemetryTxt = c.querySelector('.telemetry-txt');
     if (telemetryTxt) {
       telemetryTxt.textContent = (q || activeGenre !== 'all' || activeCategory !== 'all')
@@ -1812,13 +1601,11 @@ function renderWatchlistPage() {
         : `ALL RECORDS ONLINE: ${totalCount} TITLES`;
     }
 
-    // Update Clear Button
     const clearBtn = c.querySelector('#watchlist-clear-btn');
-    if (clearBtn) {
+    if (clearBtn && clearBtn.style) {
       clearBtn.style.display = searchQuery ? 'inline-block' : 'none';
     }
 
-    // Update Tab and Chip states
     c.querySelectorAll('.anime-cat-btn').forEach(btn => {
       const match = btn.getAttribute('data-cat') === activeCategory;
       btn.classList.toggle('is-active', match);
@@ -1833,20 +1620,15 @@ function renderWatchlistPage() {
       chip.classList.toggle('is-active', chip.getAttribute('data-genre') === activeGenre);
     });
 
-    // Render results
     const resultsArea = document.getElementById('watchlist-results-area');
     if (!resultsArea) return;
 
     if (currentMatches === 0) {
       resultsArea.innerHTML = `
-        <div class="anime-empty-state">
-          <div class="anime-empty-scanner">
-            <span class="scanner-grid"></span>
-            <span class="empty-kanji">無</span>
-          </div>
-          <p class="anime-empty-title">[ ∅ NO FREQUENCY DETECTED ]</p>
-          <p class="anime-empty-desc">No archive entries matching <strong>&ldquo;${esc(searchQuery || activeGenre)}&rdquo;</strong> in this sector.</p>
-          <button type="button" class="rfc-btn icon-btn" id="watchlist-reset-btn">Reset Radar // 全記録を再表示</button>
+        <div style="padding: var(--sp-6); text-align: center; border: 1px dashed var(--border); background: var(--bg-panel);">
+          <p style="font-family: var(--font-display); font-size: var(--fs-md); font-weight: 700; color: var(--fg); margin-bottom: 8px;">[ ∅ NO FREQUENCY DETECTED ]</p>
+          <p style="font-size: var(--fs-xs); color: var(--fg-dim); margin-bottom: 16px;">No archive entries matching <strong>&ldquo;${esc(searchQuery || activeGenre)}&rdquo;</strong> in this archive.</p>
+          <button type="button" class="rfc-btn" id="watchlist-reset-btn">Reset Filter // 全記録を再表示</button>
         </div>
       `;
       const resetBtn = resultsArea.querySelector('#watchlist-reset-btn');
@@ -1864,13 +1646,13 @@ function renderWatchlistPage() {
       let html = '';
       if (activeCategory === 'all' && !q && activeGenre === 'all') {
         html += `
-          <section class="anime-spotlight-section" aria-label="Masterwork Spotlight Showcase">
+          <section class="anime-spotlight-section hud-box-cross" aria-label="Masterwork Spotlight Showcase">
             <div class="anime-section-header">
               <div>
                 <span class="anime-section-badge">HALL OF FAME // 殿堂入り名作選</span>
                 <h2 class="anime-section-title">Iconic Masterworks &amp; Standouts</h2>
               </div>
-              <span class="anime-section-tag">CURATED ARCHIVE</span>
+              <span class="hud-sub">CURATED ARCHIVE</span>
             </div>
             <div class="anime-spotlight-grid">
               ${[
@@ -1890,11 +1672,7 @@ function renderWatchlistPage() {
                   </div>
                   <div class="spotlight-card-jp" lang="ja">${esc(spot.jp)}</div>
                   <h3 class="spotlight-card-title">${esc(spot.title)}</h3>
-                  <div class="spotlight-genre-wrap">${renderGenreTags(spot.genre)}</div>
-                  <div class="spotlight-card-foot">
-                    <span class="spotlight-status-dot"></span>
-                    <span class="spotlight-status-txt">ARCHIVED // 視聴済</span>
-                  </div>
+                  <div>${renderGenreTags(spot.genre)}</div>
                 </div>
               `).join('')}
             </div>
@@ -1902,15 +1680,14 @@ function renderWatchlistPage() {
         `;
       }
 
-      html += renderAnimeGroup('Broadcast & OVA Series', 'SECTOR 09-A // テレビシリーズ', filteredSeries, 'EP', 'badge-series', 'TV');
-      html += renderAnimeGroup('Feature Films & Cinematic Releases', 'SECTOR 09-B // 劇場版アニメ', filteredMovies, 'FILM', 'badge-film', 'FILM');
-      html += renderAnimeGroup('Television & Drama Series', 'SECTOR 09-C // 実写ドラマ', filteredLive, 'DRAMA', 'badge-live', 'SERIES');
+      html += renderAnimeGroup('Broadcast & OVA Series', 'GROUP 09-A // テレビシリーズ', filteredSeries, 'EP', 'TV');
+      html += renderAnimeGroup('Feature Films & Cinematic Releases', 'GROUP 09-B // 劇場版アニメ', filteredMovies, 'FILM', 'FILM');
+      html += renderAnimeGroup('Television & Drama Series', 'GROUP 09-C // 実写ドラマ', filteredLive, 'DRAMA', 'SERIES');
 
       resultsArea.innerHTML = html;
     }
   }
 
-  // Bind Event Listeners once
   const searchInput = c.querySelector('#watchlist-search-input');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -1952,12 +1729,11 @@ function renderWatchlistPage() {
     });
   });
 
-  // Initial populate
   updateResults();
 }
 
 /* --------------------------------------------------------------------------
-   13. UTILITIES
+   8. UTILITIES
    -------------------------------------------------------------------------- */
 function esc(str) {
   if (typeof str !== 'string') return String(str ?? '');
@@ -2003,14 +1779,14 @@ function wrapWords(str, maxLen) {
 }
 
 /* --------------------------------------------------------------------------
-   14. BOOTSTRAP
+   9. BOOTSTRAP
    -------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initHotkeys();
   initCommandPalette();
-  initFloatingContents();
   initSwipeNavigation();
+  initSidebar();
 
   const path = window.location.pathname;
   let page = 'index';
@@ -2042,22 +1818,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page !== 'index') {
     renderPagePagination(page);
   }
-
-  // Desktop pointer-only smooth specular glint tracking (throttled with RAF)
-  if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    let ticking = false;
-    window.addEventListener('mousemove', (e) => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const px = ((e.clientX / window.innerWidth) * 100).toFixed(2);
-          const py = ((e.clientY / window.innerHeight) * 100).toFixed(2);
-          document.documentElement.style.setProperty('--mouse-x', px + '%');
-          document.documentElement.style.setProperty('--mouse-y', py + '%');
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-  }
 });
-

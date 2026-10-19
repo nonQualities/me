@@ -5,48 +5,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="GitHub Activity & Repositories — Ronit Choudhury">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)">
 <title>Ronit Choudhury &mdash; GitHub</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#090d16" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap" media="print" onload="this.media='all'">
 <noscript>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap">
 </noscript>
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="space-theme-active subpage-static-bg">
+<body>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<div class="top-utility-bar theme-toggle-floating">
-  <button id="search-btn" class="rfc-btn icon-btn" type="button" aria-label="Search Portfolio (Hotkey: /)" onclick="openCommandPalette()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    <span class="btn-label">Search <kbd>/</kbd></span>
-  </button>
-  <button id="theme-toggle" class="rfc-btn icon-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme (Hotkey: t)">
-    <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-    <span class="btn-label theme-btn-label">Theme</span>
-  </button>
-  <button id="hotkeys-btn" class="rfc-btn icon-btn" type="button" aria-label="Keyboard Shortcuts (Hotkey: ?)" onclick="openHotkeysModal()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-    <span class="btn-label">Keys <kbd>?</kbd></span>
-  </button>
-</div>
+<!-- Fixed High-Contrast Top Utility Bar -->
+<header class="top-utility-bar">
+  <div class="top-bar-left">
+    <a href="index.html" class="top-bar-logo" aria-label="Ronit Choudhury Home">
+      <span class="brand-dot"></span>
+      <span>Ronit Choudhury</span>
+    </a>
+    <span class="top-bar-telemetry">GUWAHATI // 26.14°N 91.74°E</span>
+  </div>
+  <div class="top-bar-right">
+    <button id="search-btn" class="rfc-btn" type="button" aria-label="Search Portfolio (Hotkey: /)" onclick="openCommandPalette()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <span>Search <kbd>/</kbd></span>
+    </button>
+    <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme (Hotkey: t)">
+      <svg class="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg class="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <span class="theme-btn-label">Theme</span>
+    </button>
+    <button id="hotkeys-btn" class="rfc-btn" type="button" aria-label="Keyboard Shortcuts (Hotkey: ?)" onclick="openHotkeysModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <span>Keys <kbd>?</kbd></span>
+    </button>
+  </div>
+</header>
 
-<div class="page-inner-layout">
-  <main id="main-content" class="rfc-main-content wide-layout" tabindex="-1">
+<div class="app-container">
+
+  <!-- Persistent Sidebar Navigation -->
+  <aside class="app-sidebar" aria-label="Section Index">
+    <div>
+      <div class="sidebar-nav-header">
+        <span>INDEX</span>
+        <span>[ 00 - 09 ]</span>
+      </div>
+      <nav class="sidebar-nav-list">
+        <a href="index.html" class="sidebar-nav-item" data-page="index">
+          <span class="nav-idx">00</span>
+          <span class="nav-label">Overview</span>
+        </a>
+        <a href="about.html" class="sidebar-nav-item" data-page="about">
+          <span class="nav-idx">01</span>
+          <span class="nav-label">About</span>
+        </a>
+        <a href="stack.html" class="sidebar-nav-item" data-page="stack">
+          <span class="nav-idx">02</span>
+          <span class="nav-label">Stack</span>
+        </a>
+        <a href="projects.html" class="sidebar-nav-item" data-page="projects">
+          <span class="nav-idx">03</span>
+          <span class="nav-label">Projects</span>
+        </a>
+        <a href="experience.html" class="sidebar-nav-item" data-page="experience">
+          <span class="nav-idx">04</span>
+          <span class="nav-label">Experience</span>
+        </a>
+        <a href="github.html" class="sidebar-nav-item is-active" data-page="github" aria-current="page">
+          <span class="nav-idx">05</span>
+          <span class="nav-label">GitHub</span>
+        </a>
+        <a href="reading.html" class="sidebar-nav-item" data-page="reading">
+          <span class="nav-idx">06</span>
+          <span class="nav-label">Reading</span>
+        </a>
+        <a href="writing.html" class="sidebar-nav-item" data-page="writing">
+          <span class="nav-idx">07</span>
+          <span class="nav-label">Writing</span>
+        </a>
+        <a href="contact.html" class="sidebar-nav-item" data-page="contact">
+          <span class="nav-idx">08</span>
+          <span class="nav-label">Contact</span>
+        </a>
+        <a href="watchlist.html" class="sidebar-nav-item" data-page="watchlist">
+          <span class="nav-idx">09</span>
+          <span class="nav-label">Watchlist</span>
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-coords">26.14°N 91.74°E</div>
+      <div>GUWAHATI, ASSAM</div>
+      <div>DETERMINISTIC SYSTEMS</div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <main id="main-content" class="app-main rfc-main-content app-main-wide" tabindex="-1">
+
     <header class="page-header-block">
       <nav class="page-nav-crumbs" aria-label="Breadcrumb">
         <a href="index.html">&larr; Return to Index</a>
       </nav>
-      <span class="page-kicker">Section 05 &middot; Sector 05 // GitHub</span>
+      <div class="page-header-meta">
+        <span class="page-kicker">Section 05 // GitHub</span>
+      </div>
       <h1 class="page-title">GitHub Telemetry</h1>
       <p class="page-subtitle">Remote account telemetry, active repositories, and language distribution via GitHub API</p>
     </header>
@@ -57,6 +129,7 @@
       <span>Ronit Choudhury &middot; 2026</span>
       <span>Guwahati, Assam</span>
     </footer>
+
   </main>
 </div>
 

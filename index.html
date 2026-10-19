@@ -5,86 +5,497 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Portfolio of Ronit Choudhury — Software Development, Delay-Tolerant Networks Research, Systems Programming, and Theoretical Computer Science.">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#090d16" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#080808" media="(prefers-color-scheme: dark)">
 <title>Ronit Choudhury</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/400-italic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code/600-italic.css">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@600;700;800&family=Anek+Devanagari:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Sans+JP:wght@700;900&family=Space+Grotesk:wght@500;700&family=Unbounded:wght@700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@600;700;800&family=Anek+Devanagari:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Sans+JP:wght@700;900&family=Space+Grotesk:wght@500;700&family=Unbounded:wght@700;800;900&display=swap" media="print" onload="this.media='all'">
 <noscript>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,300..600;1,300..600&family=Montserrat:wght@400;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@600;700;800&family=Anek+Devanagari:wght@600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Sans+JP:wght@700;900&family=Space+Grotesk:wght@500;700&family=Unbounded:wght@700;800;900&display=swap">
 </noscript>
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="space-theme-active">
-
-<!-- 3D Spacetime Simulation Canvas -->
-<canvas id="spacetime-canvas" aria-hidden="true"></canvas>
-
-<!-- Spacetime Warp Intro Overlay -->
-<div id="spacetime-intro-overlay" class="spacetime-intro-overlay" aria-hidden="true">
-  <div class="warp-aperture-hud">
-    <span class="warp-crosshair top-left">+</span>
-    <span class="warp-crosshair top-right">+</span>
-    <span class="warp-crosshair bottom-left">+</span>
-    <span class="warp-crosshair bottom-right">+</span>
-    <div class="warp-hud-text">SPACETIME WARP // SECTOR 00</div>
-    <div class="warp-hud-sub">TRANSITIONING TO OBSERVATORY INDEX</div>
-  </div>
-  <button type="button" class="warp-skip-btn" onclick="window.skipSpacetimeWarp && window.skipSpacetimeWarp()" aria-label="Skip spacetime animation">Skip Intro [Esc]</button>
-</div>
+<body>
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<div class="top-utility-bar theme-toggle-floating">
-  <button id="search-btn" class="rfc-btn icon-btn" type="button" aria-label="Search Portfolio (Hotkey: /)" onclick="openCommandPalette()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    <span class="btn-label">Search <kbd>/</kbd></span>
-  </button>
-  <button id="theme-toggle" class="rfc-btn icon-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme (Hotkey: t)">
-    <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-    <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-    <span class="btn-label theme-btn-label">Theme</span>
-  </button>
-  <button id="hotkeys-btn" class="rfc-btn icon-btn" type="button" aria-label="Keyboard Shortcuts (Hotkey: ?)" onclick="openHotkeysModal()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-    <span class="btn-label">Keys <kbd>?</kbd></span>
-  </button>
-</div>
+<!-- Fixed High-Contrast Top Utility Bar -->
+<header class="top-utility-bar">
+  <div class="top-bar-left">
+    <a href="index.html" class="top-bar-logo" aria-label="Ronit Choudhury Home">
+      <span class="brand-dot"></span>
+      <span>Ronit Choudhury</span>
+    </a>
+    <span class="top-bar-telemetry">GUWAHATI // 26.14°N 91.74°E</span>
+  </div>
+  <div class="top-bar-right">
+    <button id="search-btn" class="rfc-btn" type="button" aria-label="Search Portfolio (Hotkey: /)" onclick="openCommandPalette()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <span>Search <kbd>/</kbd></span>
+    </button>
+    <button id="theme-toggle" class="rfc-btn theme-toggle-btn" type="button" aria-label="Toggle visual theme (Hotkey: t)">
+      <svg class="theme-icon-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <svg class="theme-icon-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <span class="theme-btn-label">Theme</span>
+    </button>
+    <button id="hotkeys-btn" class="rfc-btn" type="button" aria-label="Keyboard Shortcuts (Hotkey: ?)" onclick="openHotkeysModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      <span>Keys <kbd>?</kbd></span>
+    </button>
+  </div>
+</header>
 
-<div class="page-landing">
-  <main id="main-content" class="rfc-main-content" tabindex="-1">
+<div class="app-container">
 
-    <header class="hero-header">
-      <div class="hero-meta">
-        <span class="meta-location">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"></circle><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"></path></svg>
-          Guwahati, Assam &middot; 26.1445&deg;N 91.7362&deg;E
-        </span>
-        <button type="button" class="warp-replay-btn" onclick="window.replaySpacetimeWarp && window.replaySpacetimeWarp()" aria-label="Replay spacetime warp animation">
-          ⟲ Replay Warp
-        </button>
-        <span class="meta-date">October 2026</span>
+  <!-- Persistent Sidebar Navigation -->
+  <aside class="app-sidebar" aria-label="Section Index">
+    <div>
+      <div class="sidebar-nav-header">
+        <span>INDEX</span>
+        <span>[ 00 - 09 ]</span>
+      </div>
+      <nav class="sidebar-nav-list">
+        <a href="index.html" class="sidebar-nav-item is-active" data-page="index" aria-current="page">
+          <span class="nav-idx">00</span>
+          <span class="nav-label">Overview</span>
+        </a>
+        <a href="about.html" class="sidebar-nav-item" data-page="about">
+          <span class="nav-idx">01</span>
+          <span class="nav-label">About</span>
+        </a>
+        <a href="stack.html" class="sidebar-nav-item" data-page="stack">
+          <span class="nav-idx">02</span>
+          <span class="nav-label">Stack</span>
+        </a>
+        <a href="projects.html" class="sidebar-nav-item" data-page="projects">
+          <span class="nav-idx">03</span>
+          <span class="nav-label">Projects</span>
+        </a>
+        <a href="experience.html" class="sidebar-nav-item" data-page="experience">
+          <span class="nav-idx">04</span>
+          <span class="nav-label">Experience</span>
+        </a>
+        <a href="github.html" class="sidebar-nav-item" data-page="github">
+          <span class="nav-idx">05</span>
+          <span class="nav-label">GitHub</span>
+        </a>
+        <a href="reading.html" class="sidebar-nav-item" data-page="reading">
+          <span class="nav-idx">06</span>
+          <span class="nav-label">Reading</span>
+        </a>
+        <a href="writing.html" class="sidebar-nav-item" data-page="writing">
+          <span class="nav-idx">07</span>
+          <span class="nav-label">Writing</span>
+        </a>
+        <a href="contact.html" class="sidebar-nav-item" data-page="contact">
+          <span class="nav-idx">08</span>
+          <span class="nav-label">Contact</span>
+        </a>
+        <a href="watchlist.html" class="sidebar-nav-item" data-page="watchlist">
+          <span class="nav-idx">09</span>
+          <span class="nav-label">Watchlist</span>
+        </a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-coords">26.14°N 91.74°E</div>
+      <div>GUWAHATI, ASSAM</div>
+      <div>DETERMINISTIC SYSTEMS</div>
+    </div>
+  </aside>
+
+  <!-- Main Content Column -->
+  <main id="main-content" class="app-main app-main-wide" tabindex="-1">
+
+    <!-- ===================================================================
+         OYSTER-STYLE SWISS EDITORIAL BROADSHEET POSTER
+         =================================================================== -->
+    <section class="oyster-poster hud-box-cross" aria-label="Editorial System Broadside">
+
+      <!-- TOP ROW: SCRIPT NOTE + GIANT NAME + CALLOUT CARD + INTEGRATED STACK + VERTICAL PILL -->
+      <div class="poster-top-row">
+        <div class="poster-masthead-col">
+          <div class="poster-script-note">
+            Greetings! If you want to clone me as I appear, this is a good starting point, or this is an venture for fascination, you are welcome, else if this is professional..Welcome to my Portfolio. Good Morning. In case I do not see you again, Good Afternoon, Good Evening and Good Night.
+          </div>
+          <!-- Multilingual Geometric Name Lockup in & around RONIT -->
+          <div class="poster-title-lockup">
+            
+            <!-- Top / Overhead Scripts: Assamese, Hindi & Japanese stylized badges -->
+            <div class="poster-title-kicker-row">
+              <div class="name-script-badge name-badge-as" title="Assamese: ৰোণিত">
+                <span class="badge-lang-label">AS //</span>
+                <span class="badge-script-text as-text" lang="as">ৰোণিত</span>
+              </div>
+              <div class="name-script-badge name-badge-hi" title="Hindi: रोणित">
+                <span class="badge-lang-label">HI //</span>
+                <span class="badge-script-text hi-text" lang="hi">रोणित</span>
+              </div>
+              <div class="name-script-badge name-badge-ja" title="Japanese: ロニット">
+                <span class="badge-lang-label">JA //</span>
+                <span class="badge-script-text ja-text" lang="ja">ロニット</span>
+              </div>
+            </div>
+
+            <!-- Main Title Row with Giant RONIT and Flanking Vertical Scripts -->
+            <div class="poster-title-main-row">
+              <h1 class="poster-giant-title">RONIT</h1>
+              <div class="poster-title-flank" aria-hidden="true">
+                <span class="flank-script flank-ja" lang="ja" title="Japanese Katakana">ロニット</span>
+                <span class="flank-script flank-as" lang="as" title="Assamese Script">ৰোণিত</span>
+              </div>
+            </div>
+
+            <!-- Subtitle Line: Surname in English, Assamese, and Hindi -->
+            <div class="poster-title-sub-scripts">
+              <span class="sub-script-item en-sub" title="English">choudhury</span>
+              <span class="sub-script-sep">&middot;</span>
+              <span class="sub-script-item as-sub" lang="as" title="Assamese: চৌধুৰী">চৌধুৰী</span>
+              <span class="sub-script-sep">&middot;</span>
+              <span class="sub-script-item hi-sub" lang="hi" title="Hindi: चौधुरी">चौधुरी</span>
+            </div>
+
+          </div>
+
+          <!-- Callout Box with Arrow ↗ -->
+          <div class="poster-callout-box">
+            <a href="#toc" class="callout-arrow" aria-label="Jump to Table of Contents">↗</a>
+            <ul class="callout-list">
+              <li><span class="callout-bullet">&#9658;</span> investigate delay-tolerant networks (DTN)</li>
+              <li><span class="callout-bullet">&#9658;</span> engineer deterministic &amp; low-overhead protocols</li>
+              <li><span class="callout-bullet">&#9658;</span> systems programming, compilers &amp; formal theory</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Vertical Spine Indicator -->
+        <div class="poster-vertical-spine" aria-hidden="true">
+          <div class="v-spine-dots">
+            <span class="v-spine-dot"></span>
+            <span class="v-spine-dot"></span>
+          </div>
+          <span class="v-spine-text">PORTFOLIO // NETWORKING &middot; SYSTEMS &middot; PROTOCOLS 2026</span>
+          <div class="v-spine-dots">
+            <span class="v-spine-dot"></span>
+            <span class="v-spine-dot"></span>
+          </div>
+        </div>
+
+        <!-- Integrated Primary Stack Card -->
+        <div class="poster-stack-card">
+          <div class="poster-stack-header">
+            <span class="stack-tag">[ PRIMARY STACK ]</span>
+            <a href="stack.html" class="stack-link">full spec &rarr;</a>
+          </div>
+          <div class="poster-stack-entries">
+            <div class="stack-entry">
+              <div class="stack-entry-title">.NET with C#</div>
+              <div class="stack-entry-desc">ASP.NET Core &middot; Cross-Platform UI &middot; Networking &amp; TUN Tunnels</div>
+            </div>
+            <div class="stack-entry">
+              <div class="stack-entry-title">C / C3</div>
+              <div class="stack-entry-desc">Deterministic Memory &middot; Low-Overhead Network Tooling &middot; Systems</div>
+            </div>
+            <div class="stack-entry">
+              <div class="stack-entry-title">Elixir / OTP</div>
+              <div class="stack-entry-desc">Actor Concurrency &middot; Resilient Message Passing &middot; Distributed Nodes</div>
+            </div>
+            <div class="stack-entry">
+              <div class="stack-entry-title">Linux</div>
+              <div class="stack-entry-desc">Network Namespaces &middot; Policy Routing (fwmark) &middot; Shell Runtimes</div>
+            </div>
+            <div class="stack-entry">
+              <div class="stack-entry-title">SQL</div>
+              <div class="stack-entry-desc">PostgreSQL &middot; Relational Schema Modeling &middot; Query Optimization</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unified Education Broadsheet Card (Recreated from Design) -->
+        <div class="poster-education-pill" aria-label="Education & Academic Specification">
+          
+          <!-- Top Header: Black Square with ! + Micro Slogan + Wireframe Globe -->
+          <div class="edu-card-header">
+            <div class="edu-black-square" aria-hidden="true">
+              <span>!</span>
+            </div>
+            <div class="edu-header-side">
+              <div class="edu-micro-slogan">
+                SOFTWARE<br>
+                DEVELOPMENT<br>
+                FOR A MORE<br>
+                OPEN TOMORROW.
+              </div>
+              <div class="edu-globe-icon" aria-hidden="true">
+                <svg class="edu-globe-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Degree Block ("Integrated MSc") + Syllabus Box Link -->
+          <div class="edu-degree-block">
+            <div class="edu-degree-kicker">
+              KNOWLEDGE<br>BUILDS<br>FREEDOM.<br>
+              <span class="edu-mini-rule" aria-hidden="true"></span>
+            </div>
+
+            <div class="edu-degree-title-wrap">
+              <div class="edu-degree-word">Integrated</div>
+              <div class="edu-degree-giant-row">
+                <div class="edu-giant-msc">
+                  <span class="msc-main">MS</span><span class="msc-c">c</span>
+                </div>
+                <div class="edu-asterisk-icon" aria-hidden="true">
+                  <svg class="msc-asterisk-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                    <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+                  </svg>
+                </div>
+                <div class="edu-degree-side-note">
+                  5 YEARS<br>DEEPER<br>INTO<br>SOFTWARE<br>DEVELOPMENT<br>
+                  <span class="edu-mini-rule" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Clickable Syllabus Button -->
+            <a href="https://gauhati.ac.in/syllabus/software-development-fyimp-2026/" target="_blank" rel="noopener noreferrer" class="edu-syllabus-btn" title="View Gauhati University Software Development Syllabus">
+              <span>SOFTWARE DEVELOPMENT</span>
+              <span class="syllabus-btn-arrow" aria-hidden="true">&#x2197;</span>
+            </a>
+          </div>
+
+          <!-- Section 2: Dots Divider -->
+          <div class="edu-dots-row" aria-hidden="true">
+            <span>&middot;</span>
+            <span>&middot;</span>
+            <span>&middot;</span>
+          </div>
+
+          <!-- Section 3: Gauhati University Block with Link -->
+          <div class="edu-uni-block">
+            <div class="edu-uni-main-row">
+              <a href="https://gauhati.ac.in" target="_blank" rel="noopener noreferrer" class="edu-uni-link" title="Visit Gauhati University Official Portal">
+                <div class="uni-black-arrow-box" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+                <div class="uni-name-stack">
+                  <span class="uni-name-word">Gauhati</span>
+                  <span class="uni-name-word">University</span>
+                </div>
+              </a>
+              <div class="edu-uni-side-note">
+                A<br>PUBLIC<br>UNIVERSITY<br>IN<br>ASSAM<br>
+                <span class="edu-mini-rule" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="edu-dept-strike-row">
+              <span class="dept-strike-line" aria-hidden="true"></span>
+              <span class="dept-strike-label">DEPT OF IT</span>
+              <span class="dept-strike-line" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <!-- Section 4: High School & Dotted Rule -->
+          <div class="edu-hs-row">
+            <div class="edu-hs-pin" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+              </svg>
+            </div>
+            <div class="edu-hs-text">B.BOROOAH HS</div>
+          </div>
+
+          <div class="edu-dotted-rule" aria-hidden="true"></div>
+
+          <!-- Section 6: Location & Coordinates -->
+          <div class="edu-location-row">
+            <div class="edu-target-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="7"></circle>
+                <line x1="12" y1="1" x2="12" y2="5"></line>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="1" y1="12" x2="5" y2="12"></line>
+                <line x1="19" y1="12" x2="23" y2="12"></line>
+              </svg>
+            </div>
+            <div class="edu-loc-text-col">
+              <div class="edu-loc-city">GUWAHATI, ASSAM</div>
+              <div class="edu-loc-coords">26.14&deg;N 91.74&deg;E</div>
+            </div>
+            <div class="edu-loc-v-rule" aria-hidden="true"></div>
+            <div class="edu-loc-side-note">
+              ON THE<br>
+              BANKS OF<br>
+              THE BRAHMAPUTRA<br>
+              <span class="edu-mini-rule" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="edu-solid-rule" aria-hidden="true"></div>
+
+          <!-- Section 7: Footer (Glider Icon, Subculture Manifesto, Status Dots) -->
+          <div class="edu-card-footer">
+            <div class="edu-glider-icon" aria-hidden="true">
+              <svg class="edu-pixel-glider" width="26" height="26" viewBox="0 0 4 4" fill="currentColor">
+                <rect x="0" y="0" width="0.85" height="0.85"/>
+                <rect x="1" y="1" width="0.85" height="0.85"/>
+                <rect x="0" y="2" width="0.85" height="0.85"/>
+                <rect x="1" y="2" width="0.85" height="0.85"/>
+                <rect x="2" y="3" width="0.85" height="0.85"/>
+              </svg>
+            </div>
+
+            <div class="edu-footer-v-rule" aria-hidden="true"></div>
+
+            <div class="edu-footer-text-col">
+              <div class="edu-subculture-title">THE FREE CODE<br>SUBCULTURE</div>
+              <div class="edu-subculture-sub">
+                SOFTWARE IS KNOWLEDGE.<br>
+                KNOWLEDGE MUST BE FREE.<br>
+                <span class="edu-mini-rule" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="edu-status-dots-col" aria-hidden="true">
+              <span class="status-dot dot-gray"></span>
+              <span class="status-dot dot-black"></span>
+              <span class="status-dot dot-green"></span>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <span class="page-kicker">Section 00 &middot; Overview</span>
-      <h1 class="hero-name">Ronit Choudhury</h1>
+      <!-- MID ROW 1: CONTRAST STATEMENT + SYMBOL BOX + SPEC BIG NUM -->
+      <div class="poster-statement-row">
+        <div class="poster-vertical-kicker" aria-hidden="true">
+          <span>// FOCUS</span>
+        </div>
 
-      <div class="hero-tagline">
-        Software Development &middot; Delay-Tolerant Networks Research &middot; Community Lead @ Free Code Subculture
+        <div class="poster-statement-text">
+          <span class="stmt-sans">my areas of interest are</span>
+          <span class="stmt-script">networking, systems programming, performance engineering &amp; database systems</span>
+        </div>
+
+        <div class="poster-symbol-box" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+
+        <div class="poster-spec-box">
+          <div class="spec-big-num">8.5 CGPA</div>
+          <div class="spec-title">INTEGRATED MSC (IT)</div>
+        </div>
       </div>
 
-      <p class="hero-intro">
-        Integrated Master of Science (MSc) in Software Development at Gauhati University within the Department of Information Technology (current CGPA: 8.5). Completed Higher Secondary education at B.Borooah College, Guwahati. Community Lead for <a href="https://thefreecodesyndicate.github.io/fcs-site/" target="_blank" rel="noopener noreferrer" class="landing-header-link">The Free Code Subculture</a> (previously, Syndicate). Formal training in Fine Arts informs my approach to structure and typography.
-      </p>
-    </header>
+      <!-- MID ROW 2: FINE PRINT, SLASHES, WARRANTY BADGE, POSTAL STAMP -->
+      <div class="poster-stamps-row">
+        <div class="poster-fine-print-col">
+          <p class="fine-print-text">
+            DELAY-TOLERANT NETWORKS. STORE-CARRY-FORWARD TOPOLOGIES. INTERMITTENT CONNECTIVITY PROTOCOLS.
+          </p>
+          <div class="poster-slashes-line">
+          // THINGS I AM THINKING RECENTLY
+          </div>
+        </div>
+
+        <div class="poster-warranty-badge">
+          <span>Community Lead @ The <a href="https://thefreecodesyndicate.github.io/fcs-site">Free Code Subculture</a></span>
+        </div>
+
+        <div class="poster-vertical-badge" aria-hidden="true">
+          <span>SYSTEMS // RESEARCH</span>
+        </div>
+
+        <div class="poster-postage-stamp">
+          <div class="stamp-top-bar">CORE MANIFESTO</div>
+          <div class="stamp-body">
+            <div class="stamp-icon-box" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+            </div>
+            <div class="stamp-text">
+              I APPRECIATE FAST, SIMPLE AND UNBLOATED SOFTWARE. I DO NOT ENJOY UNECESSARY COMPLICATIONS OR LAYERS OF ABSTRACTTION JUST FOR THE SAKE OF IT
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM ROW: HUGE AMPERSAND + PARTITIONED JAPANESE TICKET + TELEMETRY BARCODE -->
+      <div class="poster-ticket-row">
+        
+        <div class="poster-edge-vertical poster-edge-left" aria-hidden="true">
+          JP's jus aesthetic fascination
+        </div>
+
+        <div class="poster-ampersand-col">
+          <span class="huge-ampersand">&amp;</span>
+        </div>
+
+        <div class="poster-ticket-partition">
+          <div class="ticket-upper">
+            <div class="ticket-disclaimer">
+              DISCLAIMER: I am not a frontend developer at its best. This website is the extent of my frontend skills althuogh not the end of my design skills.
+            </div>
+            <div class="ticket-rights">
+              <span class="rights-kicker">PERSONAL PORTFOLIO</span>
+              <span class="rights-code">RONIT &middot; 2026</span>
+            </div>
+          </div>
+
+          <div class="ticket-japanese-wrap" tabindex="0" title="Delay-Tolerant Networks · Software Development">
+            <div class="ticket-japanese" lang="ja">
+              遅延耐性ネットワーク・ソフトウェア開発
+            </div>
+            <div class="ticket-japanese-translation" aria-hidden="true">
+              [ Delay-Tolerant Networks &middot; Software Development ]
+            </div>
+          </div>
+
+          <div class="ticket-lower">
+            <span class="ticket-hours-label">connect &#9658;</span>
+            <a href="mailto:choudhury.ronit@proton.me" class="ticket-endpoint-link" title="Send direct email via Proton Mail">proton mail</a> &middot;
+            <a href="https://github.com/nonQualities" target="_blank" rel="noopener noreferrer" class="ticket-endpoint-link" title="View GitHub profile">github</a> &middot;
+            <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank" rel="noopener noreferrer" class="ticket-endpoint-link" title="View LinkedIn profile">linkedin</a> &middot;
+            <a href="contact.html" class="ticket-endpoint-link" title="View all contact endpoints">direct contact &rarr;</a>
+          </div>
+        </div>
+
+        <div class="poster-barcode-col">
+          <div class="dense-specs-text">
+            Apart from tech, I enjoy reading, music and art in general. I play the guitar, and learning the piano, but piano is very hard. I also sing sometimes (all the time) and I watch a lot of anime, atleast used to watch a lot of anime. Recently, Ted Lasso on apple tv really impressed me, and in anime world, Ergo proxy was really good (yes the old one). 
+          </div>
+          <div class="barcode-graphic-box" title="Code 128 Barcode: ronit">
+            <svg class="barcode-svg" viewBox="0 0 110 36" width="100%" height="36" preserveAspectRatio="none" aria-label="Barcode encoding: ronit" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#ffffff" rx="0"/><rect x="10" y="0" width="2" height="36" fill="#000000"/><rect x="13" y="0" width="1" height="36" fill="#000000"/><rect x="16" y="0" width="1" height="36" fill="#000000"/><rect x="21" y="0" width="1" height="36" fill="#000000"/><rect x="24" y="0" width="1" height="36" fill="#000000"/><rect x="27" y="0" width="4" height="36" fill="#000000"/><rect x="32" y="0" width="1" height="36" fill="#000000"/><rect x="36" y="0" width="4" height="36" fill="#000000"/><rect x="41" y="0" width="1" height="36" fill="#000000"/><rect x="43" y="0" width="2" height="36" fill="#000000"/><rect x="49" y="0" width="1" height="36" fill="#000000"/><rect x="51" y="0" width="1" height="36" fill="#000000"/><rect x="54" y="0" width="1" height="36" fill="#000000"/><rect x="59" y="0" width="2" height="36" fill="#000000"/><rect x="62" y="0" width="1" height="36" fill="#000000"/><rect x="65" y="0" width="1" height="36" fill="#000000"/><rect x="68" y="0" width="4" height="36" fill="#000000"/><rect x="73" y="0" width="1" height="36" fill="#000000"/><rect x="76" y="0" width="3" height="36" fill="#000000"/><rect x="80" y="0" width="1" height="36" fill="#000000"/><rect x="82" y="0" width="2" height="36" fill="#000000"/><rect x="87" y="0" width="2" height="36" fill="#000000"/><rect x="92" y="0" width="3" height="36" fill="#000000"/><rect x="96" y="0" width="1" height="36" fill="#000000"/><rect x="98" y="0" width="2" height="36" fill="#000000"/></svg>
+          </div>
+        </div>
+
+        <div class="poster-edge-vertical">
+          regarless of tech
+        </div>
+
+      </div>
+
+    </section>
 
     <!-- Research & Areas of Interest -->
-    <section class="space-hud-section" aria-label="Research and Areas of Interest">
+    <section class="hud-box" aria-label="Research and Areas of Interest">
       <div class="hud-header">
         <span class="hud-title">Research &amp; Areas of Interest</span>
         <span class="hud-sub">[ Focus Domains ]</span>
@@ -111,197 +522,111 @@
       </div>
     </section>
 
-    <!-- Primary Technical Stack -->
-    <section class="space-hud-section" aria-label="Primary Technical Stack">
+    <!-- Table of Contents (Tabular Architecture) -->
+    <nav class="toc-container" id="toc" aria-label="Table of Contents">
       <div class="hud-header">
-        <span class="hud-title">Primary Technical Stack</span>
-        <span class="hud-sub">[ Languages &amp; Environments ]</span>
+        <span class="hud-title">Table of Contents // Navigation</span>
+        <span class="hud-sub">[ Hotkeys: 0-9 &middot; / to Search ]</span>
       </div>
-      <div class="stack-badges-grid">
-        <div class="stack-badge-item">
-          <span class="stack-badge-name">.NET with C#</span>
-          <span class="stack-badge-desc">Systems, asynchronous runtimes, and desktop architectures</span>
-        </div>
-        <div class="stack-badge-item">
-          <span class="stack-badge-name">C / C3</span>
-          <span class="stack-badge-desc">Low-level systems programming and deterministic memory control</span>
-        </div>
-        <div class="stack-badge-item">
-          <span class="stack-badge-name">Elixir / OTP</span>
-          <span class="stack-badge-desc">Actor-model concurrency, message passing, and resilient services</span>
-        </div>
-        <div class="stack-badge-item">
-          <span class="stack-badge-name">SQL</span>
-          <span class="stack-badge-desc">Relational database systems, relational modeling, and query logic</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Discreet, subtle disclaimer note (smaller, not primary focus) -->
-    <div class="disclaimer-note-subtle" role="note">
-      <span class="disclaimer-note-label">Footnote:</span>
-      I am a systems programmer, not a web developer. I channeled my frontend energy into engineering this space-themed Home page so it looks respectable—the rest of the subpages are kind of okayish and strictly functional.
-    </div>
-
-    <!-- Table of Contents -->
-    <nav class="toc-container" aria-label="Table of Contents">
-      <div class="toc-heading-bar">
-        <span class="toc-heading">Table of Contents // Navigation</span>
-        <span class="toc-subheading">[ Hotkeys: Press 0-9 or / to search ]</span>
-      </div>
-      <div class="toc-grid">
-        <a href="about.html" class="toc-card" data-key="1">
-          <div class="toc-card-header">
-            <span class="toc-card-num">01</span>
-            <span class="toc-card-key"><kbd>1</kbd></span>
+      <div class="toc-table">
+        <a href="about.html" class="toc-row" data-key="1">
+          <span class="toc-row-num">01.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">About &amp; Principles</span>
+            <span class="toc-row-desc">Academic background, theoretical CS interests, fine arts training, and the engineering manifesto.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">About &amp; Principles</span>
-            <span class="toc-card-desc">Academic background, theoretical CS interests, fine arts training, and the engineering manifesto.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">about.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="stack.html" class="toc-card" data-key="2">
-          <div class="toc-card-header">
-            <span class="toc-card-num">02</span>
-            <span class="toc-card-key"><kbd>2</kbd></span>
+        <a href="stack.html" class="toc-row" data-key="2">
+          <span class="toc-row-num">02.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Technical Stack</span>
+            <span class="toc-row-desc">Programming languages, systems tooling, formal theory, databases, and accessibility frameworks.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Technical Stack</span>
-            <span class="toc-card-desc">Programming languages, systems tooling, formal theory, databases, and accessibility frameworks.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">stack.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="projects.html" class="toc-card" data-key="3">
-          <div class="toc-card-header">
-            <span class="toc-card-num">03</span>
-            <span class="toc-card-key"><kbd>3</kbd></span>
+        <a href="projects.html" class="toc-row" data-key="3">
+          <span class="toc-row-num">03.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Projects &amp; Systems</span>
+            <span class="toc-row-desc">ErgoProxy, AntiProxy, Upagraha, Dasam FSM simulator, DSL evaluator, and FSynth audio synthesizer.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Projects &amp; Systems</span>
-            <span class="toc-card-desc">ErgoProxy, AntiProxy, Upagraha, Dasam FSM simulator, DSL evaluator, and FSynth audio synthesizer.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">projects.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="experience.html" class="toc-card" data-key="4">
-          <div class="toc-card-header">
-            <span class="toc-card-num">04</span>
-            <span class="toc-card-key"><kbd>4</kbd></span>
+        <a href="experience.html" class="toc-row" data-key="4">
+          <span class="toc-row-num">04.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Experience &amp; Internships</span>
+            <span class="toc-row-desc">Technical internship at DITEC (DPI &amp; networks), NIELIT (ML pipelines), and design leadership.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Experience &amp; Internships</span>
-            <span class="toc-card-desc">Technical internship at DITEC (DPI &amp; networks), NIELIT (ML pipelines), and design leadership.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">experience.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="github.html" class="toc-card" data-key="5">
-          <div class="toc-card-header">
-            <span class="toc-card-num">05</span>
-            <span class="toc-card-key"><kbd>5</kbd></span>
+        <a href="github.html" class="toc-row" data-key="5">
+          <span class="toc-row-num">05.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">GitHub Telemetry</span>
+            <span class="toc-row-desc">Live repository metrics, language breakdowns, commit telemetry, and open-source contributions.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">GitHub Telemetry</span>
-            <span class="toc-card-desc">Live repository metrics, language breakdowns, commit telemetry, and open-source contributions.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">github.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="reading.html" class="toc-card" data-key="6">
-          <div class="toc-card-header">
-            <span class="toc-card-num">06</span>
-            <span class="toc-card-key"><kbd>6</kbd></span>
+        <a href="reading.html" class="toc-row" data-key="6">
+          <span class="toc-row-num">06.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Reading &amp; Notes</span>
+            <span class="toc-row-desc">Classical literature, philosophy, epistemology, cognitive science, and 21 foundational CS textbooks.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Reading &amp; Notes</span>
-            <span class="toc-card-desc">Classical literature, philosophy, epistemology, cognitive science, and 21 foundational CS textbooks.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">reading.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="writing.html" class="toc-card" data-key="7">
-          <div class="toc-card-header">
-            <span class="toc-card-num">07</span>
-            <span class="toc-card-key"><kbd>7</kbd></span>
+        <a href="writing.html" class="toc-row" data-key="7">
+          <span class="toc-row-num">07.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Writing &amp; Articles</span>
+            <span class="toc-row-desc">Technical essays on protocol design, CSMA network simulation, and reflective prose on Medium.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Writing &amp; Articles</span>
-            <span class="toc-card-desc">Technical essays on protocol design, CSMA network simulation, and reflective prose on Medium.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">writing.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="contact.html" class="toc-card" data-key="8">
-          <div class="toc-card-header">
-            <span class="toc-card-num">08</span>
-            <span class="toc-card-key"><kbd>8</kbd></span>
+        <a href="contact.html" class="toc-row" data-key="8">
+          <span class="toc-row-num">08.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Contact Endpoints</span>
+            <span class="toc-row-desc">Direct communication channels: GitHub, LinkedIn, Proton Mail, and academic contact vectors.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Contact Endpoints</span>
-            <span class="toc-card-desc">Direct communication channels: GitHub, LinkedIn, Proton Mail, and academic contact vectors.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">contact.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
-        <a href="watchlist.html" class="toc-card" data-key="9">
-          <div class="toc-card-header">
-            <span class="toc-card-num">09</span>
-            <span class="toc-card-key"><kbd>9</kbd></span>
+        <a href="watchlist.html" class="toc-row" data-key="9">
+          <span class="toc-row-num">09.</span>
+          <div class="toc-row-main">
+            <span class="toc-row-title">Watchlist &amp; Leisure</span>
+            <span class="toc-row-desc">Anime archive &amp; leisure: 165 anime series, cinematic films, and drama with Japanese typography, masterworks, and genre telemetry.</span>
           </div>
-          <div class="toc-card-body">
-            <span class="toc-card-title">Watchlist &amp; Leisure</span>
-            <span class="toc-card-desc">Anime archive &amp; leisure: 165 anime series, cinematic films, and drama with Japanese typography, masterworks, and genre telemetry.</span>
-          </div>
-          <div class="toc-card-footer">
-            <span class="toc-card-file">watchlist.html</span>
-            <span class="toc-card-arrow">&rarr;</span>
-          </div>
+          <span class="toc-row-arrow">&rarr;</span>
         </a>
       </div>
     </nav>
 
     <!-- Direct Contact Channels -->
     <section class="landing-contacts-block" aria-label="Direct Contact Endpoints">
-      <div class="landing-contacts-header">
-        <span class="landing-contacts-title">Direct Contact Endpoints</span>
-        <span class="landing-contacts-sub">[ Direct Channels ]</span>
+      <div class="hud-header">
+        <span class="hud-title">Direct Contact Endpoints</span>
+        <span class="hud-sub">[ Direct Channels ]</span>
       </div>
-      <div class="landing-contacts-grid">
-        <a href="https://github.com/nonQualities" target="_blank" rel="noopener noreferrer" class="landing-contact-item" data-channel="github">
+      <div class="contacts-table">
+        <a href="https://github.com/nonQualities" target="_blank" rel="noopener noreferrer" class="contact-row" data-channel="github">
           <span class="contact-ch-badge">GitHub</span>
           <span class="contact-ch-val">@nonQualities</span>
           <span class="contact-ch-action">&rarr; View Repositories</span>
         </a>
-        <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank" rel="noopener noreferrer" class="landing-contact-item" data-channel="linkedin">
+        <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank" rel="noopener noreferrer" class="contact-row" data-channel="linkedin">
           <span class="contact-ch-badge">LinkedIn</span>
           <span class="contact-ch-val">Ronit Choudhury</span>
           <span class="contact-ch-action">&rarr; View Profile</span>
         </a>
-        <a href="mailto:choudhury.ronit@proton.me" class="landing-contact-item" data-channel="proton">
-          <span class="contact-ch-badge">Proton</span>
+        <a href="mailto:choudhury.ronit@proton.me" class="contact-row" data-channel="proton">
+          <span class="contact-ch-badge">Proton Mail</span>
           <span class="contact-ch-val">choudhury.ronit@proton.me</span>
           <span class="contact-ch-action">&rarr; Send Direct Mail</span>
         </a>
-        <a href="mailto:ronitchoudhury965@gmail.com" class="landing-contact-item" data-channel="gmail">
+        <a href="mailto:ronitchoudhury965@gmail.com" class="contact-row" data-channel="gmail">
           <span class="contact-ch-badge">Gmail</span>
           <span class="contact-ch-val">ronitchoudhury965@gmail.com</span>
           <span class="contact-ch-action">&rarr; Send Direct Mail</span>
@@ -318,7 +643,6 @@
 </div>
 
 <script src="data.js" defer></script>
-<script src="spacetime.js" defer></script>
 <script src="main.js" defer></script>
 </body>
 </html>
