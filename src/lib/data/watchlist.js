@@ -9,22 +9,22 @@ export const watchlist = {
       "source": "Cowboy Bebop (カウボーイビバップ)"
     },
     {
-      "text": "No one knows what the future holds. That's why its potential is infinite.",
-      "jp": "「未来のことは誰にもわからない。だからこそ、その可能性は無限なんだ」",
-      "author": "Rintaro Okabe",
-      "source": "Steins;Gate (シュタインズ・ゲート)"
+      "text": "If you begin to regret, you'll dull your future decisions and let others make your choices for you. All that's left for you then is to die. Nobody can foretell the outcome. Each decision you make holds meaning only by affecting your next decision.",
+      // "jp": "「未来のことは誰にもわからない。だからこそ、その可能性は無限なんだ」",
+      "author": "- Erwin Smith",
+      "source": "AOT"
     },
     {
-      "text": "The world is cruel, but it is also very beautiful.",
-      "jp": "「この世界は残酷だ… そして… とても美しい」",
-      "author": "Mikasa Ackerman",
-      "source": "Attack on Titan (進撃の巨人)"
+      "text": "I'm not stupid. I'm just too lazy to show how smart I am.",
+      // "jp": "「この世界は残酷だ… そして… とても美しい」",
+      "author": "Oreki Houtarou",
+      "source": "Hyoka"
     },
     {
-      "text": "Was I able to live inside someone's heart? Was I able to live inside your heart?",
-      "jp": "「私は誰かの心に住めたかな？ 君の心に住めたかな？」",
-      "author": "Kaori Miyazono",
-      "source": "Your Lie in April (四月は君の嘘)"
+      "text": "The world's not perfect, but it's there for us, trying the best it can. That's what makes it so damn beautiful.",
+      // "jp": "「私は誰かの心に住めたかな？ 君の心に住めたかな？」",
+      "author": "Roy Mustang",
+      "source": "Full Metal Alchemist: Brotherhood"
     },
     {
       "text": "Treasure the experience. Dreams fade away after you wake up.",
@@ -71,7 +71,6 @@ export const watchlist = {
       "title": "Death Note",
       "jp": "DEATH NOTE",
       "genre": "Psychological · Supernatural Thriller",
-      "spotlight": true
     },
     {
       "id": 7,
@@ -89,20 +88,21 @@ export const watchlist = {
       "id": 9,
       "title": "Kimi ni Todoke (From Me to You) Season 2",
       "jp": "君に届け 2ND SEASON",
-      "genre": "Romance · Slice of Life"
+      "genre": "Romance · Slice of Life",
+      "spotlight" : true
     },
     {
       "id": 10,
       "title": "Hyouka",
       "jp": "氷菓",
       "genre": "Mystery · Slice of Life · Kyoto Animation",
-      "spotlight": true
     },
     {
       "id": 11,
       "title": "Anohana: The Flower We Saw That Day",
       "jp": "あの日見た花の名前を僕達はまだ知らない。",
-      "genre": "Drama · Supernatural"
+      "genre": "Drama · Supernatural",
+      "spotlight" : true
     },
     {
       "id": 12,
@@ -164,7 +164,6 @@ export const watchlist = {
       "title": "Attack on Titan Season 1",
       "jp": "進撃の巨人 Season 1",
       "genre": "Dark Fantasy · Action · Drama",
-      "spotlight": true
     },
     {
       "id": 22,
@@ -188,7 +187,8 @@ export const watchlist = {
       "id": 25,
       "title": "Attack on Titan: The Final Season Part 2",
       "jp": "進撃の巨人 The Final Season Part 2",
-      "genre": "Dark Fantasy · War · MAPPA"
+      "genre": "Dark Fantasy · War · MAPPA",
+      "spotlight" : true
     },
     {
       "id": 26,
@@ -303,7 +303,8 @@ export const watchlist = {
       "id": 44,
       "title": "Naruto: Shippuden",
       "jp": "NARUTO -ナルト- 疾風伝",
-      "genre": "Ninja Action · Epic Adventure · Shonen"
+      "genre": "Ninja Action · Epic Adventure · Shonen",
+      "spotlight" : true
     },
     {
       "id": 45,
@@ -323,7 +324,6 @@ export const watchlist = {
       "title": "Mob Psycho 100 Season 2",
       "jp": "モブサイコ100 II",
       "genre": "Supernatural Action · Coming-of-Age · Bones",
-      "spotlight": true
     },
     {
       "id": 48,
@@ -446,7 +446,8 @@ export const watchlist = {
       "id": 67,
       "title": "Barakamon",
       "jp": "ばらかもん",
-      "genre": "Calligraphy · Island Slice of Life"
+      "genre": "Calligraphy · Island Slice of Life",
+      "spotlight" : true
     },
     {
       "id": 68,
@@ -484,13 +485,13 @@ export const watchlist = {
       "title": "Kids on the Slope",
       "jp": "坂道のアポロン",
       "genre": "1960s Jazz · Youth Drama · Shinichiro Watanabe",
-      "spotlight": true
     },
     {
       "id": 74,
       "title": "Beck: Mongolian Chop Squad",
       "jp": "BECK",
-      "genre": "Indie Rock · Coming-of-Age · Madhouse"
+      "genre": "Indie Rock · Coming-of-Age · Madhouse",
+      "spotlight" : true
     },
     {
       "id": 75,
@@ -519,28 +520,30 @@ export const watchlist = {
     },
     {
       "id": 79,
-      "title": "Horimiya: The Missing Pieces",
+      "title": "Horimiya and Horimiya The Missing Pieces",
       "jp": "ホリミヤ -piece-",
-      "genre": "Romance · Slice of Life"
+      "genre": "Romance · Slice of Life",
+      "spotlight": true
     },
     {
       "id": 80,
-      "title": "Silver Spoon",
+      "title": "Silver Spoon S1 & S2",
       "jp": "銀の匙 Silver Spoon",
-      "genre": "Agricultural High School · Hiromu Arakawa"
+      "genre": "Agricultural High School · Hiromu Arakawa",
+      "spotlight": true
     },
     {
       "id": 81,
       "title": "86 Eighty-Six",
       "jp": "86-エイティシックス-",
       "genre": "Mecha · Military Sci-Fi · Dystopian Drama",
-      "spotlight": true
     },
     {
       "id": 82,
       "title": "Oshi no Ko",
       "jp": "【推しの子】",
-      "genre": "Entertainment Industry · Reincarnation · Mystery"
+      "genre": "Entertainment Industry · Reincarnation · Mystery",
+      "spotlight": true
     },
     {
       "id": 83,
@@ -653,7 +656,6 @@ export const watchlist = {
       "title": "Cowboy Bebop",
       "jp": "カウボーイビバップ",
       "genre": "Space Western · Cyberpunk Noir · Legend",
-      "spotlight": true
     },
     {
       "id": 101,
@@ -720,7 +722,14 @@ export const watchlist = {
       "title": "Sparks of Tomorrow (Encore)",
       "jp": "あすの火花 (アンコール)",
       "genre": "Reflective Drama · Encore"
-    }
+    },
+    {
+      "id":112,
+      "title": "My Hero Academia S6",
+      "genre": "by now its a genre by itself",
+      "spotlight": true
+    },
+
   ],
   "animeMovies": [
     {
@@ -744,7 +753,6 @@ export const watchlist = {
       "jp": "君の膵臓をたべたい",
       "genre": "Romance · Terminal Illness Drama",
       "year": "2018",
-      "spotlight": true
     },
     {
       "id": 4,
@@ -773,7 +781,6 @@ export const watchlist = {
       "jp": "言の葉の庭",
       "genre": "Visual Poetry · Rain & Shoes · Shinkai",
       "year": "2013",
-      "spotlight": true
     },
     {
       "id": 8,
@@ -794,7 +801,8 @@ export const watchlist = {
       "title": "Flavors of Youth",
       "jp": "詩季織々",
       "genre": "Nostalgic Anthology · CoMix Wave Films",
-      "year": "2018"
+      "year": "2018",
+      "spotlight": true
     },
     {
       "id": 11,

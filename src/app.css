@@ -397,7 +397,7 @@ html {
   -webkit-text-size-adjust: 100%;
   color-scheme: light dark;
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -415,7 +415,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -698,7 +698,8 @@ h1, h2, h3, h4, h5, h6 {
    -------------------------------------------------------------------------- */
 .app-container {
   display: flex;
-  min-height: 100vh;
+  align-items: flex-start;
+  min-height: calc(100vh - 48px);
   padding-top: 48px; /* Offset for fixed top bar */
 }
 
@@ -707,9 +708,10 @@ h1, h2, h3, h4, h5, h6 {
   width: var(--sidebar-w);
   flex-shrink: 0;
   border-right: 1px solid var(--border);
-  background: transparent;
+  background: var(--bg);
   position: sticky;
   top: 48px;
+  align-self: flex-start;
   height: calc(100vh - 48px);
   overflow-y: auto;
   display: flex;
@@ -926,6 +928,31 @@ h1, h2, h3, h4, h5, h6 {
 .poster-giant-title:hover {
   text-shadow: none;
   opacity: 0.92;
+}
+
+@keyframes ronit-gradual-glow {
+  0% {
+    text-shadow: 0 0 0px transparent;
+    filter: brightness(1);
+  }
+  35% {
+    text-shadow: 0 0 16px var(--accent-glow), 0 0 32px var(--accent-glow);
+    filter: brightness(1.22);
+  }
+  100% {
+    text-shadow: none;
+    filter: brightness(1);
+  }
+}
+
+.ronit-landing-glow {
+  animation: ronit-gradual-glow 2.2s cubic-bezier(0.25, 1, 0.4, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ronit-landing-glow {
+    animation: none !important;
+  }
 }
 
 /* Multilingual Name Lockup in and around RONIT */
@@ -3714,6 +3741,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 860px) {
   .app-container {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .sidebar-menu-btn {

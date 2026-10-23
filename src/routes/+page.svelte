@@ -41,7 +41,7 @@
 
 					<!-- Main Title Row with Giant RONIT and Flanking Vertical Scripts -->
 					<div class="poster-title-main-row">
-						<h1 class="poster-giant-title">RONIT</h1>
+						<h1 class="poster-giant-title ronit-landing-glow">RONIT</h1>
 						<div class="poster-title-flank" aria-hidden="true">
 							<span class="flank-script flank-ja" lang="ja" title="Japanese Katakana">ロニット</span>
 							<span class="flank-script flank-as" lang="as" title="Assamese Script">ৰোণিত</span>
